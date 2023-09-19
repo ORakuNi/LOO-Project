@@ -1,5 +1,5 @@
 package com.example.loo.model.board;
 
 public class Board {
-	int a;
+	String a;
 }
