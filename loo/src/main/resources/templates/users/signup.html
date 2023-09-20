@@ -37,29 +37,45 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="m-sm-3">
-									<form>
+									<form action="signup" method="post" th:object="${member}">
 										<div class="mb-3">
 											<label class="form-label">아이디(Email)</label>
-											<input class="form-control form-control-lg" type="email" name="name" placeholder="Enter your email" />
+											<input class="form-control form-control-lg" type="email" th:field="*{company_id}" placeholder="회사 이메일을 입력해주세요." />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">비밀번호</label>
-											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter password" />
+											<input class="form-control form-control-lg" type="password" th:field="*{password}" placeholder="비밀번호를 입력해주세요." />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">이름</label>
-											<input class="form-control form-control-lg" type="text" name="name" placeholder="Enter your name" />
+											<input class="form-control form-control-lg" type="text" th:field="*{name}" placeholder="이름을 입력해주세요." />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">전화번호</label>
-											<input class="form-control form-control-lg" type="text" name="name" placeholder="Enter your phone" />
+											<input class="form-control form-control-lg" type="text" th:field="*{phone_number}" placeholder="연락처를 입력해주세요." />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">생년월일</label>
-											<input class="form-control form-control-lg" type="text" name="name" placeholder="Enter your birth" />
+											<input class="form-control form-control-lg" type="date" th:field="*{birthday}"/>
+										</div>
+										<div class="mb-3">
+											<label class="form-label">입사일</label>
+											<input class="form-control form-control-lg" type="date" th:field="*{hire_date}"/>
+										</div>
+										<div class="mb-3">
+											<label class="form-label">회사명</label>
+											<input class="form-control form-control-lg" type="text" th:field="*{company_id}" placeholder="회사명을 입력해주세요."/>
+										</div>
+										<div class="mb-3">
+											<label class="form-label">부서 정보</label>
+											<input class="form-control form-control-lg" type="text" th:field="*{department_id}" placeholder="부서 정보를 입력해주세요."/>
+										</div>
+										<div class="mb-3">
+											<label class="form-label">직책</label>
+											<input class="form-control form-control-lg" type="text" th:field="*{position_id}" placeholder="직책 정보를 입력해주세요."/>
 										</div>
 										<div class="d-grid gap-2 mt-3">
-											<a href="index.html" class="btn btn-lg btn-primary">회원가입</a>
+											<input type="submit" value="회원가입" class="btn btn-lg btn-primary">
 										</div>
 									</form>
 								</div>
