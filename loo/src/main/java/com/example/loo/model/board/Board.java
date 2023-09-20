@@ -1,5 +1,7 @@
 package com.example.loo.model.board;
 
 public class Board {
-	int a;
+
+	private String board_id;
+	
 }
