@@ -1,0 +1,8 @@
+
+controller와 html에서 로그인 관련 부분 뻄
+
+
+read에서 <th:block th:if="${session.loginMember.member_id == board.member_id}"> 뺌
+
+
+
