@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="com.example.loo.repository.MemberMapper">
+	<insert id="saveMember">
+	<selectKey keyProperty="member_id" resultType="Long" order="BEFORE">
+		select member_seq.nextval from dual
+	</selectKey>
+		INSERT INTO member (
+			member_id,
+			company_mail,
+			password,
+			member_name,
+			phone,
+			birthday,
+			hire_date,
+			company_id,
+			department_id,
+			position_id
+		) VALUES (
+			#{member_id},		
+			#{company_mail},	
+			#{password},		
+			#{member_name},		
+			#{phone},
+			#{birthday},
+			#{hire_date},
+			#{company_id},
+			#{department_id},
+			#{position_id}
+		)
+	</insert>
+
+	<select id="findMember" resultType="member">
+		select * from member where company_mail = #{company_mail}
+	</select>
+	
+</mapper>
