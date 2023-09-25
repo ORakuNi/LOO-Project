@@ -14,7 +14,7 @@
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-	<title>Main</title>
+	<title>LOO-Main</title>
 
 	<link href="css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -35,24 +35,24 @@
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="index.html">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Main</span>
             </a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+              <i class="align-middle" data-feather="user"></i> <span class="align-middle">내정보</span>
             </a>
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="pages-sign-in.html">
-              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Sign In</span>
+						<a class="sidebar-link" href="/users/login">
+              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">로그인</span>
             </a>
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" th:href="@{/member/join}">
+						<a class="sidebar-link" href="/users/signup">
               <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">회원가입</span>
             </a>
 					</li>
@@ -60,6 +60,12 @@
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-blank.html">
               <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+            </a>
+					</li>
+					
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/board/list">
+              <i class="align-middle" data-feather="book"></i> <span class="align-middle">게시판</span>
             </a>
 					</li>
 
