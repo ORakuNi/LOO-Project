@@ -9,5 +9,6 @@ spring:
     driver-class-name: oracle.jdbc.driver.OracleDriver
 
 mybatis:
+  type-aliases-package: com.example.loo.model
   mapper-locations:
   - classpath:mapper/**/*.xml
