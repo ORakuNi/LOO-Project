@@ -1,12 +1,10 @@
 package com.example.loo.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -14,10 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.loo.model.member.Member;
 import com.example.loo.model.member.MemberLogin;
 import com.example.loo.model.member.MemberSignUp;
+import com.example.loo.model.member.MemberUpdate;
 import com.example.loo.repository.MemberMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,13 +57,13 @@ public class MemberController {
       
       
       //이메일 주소검증
-      if(!memberSignUp.getCompany_mail().contains("@")) {
+      if(!memberSignUp.getMember_mail().contains("@")) {
          result.reject("emailError", "이메일 형식이 맞지 않습니다.");
          return "users/signup";
       }
       
       //회원가입 중복 확인
-      Member checkToEmail = memberMapper.findMember(memberSignUp.getCompany_mail());
+      Member checkToEmail = memberMapper.findMember(memberSignUp.getMember_mail());
       if (checkToEmail != null) {
          result.reject("alreadyUsedId", "이미 가입된 이메일입니다.");
          return "users/signup";
@@ -82,9 +83,9 @@ public class MemberController {
    
    // 로그인
    @PostMapping("login")
-   public String login(@Validated @ModelAttribute MemberLogin memberLogin, BindingResult result,
-                  HttpServletResponse response,
-                  HttpServletRequest request) {
+   public String login(@SessionAttribute(name="loginMember", required = false) 
+   						@Validated @ModelAttribute MemberLogin memberLogin, BindingResult result,
+   						HttpServletRequest request) {
       
       log.info("MemberLogin: {}", memberLogin);
       if(result.hasErrors()) {
@@ -92,7 +93,7 @@ public class MemberController {
       }
       
    //로그인 검증
-   Member findMember = memberMapper.findMember(memberLogin.getCompany_mail());
+   Member findMember = memberMapper.findMember(memberLogin.getMember_mail());
    log.info("findMember:{}", findMember);
    if(findMember == null || !findMember.getPassword().equals(memberLogin.getPassword())) {
       result.reject("loginError", "아이디가 존재하지 않거나 패스워드가 다릅니다");
@@ -108,10 +109,48 @@ public class MemberController {
    
    //로그아웃
    @GetMapping("logout")
-   public String logout(HttpServletResponse response, HttpServletRequest request) {
+   public String logout(HttpServletRequest request) {
       HttpSession session = request.getSession();
       //세션 초기화
       session.invalidate();
       return "redirect:/";
    }
+   
+   @GetMapping("update")
+	public String update(Model model,
+						@SessionAttribute(name="loginMember", required = false) Member loginMember) {
+		if(loginMember == null) {
+			return "redirect:/users/login";
+		}
+		Member member = memberMapper.findMember(loginMember.getMember_mail());
+		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
+			return "redirect:/";
+		}
+		model.addAttribute("update", member);
+		return "users/update";
+	}
+	
+	@PostMapping("update")
+	public String update(@SessionAttribute(name="loginMember", required = false) Member loginMember,
+						@RequestParam String company_mail,
+						@ModelAttribute("member") MemberUpdate memberUpdate,
+						BindingResult result) {
+		if(loginMember == null) {
+			return "redirect:/users/login";
+		}
+		log.info("company_mail: {}, member:{}", company_mail, memberUpdate);
+		if(result.hasErrors()) {
+			return "users/update";
+		}
+		Member member = memberMapper.findMember(company_mail);
+		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
+			return "redirect:/board/list";
+		}
+		member.setPassword(memberUpdate.getPassword());
+		member.setPhone(memberUpdate.getPhone());
+		log.info("member: {}", member);
+		memberMapper.updateMember(member);
+		
+		return "redirect:/";
+	}
 }

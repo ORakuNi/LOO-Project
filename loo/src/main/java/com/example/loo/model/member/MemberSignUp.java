@@ -15,10 +15,8 @@ import lombok.Data;
 
 @Data
 public class MemberSignUp {
-	
-	private Long member_id;
 	@NotBlank
-	private String company_mail;
+	private String member_mail;
 	@NotBlank
 	private String password;
 	@NotBlank
@@ -28,7 +26,8 @@ public class MemberSignUp {
 	@Past
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate birthday;
-	private String hire_date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate hire_date;
 	private String company_id;
 	private String department_id;
 	private String position_id;
@@ -36,8 +35,7 @@ public class MemberSignUp {
 	public static Member toMember(MemberSignUp memberJoinForm) {
 		Member member = new Member();
 		
-		member.setMember_id(memberJoinForm.getMember_id());
-		member.setCompany_mail(memberJoinForm.getCompany_mail());
+		member.setMember_mail(memberJoinForm.getMember_mail());
 		member.setPassword(memberJoinForm.getPassword());
 		member.setMember_name(memberJoinForm.getMember_name());
 		member.setPhone(memberJoinForm.getPhone());
