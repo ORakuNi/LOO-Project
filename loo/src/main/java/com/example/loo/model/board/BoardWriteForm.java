@@ -12,12 +12,12 @@ public class BoardWriteForm {
 	@NotBlank
 	private String board_title; //글 제목
 	@NotBlank
-	private String contents; //내용
+	private String board_contents; //내용
 	
 	public static Board toBoard(BoardWriteForm boardWriteForm) {
 		Board board = new Board();
 		board.setBoard_title(boardWriteForm.getBoard_title());
-		board.setContents(boardWriteForm.getContents());
+		board.setBoard_contents(boardWriteForm.getBoard_contents());
 		return board;
 	}
 }
