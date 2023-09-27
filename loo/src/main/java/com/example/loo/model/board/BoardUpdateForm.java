@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
+import com.example.loo.model.member.Member;
+
 import lombok.Data;
 
 @Data
@@ -14,6 +16,7 @@ public class BoardUpdateForm {
     @NotBlank
     private String board_contents;
     private String member_mail;
+    private String member_name;
     private Long hit;
     private LocalDateTime create_time;
 }

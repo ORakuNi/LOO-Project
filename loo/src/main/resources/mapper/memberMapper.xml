@@ -5,12 +5,8 @@
 		
 <mapper namespace="com.example.loo.repository.MemberMapper">
 	<insert id="saveMember">
-	<selectKey keyProperty="member_id" resultType="Long" order="BEFORE">
-		select member_seq.nextval from dual
-	</selectKey>
 		INSERT INTO member (
-			member_id,
-			company_mail,
+			member_mail,
 			password,
 			member_name,
 			phone,
@@ -20,8 +16,7 @@
 			department_id,
 			position_id
 		) VALUES (
-			#{member_id},		
-			#{company_mail},	
+			#{member_mail},	
 			#{password},		
 			#{member_name},		
 			#{phone},
@@ -34,7 +29,16 @@
 	</insert>
 
 	<select id="findMember" resultType="member">
-		select * from member where company_mail = #{company_mail}
+		select * from member where member_mail = #{member_mail}
 	</select>
+	
+	<update id="updateMember">
+		update member
+		set
+			password = #{password},
+			phone = #{phone}
+		where
+			member_mail = #{member_mail}
+	</update>
 	
 </mapper>

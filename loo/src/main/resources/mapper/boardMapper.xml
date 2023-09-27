@@ -13,21 +13,48 @@
       board_id,
       board_title,
       board_contents,
-      board_category
+      board_category,
+      member_mail
     ) values (
       #{board_id},
       #{board_title},
       #{board_contents},
-      #{board_category}   
+      #{board_category},
+      #{member_mail}   
     )
   </insert>
   
   <select id="findAllBoards" resultType="board">
-    select * from board
+    select
+    	b.board_id,
+    	b.board_title,
+    	b.board_contents,
+    	m.member_name,
+    	b.board_category,
+    	b.create_time,
+    	b.edit_time,
+    	b.hit
+    from
+    	board b join member m
+    	on (b.member_mail = m.member_mail)
   </select>
   
   <select id="findBoard" resultType="board">
-    select * from board where board_id = #{board_id}
+  	select
+    	b.board_id,
+    	b.board_title,
+    	b.board_contents,
+    	b.member_mail,
+    	m.member_name,
+    	b.board_category,
+    	b.create_time,
+    	b.edit_time,
+    	b.hit
+    from
+    	board b join member m
+    	on (b.member_mail = m.member_mail)
+    where
+    	b.board_id = #{board_id}
   </select>
   
   <update id="addHit">

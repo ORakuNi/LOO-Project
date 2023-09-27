@@ -2,6 +2,8 @@ package com.example.loo.model.board;
 
 import java.time.LocalDateTime;
 
+import com.example.loo.model.member.Member;
+
 import lombok.Data;
 
 @Data
@@ -10,7 +12,8 @@ public class Board {
 	private Long board_id; //게시물 아이디
 	private String board_title; //글 제목
 	private String board_contents; //내용
-	private String member_mail; //작성자
+	private	String member_mail; //작성자 메일
+	private	String member_name; //작성자 이름
 	private String board_category; // 게시판 종류
 	private LocalDateTime create_time; //작성일
 	private LocalDateTime edit_time;  // 수정시간

@@ -14,7 +14,7 @@
 
    <link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-up.html" />
 
-   <title>LOO-회원가입</title>
+   <title>Sign Up</title>
 
    <link href="/css/app.css" rel="stylesheet">
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -40,7 +40,7 @@
                            <form action="signup" method="post" th:object="${member}">
                               <div class="mb-3">
                                  <label class="form-label">아이디(Email)</label>
-                                 <input class="form-control form-control-lg" type="email" th:field="*{company_mail}" placeholder="회사 이메일을 입력해주세요." />
+                                 <input class="form-control form-control-lg" type="email" th:field="*{member_mail}" placeholder="회사 이메일을 입력해주세요." />
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">비밀번호</label>

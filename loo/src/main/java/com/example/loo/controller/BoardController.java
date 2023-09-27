@@ -54,7 +54,8 @@ public class BoardController {
 		
 		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
-            return "redirect:/member/login";
+
+            return "redirect:/users/login";
         }
 		
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
@@ -72,7 +73,8 @@ public class BoardController {
     	
     	// 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
-            return "redirect:/member/login";
+
+            return "redirect:/users/login";
         }
 
         // writeForm.html의 필드 표시를 위해 빈 BoardWriteForm 객체를 생성하여 model 에 저장한다.
@@ -89,7 +91,8 @@ public class BoardController {
 
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
-            return "redirect:/member/login";
+
+            return "redirect:/users/login";
         }
         log.info("board: {}", boardWriteForm);
         
@@ -118,7 +121,8 @@ public class BoardController {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
-            return "redirect:/member/login";
+
+            return "redirect:/users/login";
         }
         log.info("id: {}", board_id);
     	
@@ -148,7 +152,8 @@ public class BoardController {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
-            return "redirect:/member/login";
+        	
+            return "redirect:/users/login";
         }
 
     	
@@ -208,7 +213,8 @@ public class BoardController {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
-            return "redirect:/member/login";
+
+            return "redirect:/users/login";
         }
         
         // board_id 에 해당하는 게시글을 가져온다.
