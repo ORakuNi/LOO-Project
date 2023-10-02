@@ -29,6 +29,7 @@ public class CommuteController {
 
 
 	private final CommuteMapper commuteMapper;
+	private Commute findCommute;
 	
 	@Autowired
 	public CommuteController(CommuteMapper commuteMapper) {
@@ -39,8 +40,8 @@ public class CommuteController {
 	
 	// 출근하기
 	@PostMapping("attendance")
-	public String attend(@SessionAttribute(name = "status")
-						 @ModelAttribute CommuteAttendance commuteAttendance, HttpServletRequest request,
+	public String attend(@SessionAttribute(name = "status", required = false)@ModelAttribute CommuteAttendance commuteAttendance, 
+						 HttpServletRequest request,
 						 @SessionAttribute(name = "loginMember", required = false) Member loginMember) {
 		
 		commuteAttendance.setMember_mail(loginMember.getMember_mail());
@@ -61,10 +62,14 @@ public class CommuteController {
 						@ModelAttribute CommuteAttendance commuteAttendance, HttpServletRequest request,
 						@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
 		
-		
-		Commute commute = CommuteAttendance.toCommute(commuteAttendance);
-		commuteMapper.updateCommute(commute);
-		
+		commuteAttendance.setCommute_status("0");
+		HttpSession session = request.getSession();
+		Object attribute = session.getAttribute("status");
+
+		// session에 있는 commute_id를 들고와서 형변환 시켜줌
+//		log.info("status : {}" , ((Commute) attribute).getCommute_id());
+		findCommute = commuteMapper.findCommute(((Commute) attribute).getCommute_id());
+		commuteMapper.updateCommute(findCommute);
 		return "redirect:/";
 	}
 	

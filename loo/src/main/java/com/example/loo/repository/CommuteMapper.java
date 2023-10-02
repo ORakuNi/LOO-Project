@@ -17,6 +17,9 @@ public interface CommuteMapper {
 	// 퇴근하기 
 	void updateCommute(Commute commute);
 	
+	// 찾기
+	Commute findCommute(Long commute_id);
+	
 	// 전체 출퇴근 기록
 	List<Commute> findAllCommutes(String member_mail); 
 }

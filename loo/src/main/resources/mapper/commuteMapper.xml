@@ -24,6 +24,11 @@
 	)
 	
 </insert>
+
+
+<select id="findCommute" resultType="commute">
+	select * from commute where commute_id = #{commute_id}
+</select>
  
  <update id="updateCommute">
  	update commute
@@ -31,7 +36,7 @@
  		<if test="commute_status != 0">commute_status = '0',</if>
  		<if test="leave_time == null">leave_time = SYSDATE</if>
  	</set>
- 	where member_mail = #{member_mail}
+ 	where commute_id = #{commute_id}
  </update>
   
  
