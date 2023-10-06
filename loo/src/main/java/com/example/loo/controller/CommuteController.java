@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
@@ -22,29 +23,16 @@ import com.example.loo.repository.CommuteMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@RequestMapping("commute")
 @Slf4j
-public class HomeController {
+public class CommuteController {
 
-	@GetMapping("/")
-	public String home(@SessionAttribute(name = "status", required = false)
-	@ModelAttribute CommuteAttendance commuteAttendance, HttpServletRequest request, Model model) {
-		
-		HttpSession session = request.getSession();
-		Object attribute = session.getAttribute("status");
-//		log.info("attribute : {}", attribute);
-		if(attribute != null) {
-			Commute findCommute = commuteMapper.findCommute(((Commute)attribute).getCommute_id());
-//			log.info("see : {}", findCommute);
-			model.addAttribute("commute", findCommute.getCommute_status());
-		}
-		return "index";
-	}
-	
+
 	private final CommuteMapper commuteMapper;
 	private Commute findCommute;
 	
 	@Autowired
-	public HomeController(CommuteMapper commuteMapper) {
+	public CommuteController(CommuteMapper commuteMapper) {
 		this.commuteMapper = commuteMapper;
 	}
 	
@@ -74,10 +62,9 @@ public class HomeController {
 						@ModelAttribute CommuteAttendance commuteAttendance, HttpServletRequest request,
 						@SessionAttribute(name = "loginMember", required = false) Member loginMember) {
 		
+		commuteAttendance.setCommute_status("0");
 		HttpSession session = request.getSession();
-	
 		Object attribute = session.getAttribute("status");
-		session.setAttribute("status", attribute);
 
 		// session에 있는 commute_id를 들고와서 형변환 시켜줌
 //		log.info("status : {}" , ((Commute) attribute).getCommute_id());
@@ -98,6 +85,7 @@ public class HomeController {
 		
 		return "commute/list";
 	}
+	
 	
 	
 }
