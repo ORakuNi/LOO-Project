@@ -7,93 +7,146 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
 	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+	<meta name="keywords"
+		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
 	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="/img/icons/favicon-16x16.png"/>
+	<link rel="shortcut icon" href="/img/icons/favicon-16x16.png" />
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
+	<script defer src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
+		integrity="sha384-vuFJ2JiSdUpXLKGK+tDteQZBqNlMwAjhZ3TvPaDfN9QmbPb7Q8qUpbSNapQev3YF"
+		crossorigin="anonymous"></script>
 	<title>홈</title>
 
 	<link href="/css/app.css" rel="stylesheet">
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 	<script>
-$(document).ready(function () {
-    $("#comcheck").click(function () {
-        Swal.fire({
-            title: '출근하시겠습니까?',
-            text: "다시 되돌릴 수 없습니다. 신중하세요.",
-            icon: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '출근 ',
-            cancelButtonText: '취소'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const url = "/commute/attendance";
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    success: function (result) {
-                        Swal.fire(
-                            '출근 되었습니다.',
-                            '오늘 하루도 화이팅하세요'
-                        ).then(() => {
-                            // 출근 요청 성공 후에 페이지 새로고침
-                            location.reload();
-                        });
-                    },
-                    error: function (error) {
-                        console.log('Error ${error}')
-                    }
-                });
-            }
-        });
-    });
-});
-</script>
+		$(document).ready(function () {
+			$("#comcheck").click(function () {
+				Swal.fire({
+					title: '출근하시겠습니까?',
+					text: "다시 되돌릴 수 없습니다. 신중하세요.",
+					icon: 'success',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '출근 ',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						const url = "/attendance";
+						$.ajax({
+							url: url,
+							type: "POST",
+							success: function (result) {
+								Swal.fire(
+									'출근 되었습니다.',
+									'오늘 하루도 화이팅하세요'
+								).then(() => {
+									// 출근 요청 성공 후에 페이지 새로고침
+									location.reload();
+								});
+							},
+							error: function (error) {
+								console.log('Error ${error}')
+							}
+						});
+					}
+				});
+			});
+		});
+	</script>
 
 
 	<script>
 		$().ready(function () {
-   		 $("#comout").click(function () {
-        Swal.fire({
-            title: '퇴근하시겠습니까?',
-            text: "다시 되돌릴 수 없습니다. 신중하세요.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: '퇴근 ',
-            cancelButtonText: '취소'
-        }).then((result) => {
-			
-            if (result.isConfirmed) {
-				const url = "/commute/leave";
-        $.ajax({
-			url : url,
-			type : "POST",
-			success : function(result){
-				console.log(result)
-			}, 
-			error : function(error){
-				console.log('Error ${error}')
-			}
-		})
-                Swal.fire(
-                    '퇴근 되었습니다.',
-                    '오늘 하루도 수고하셨습니다',
-                )
-            }
-        })
-        
-    });
-});
+			$("#comout").click(function () {
+				Swal.fire({
+					title: '퇴근하시겠습니까?',
+					text: "다시 되돌릴 수 없습니다. 신중하세요.",
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '퇴근 ',
+					cancelButtonText: '취소'
+				}).then((result) => {
+
+					if (result.isConfirmed) {
+						const url = "/leave";
+						$.ajax({
+							url: url,
+							type: "POST",
+							success: function (result) {
+								Swal.fire(
+									'퇴근 되었습니다.',
+									'오늘 하루도 수고하셨습니다',
+								).then(() => {
+									// 퇴근 요청 성공 후에 페이지 새로고침
+									location.reload();
+								});
+							},
+							error: function (error) {
+								console.log('Error ${error}')
+							}
+						})
+
+					}
+				})
+
+			});
+		});
 	</script>
-	
+	<script>
+		$(document).ready(function () {
+			let weatherIcon = {
+				'01': 'fas fa-sun',
+				'02': 'fas fa-cloud-sun',
+				'03': 'fas fa-cloud',
+				'04': 'fas fa-cloud-meatball',
+				'09': 'fas fa-cloud-sun-rain',
+				'10': 'fas fa-cloud-showers-heavy',
+				'11': 'fas fa-poo-storm',
+				'13': 'far fa-snowflake',
+				'50': 'fas fa-smog'
+			};
+
+			// 선택한 도시가 변경되면 이벤트 핸들러 실행
+			$('select.form-select').change(function () {
+				// 선택한 도시의 값을 가져옴
+				var selectedCity = $(this).val();
+
+				// API 요청을 보낼 URL을 생성
+				var apiUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + selectedCity + '&APPID=66ae6c9da765953cc1248d15b7f58817&units=metric';
+
+				$.ajax({
+					url: apiUrl,
+					dataType: 'json',
+					type: 'GET',
+					success: function (data) {
+						var $Icon = (data.weather[0].icon).substr(0, 2);
+						var $Temp = Math.floor(data.main.temp) + 'º';
+						var $city = data.name;
+
+						// 날씨 정보 업데이트
+						$('.CurrIcon').empty().append('<i class="' + weatherIcon[$Icon] + '"></i>');
+						$('.CurrTemp').text($Temp);
+						$('.City').text($city + '의 날씨 정보입니다');
+					},
+					error: function () {
+						alert('날씨 정보를 가져올 수 없습니다.');
+					}
+				});
+			});
+
+			// 페이지 로드 시 초기 선택한 도시에 대한 날씨 정보를 가져옴
+			$('select.form-select').trigger('change');
+		});
+	</script>
+
 </head>
 
 <body>
@@ -104,7 +157,7 @@ $(document).ready(function () {
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="/">
 					<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px;" alt="logo" />
-        		</a>
+				</a>
 				<ul class="sidebar-nav">
 					<li class="sidebar-header">
 						Life Of Office
@@ -112,20 +165,20 @@ $(document).ready(function () {
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="/">
-              <i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
-            </a>
+							<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
+						</a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="/users/login">
-              <i class="align-middle" data-feather="log-in"></i> <span class="align-middle">로그인</span>
-            </a>
+							<i class="align-middle" data-feather="log-in"></i> <span class="align-middle">로그인</span>
+						</a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="/users/signup">
-              <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">회원가입</span>
-            </a>
+							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">회원가입</span>
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -134,8 +187,9 @@ $(document).ready(function () {
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="/">
-					<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;" alt="logo" />
-        		</a>
+					<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;"
+						alt="logo" />
+				</a>
 				<ul class="sidebar-nav">
 					<li class="sidebar-header">
 						My Pages
@@ -143,20 +197,20 @@ $(document).ready(function () {
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="/">
-              <i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
-            </a>
+							<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
+						</a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="/users/update">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
-            </a>
+							<i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
+						</a>
 					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="/users/logout">
-              <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
-            </a>
+							<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
+						</a>
 					</li>
 
 					<li class="sidebar-header">
@@ -165,14 +219,16 @@ $(document).ready(function () {
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
-            </a>
+							<i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
+						</a>
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}">
-             		 <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">근태관리</span>
-            		</a>
+						<a class="sidebar-link"
+							th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}">
+							<i class="align-middle" data-feather="check-square"></i> <span
+								class="align-middle">근태관리</span>
+						</a>
 					</li>
 
 					<li class="sidebar-header">
@@ -181,36 +237,37 @@ $(document).ready(function () {
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
-            </a>
+							<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
+						</a>
 					</li>
-					
+
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="board/list">
-              <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
-            </a>
+							<i class="align-middle" data-feather="clipboard"></i> <span
+								class="align-middle">자유게시판</span>
+						</a>
 					</li>
-					
+
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
-            </a>
+							<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
+						</a>
 					</li>
-					
+
 					<li class="sidebar-header">
 						Life
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
-            </a>
+						<a class="sidebar-link" href="/api/restaurant">
+							<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
+						</a>
 					</li>
-					
+
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
-            </a>
+							<i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
+						</a>
 					</li>
 				</ul>
 
@@ -218,11 +275,11 @@ $(document).ready(function () {
 		</nav>
 
 		<div class="main">
-		<!-- 드롭다운 메뉴 -->
+			<!-- 드롭다운 메뉴 -->
 			<nav class="navbar navbar-expand navbar-light navbar-bg">
 				<a class="sidebar-toggle js-sidebar-toggle">
-          			<i class="hamburger align-self-center"></i>
-        		</a>
+					<i class="hamburger align-self-center"></i>
+				</a>
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
 						<!-- 로그아웃 시 -->
@@ -230,35 +287,41 @@ $(document).ready(function () {
 							<a class="nav-link d-none d-sm-inline-block" href="/users/login">
 								<i class="text-dark" data-feather="log-in"></i>
 								<span class="text-dark">로그인</span>
-              				</a>
+							</a>
 							<a class="nav-link d-none d-sm-inline-block" href="/users/signup">
-               					<i class="text-dark" data-feather="user-plus"></i>
-               					<span class="text-dark">회원가입</span>
-              				</a>
+								<i class="text-dark" data-feather="user-plus"></i>
+								<span class="text-dark">회원가입</span>
+							</a>
 						</li>
 						<!-- 로그인 시 -->
 						<li class="nav-item dropdown" th:if="${session.loginMember}">
-							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-                				<i class="align-middle" data-feather="settings"></i>
-              				</a>
+							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#"
+								data-bs-toggle="dropdown">
+								<i class="align-middle" data-feather="settings"></i>
+							</a>
 							<!-- 회원이름 표시 -->
-							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                				<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" />
-               					<span class="text-dark">[[${session.loginMember.member_name}]]</span>
-              				</a>
-              				<!-- 드롭다운 내 메뉴 -->
+							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
+								data-bs-toggle="dropdown">
+								<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" />
+								<span class="text-dark">[[${session.loginMember.member_name}]]</span>
+							</a>
+							<!-- 드롭다운 내 메뉴 -->
 							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1" data-feather="user"></i> 내 정보</a>
-								<a class="dropdown-item" th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}"><i class="align-middle me-1" data-feather="check-square"></i> 근태관리</a>
+								<a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
+										data-feather="user"></i> 내 정보</a>
+								<a class="dropdown-item"
+									th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}"><i
+										class="align-middle me-1" data-feather="check-square"></i> 근태관리</a>
 								<!-- 드롭다운 메뉴 구분선 -->
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="/users/logout"><i class="align-middle me-1" data-feather="log-out"></i> 로그아웃</a>
+								<a class="dropdown-item" href="/users/logout"><i class="align-middle me-1"
+										data-feather="log-out"></i> 로그아웃</a>
 							</div>
 						</li>
 					</ul>
 				</div>
 			</nav>
-			
+
 			<!-- 화면 중앙 -->
 			<main class="content">
 				<!-- 로그아웃 시 -->
@@ -279,7 +342,7 @@ $(document).ready(function () {
 						</div>
 					</div>
 				</div>
-				
+
 				<!-- 로그인 시 -->
 				<div class="container-fluid p-0" th:if="${session.loginMember}">
 
@@ -288,26 +351,70 @@ $(document).ready(function () {
 					<div class="row">
 						<div class="col-xl-6 col-xxl-5 d-flex">
 							<div class="w-100">
-									<div class="col-sm-12">
-										<div class="card">
-											<div class="card-body">
-												<div class="row">
-													<div class="col mt-0">
-														<h5 class="card-title">Commute</h5>
-													</div>
+								<div class="col-sm-12">
+									<div class="card">
+										<div class="card-body">
+											<div class="row">
+												<div class="col mt-0">
+													<h5 class="card-title">Commute</h5>
 												</div>
-												<div class=" text-center" th:unless="${session.status}">
-													<span th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
-													<button class="btn btn-danger btn-lg mr-12" id="comcheck">출근</button>
+											</div>
+											<div class=" text-center" th:unless="${session.status}">
+												<span
+													th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+												<button class="btn btn-danger btn-lg mr-12" id="comcheck">출근</button>
+											</div>
+
+											<!--출근하고 나서 퇴근 -->
+											<div class=" text-center" th:if="${session.status}">
+												<th:block th:if="${commute == '1'}">
+													<span
+														th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+													<button class="btn btn-primary btn-lg" id="comout">퇴근</button>
+												</th:block>
+												<th:block th:unless="${commute == '1'}">
+													<span
+														th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+													<p style="color: red; font-weight: bold; font-size: large;">오늘 하루도
+														수고하셨습니다! 업무는 하실수 없습니다.</p>
+												</th:block>
+											</div>
+
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- 날씨 -->
+						<div class="col-xl-6 col-xxl-5 d-flex">
+							<div class="w-100">
+								<div class="col-sm-12">
+									<div class="card">
+										<div class="card-body">
+											<div class="row">
+												<div class="col mt-0">
+													<form>
+														<h5 class="card-title">Weather</h5>
+														<select class="form-select ">
+															<option value="seoul">서울</option>
+															<option value="busan">부산</option>
+															<option value="tokyo">도쿄</option>
+															<option value="osaka">오사카</option>
+														</select>
+														<div class="text-center">
+															<div class="weather">
+																<p class="City" style="display: inline;"></p>
+																<p class="CurrIcon" style="display: inline;"></p>
+																<p class="CurrTemp" style="display: inline;"></p>
+															</div>
+														</div>
+													</form>
 												</div>
-												
-												<!--출근하고 나서 퇴근 -->
-												<div class=" text-center"  th:if="${session.status}">
-													
-													<span th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
-													<button class="btn btn-primary btn-lg" id="comout">퇴근</button>													
-												</div>
-										</div>	
+											</div>
+
+										</div>
 									</div>
 								</div>
 							</div>
@@ -355,7 +462,7 @@ $(document).ready(function () {
 								</table>
 							</div>
 						</div>
-						
+
 					</div>
 
 				</div>
@@ -364,12 +471,12 @@ $(document).ready(function () {
 	</div>
 
 	<script src="/js/app.js"></script>
-	
 
-	
-	
+
+
+
 	<script>
-		document.addEventListener("DOMContentLoaded", function() {
+		document.addEventListener("DOMContentLoaded", function () {
 			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
 			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
 			document.getElementById("datetimepicker-dashboard").flatpickr({

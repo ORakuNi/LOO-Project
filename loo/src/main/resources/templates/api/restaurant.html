@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+	<meta name="author" content="AdminKit">
+	<meta name="keywords"
+		content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link rel="shortcut icon" href="/img/icons/favicon-16x16.png" />
+
+	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+	<title>LOO:근태관리</title>
+
+	<link href="/css/app.css" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function () {
+		$.ajax({
+			url: "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=kL00C7wEpGgpo2n%2FErweSgWemnixWZxI2N%2BTzlkyWrugWrGVQTQGO0lpetrDfzp88yDNXbcJJDyN2mTGdowblw%3D%3D&pageNo=1&numOfRows=10&resultType=json",           //파일 경로, 어떤 파일을 불러올 것인지               //캐시 사용여부 true false
+			dataType: "json",             //타입
+			success: function (data) {
+				console.log(data)
+				let matgip_data = data['getFoodKr']['item']
+				for (let i = 0; i < matgip_data.length; i++) {
+					put_data1(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
+				}
+				console.log(matgip_data)
+
+			},
+			error: function () {  //불러오지 못했을때 할일
+				alert('Error loading XML document');
+			}
+
+		})
+
+	})
+
+	function put_data1(num, title, contents, add, tel, img) {
+		let html = `
+					<div class="col-12 col-md-6">
+					<div class="card">
+						<img class="card-img-top" src="${img}" alt="Unsplash">
+						<div class="card-header">
+							<h5 class="card-title mb-0">${num + 1}.${title}</h5>
+						</div>
+						<div class="card-body">
+							<p class="card-text">${contents}</p>
+							<a href="tel:${tel}" class="card-link">${tel}</a>
+							<a href="#" class="card-link">${add}</a>
+						</div>
+					</div>
+				</div>
+					`
+		$('#matgip').append(html);
+	}
+
+</script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$("#more").click(function () {
+			$.ajax({
+				url: "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=kL00C7wEpGgpo2n%2FErweSgWemnixWZxI2N%2BTzlkyWrugWrGVQTQGO0lpetrDfzp88yDNXbcJJDyN2mTGdowblw%3D%3D&pageNo=2&numOfRows=10&resultType=json",           //파일 경로, 어떤 파일을 불러올 것인지               //캐시 사용여부 true false
+				dataType: "json",             //타입
+				success: function (data) {
+					console.log(data)
+					let matgip_data = data['getFoodKr']['item']
+					for (let i = 0; i < matgip_data.length; i++) {
+						put_data(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
+					}
+					console.log(matgip_data)
+
+				},
+				error: function () {  //불러오지 못했을때 할일
+					alert('Error loading XML document');
+				}
+
+			})
+		})
+	})
+	function put_data(num, title, contents, add, tel, img) {
+		let html = `
+					<div class="col-12 col-md-6">
+					<div class="card">
+						<img class="card-img-top" src="${img}" alt="Unsplash">
+						<div class="card-header">
+							<h5 class="card-title mb-0">${num}.${title}</h5>
+						</div>
+						<div class="card-body">
+							<p class="card-text">${contents}</p>
+							<a href="tel:${tel}" class="card-link">${tel}</a>
+							<a href="#" class="card-link">${add}</a>
+						</div>
+					</div>
+				</div>
+					`
+		
+		$("#matgip").map(function(){
+			return this.firstChild;
+		}).before(html)
+	}
+
+</script>
+
+
+
+
+
+<body>
+	<div class="wrapper">
+		<nav id="sidebar" class="sidebar js-sidebar">
+			<div class="sidebar-content js-simplebar">
+				<a class="sidebar-brand" href="/">
+					<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;"
+						alt="logo" />
+				</a>
+				<ul class="sidebar-nav">
+					<li class="sidebar-header">
+						My Pages
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/">
+							<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/users/update">
+							<i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/users/logout">
+							<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
+						</a>
+					</li>
+
+					<li class="sidebar-header">
+						My Schedule
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="#">
+							<i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="#">
+							<i class="align-middle" data-feather="check-square"></i> <span
+								class="align-middle">근태관리</span>
+						</a>
+					</li>
+
+					<li class="sidebar-header">
+						Community
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="#">
+							<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="/board/list">
+							<i class="align-middle" data-feather="clipboard"></i> <span
+								class="align-middle">자유게시판</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="#">
+							<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
+						</a>
+					</li>
+
+					<li class="sidebar-header">
+						Life
+					</li>
+
+					<li class="sidebar-item active">
+						<a class="sidebar-link" href="#">
+							<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
+						</a>
+					</li>
+
+					<li class="sidebar-item">
+						<a class="sidebar-link" href="#">
+							<i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</nav>
+
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg">
+				<a class="sidebar-toggle js-sidebar-toggle">
+					<i class="hamburger align-self-center"></i>
+				</a>
+
+				<div class="navbar-collapse collapse">
+					<ul class="navbar-nav navbar-align">
+						<li class="nav-item dropdown">
+							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#"
+								data-bs-toggle="dropdown">
+								<i class="align-middle" data-feather="settings"></i>
+							</a>
+							<!-- 회원이름 표시 -->
+							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
+								data-bs-toggle="dropdown">
+								<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" />
+								<span class="text-dark">[[${session.loginMember.member_name}]]</span>
+							</a>
+							<!-- 드롭다운 내 메뉴 -->
+							<div class="dropdown-menu dropdown-menu-end">
+								<a class="dropdown-item" href="/users/update"><i class="align-middle me-1"
+										data-feather="user"></i> 내 정보</a>
+								<a class="dropdown-item" href="#"><i class="align-middle me-1"
+										data-feather="check-square"></i> 근태관리</a>
+								<!-- 드롭다운 메뉴 구분선 -->
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="/users/logout"><i class="align-middle me-1"
+										data-feather="log-out"></i> 로그아웃</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</nav>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle">맛집</h1>
+						<a class="badge bg-dark text-white ms-2" id="more">
+							오늘의 맛집 추천이 맘에 들지 않는다면?
+						</a>
+					</div>
+
+					<div class="row" id="matgip">
+
+					</div>
+				</div>
+			</main>
+
+		</div>
+	</div>
+
+	<script src="/js/app.js"></script>
+
+</body>
+
+</html>
