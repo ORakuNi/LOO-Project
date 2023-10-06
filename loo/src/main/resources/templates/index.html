@@ -104,19 +104,19 @@
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
+						<a class="sidebar-link" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
               <i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
             </a>
 					</li>
 					
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="board/list">
+						<a class="sidebar-link" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).FREE})}">
               <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
             </a>
 					</li>
 					
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
+						<a class="sidebar-link" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).CLUB})}">
               <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
             </a>
 					</li>

@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.loo.model.board.Board;
+import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.board.BoardUpdateForm;
 import com.example.loo.model.board.BoardWriteForm;
 import com.example.loo.model.member.Member;
@@ -28,29 +30,15 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 	
 	private final BoardMapper boardMapper;
-	
+	                                                                                                                     
 	@Autowired
     public BoardController(BoardMapper boardMapper) {
         this.boardMapper = boardMapper;
     }
 	
-	@GetMapping("test")
-	public String test() {
-		
-		return "board/test";
-	}
-    
-
-	@GetMapping("board")
-	public String baord() {
-		
-		return "board/board";
-	}
-	
-	
 	@GetMapping("list")
 	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-						Model model) {
+						Model model, @RequestParam BoardCategory board_category) {
 		
 		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
@@ -58,9 +46,12 @@ public class BoardController {
         }
 		
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardMapper.findAllBoards();
+        List<Board> boards = boardMapper.findAllBoards(board_category);
+        
         // Board 리스트를 model 에 저장한다.
         model.addAttribute("boards", boards);
+        // 카테고리 정보를 전달할 때 사용
+        model.addAttribute("board_category", board_category);
 		
 		return "board/list";
 	}
@@ -68,15 +59,19 @@ public class BoardController {
     // 글쓰기 페이지 이동
     @GetMapping("write")
     public String writeForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    						Model model) {
+    						Model model, @RequestParam BoardCategory board_category) {
     	
     	// 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
             return "redirect:/users/login";
         }
-
+        
+        BoardWriteForm boardWriteForm = new BoardWriteForm();
+        boardWriteForm.setBoard_category(board_category);
+        
         // writeForm.html의 필드 표시를 위해 빈 BoardWriteForm 객체를 생성하여 model 에 저장한다.
-        model.addAttribute("writeForm", new BoardWriteForm());
+        model.addAttribute("writeForm", boardWriteForm);
+                
         // board/writeForm.html 을 찾아 리턴한다.
         return "board/write";
     }
@@ -85,12 +80,13 @@ public class BoardController {
     @PostMapping("write")
     public String write(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@Validated @ModelAttribute("writeForm") BoardWriteForm boardWriteForm,
-                        BindingResult result) {
+                        BindingResult result, RedirectAttributes redirect) {
 
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
             return "redirect:/users/login";
         }
+        
         log.info("board: {}", boardWriteForm);
         
         // validation 에러가 있으면 board/write.html 페이지를 다시 보여준다.
@@ -100,13 +96,15 @@ public class BoardController {
 
         // 파라미터로 받은 BoardWriteForm 객체를 Board 타입으로 변환한다.
         Board board = BoardWriteForm.toBoard(boardWriteForm);
-
-        // board 객체에 로그인한 사용자의 아이디와 카테고리 타입 추가 (카테고리는 차후 수정)
-        board.setMember_mail(loginMember.getMember_mail()); // getMember_id 맞나?
-        board.setBoard_category("notice");
+        
+        // board 객체에 로그인한 사용자의 아이디와 카테고리 타입 추가
+        board.setMember_mail(loginMember.getMember_mail());
         
         // 데이터베이스에 저장한다.
         boardMapper.saveBoard(board);
+        
+        //다시 redirect 원래 페이지로 돌아오게 할 때?
+        redirect.addAttribute("board_category", board.getBoard_category());
         
         // board/list 로 리다이렉트한다.
         return "redirect:/board/list";
@@ -124,6 +122,7 @@ public class BoardController {
     	
         // 조회수 1 증가
     	boardMapper.addHit(board_id); 
+    	
     	// board_id에 해당하는 게시글 찾기
     	Board board = boardMapper.findBoard(board_id);
     	
@@ -135,8 +134,8 @@ public class BoardController {
         
         // 모델에 Board 객체를 저장한다.
         model.addAttribute("board", board);
+        model.addAttribute("board_category", board.getBoard_category());
         
-    	
     	return "board/read";
     }
     
@@ -170,7 +169,7 @@ public class BoardController {
     public String update(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id,
     					@Validated @ModelAttribute("board") BoardUpdateForm updateBoard,
-    					BindingResult result) {
+    					BindingResult result, RedirectAttributes redirect) {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
@@ -199,12 +198,14 @@ public class BoardController {
         // 수정한 Board 를 데이터베이스에 update 한다.
         boardMapper.updateBoard(board);
         
+        redirect.addAttribute("board_category", board.getBoard_category());
+        
     	return "redirect:/board/list";
     }
     
     @GetMapping("delete")
     public String delete(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    					@RequestParam Long board_id) {
+    					@RequestParam Long board_id, RedirectAttributes redirect) {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
@@ -223,18 +224,8 @@ public class BoardController {
         // 게시글 삭제
     	boardMapper.removeBoard(board_id);
     	
+    	redirect.addAttribute("board_category", board.getBoard_category());
+    	
     	return "redirect:/board/list";
     }
-    
-    
 }
-
-
-
-
-
-
-
-
-
-
