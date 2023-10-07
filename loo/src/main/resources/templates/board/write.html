@@ -35,21 +35,22 @@
 												<th class="text-center">제목</th>
 												<td>
 										          <input type="text" class="form-control" th:field="*{board_title}">
-										          <div class="text-danger" th:errors="*{board_title}"></div>
+										          <div class="text-danger" th:if="${#fields.hasErrors('board_title')}" th:errors="*{board_title}"></div>
 										        </td>
 										    </tr>
 							    			<tr>
 												<th class="text-center">내용</th>
 												<td>
 										          <textarea rows="10" class="form-control" th:field="*{board_contents}"></textarea>
-          										  <div th:errorClass="error" th:errors="*{board_contents}"></div>
+          										  <div th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
 										        </td>
 										    </tr>
 										  </tbody>
 										</table>
+										<input type="hidden" th:field="*{board_category}">
 									    <p>
 									    <div class="text-center">
-									      <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/board/list'" value="목록으로">
+									      <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/list(board_category=${param.board_category})}'|" value="목록으로">
 									      <input type="submit" class="btn btn-primary btn-sm" value="등록하기">
 									      <input type="reset" class="btn btn-primary btn-sm" value="취소">
 									    </div>
