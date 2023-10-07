@@ -147,7 +147,7 @@
 					<form th:action="@{/users/update(member_mail=${update.member_mail})}" method="post" th:object="${update}">
 						<div class="mb-3">
 							<label class="form-label">아이디(Email)</label>
-							<div class="form-control form-control-lg" th:text="*{member_mail}"></div>
+							<input type="text" class="form-control" th:field="*{member_mail}" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">비밀번호</label>
@@ -155,7 +155,7 @@
 						</div>
 						<div class="mb-3">
 							<label class="form-label">이름</label>
-							<div class="form-control form-control-lg" th:text="*{member_name}"></div>
+							<input type="text" class="form-control" th:field="*{member_name}" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">전화번호</label>
@@ -163,23 +163,23 @@
 						</div>
 						<div class="mb-3">
 							<label class="form-label">생년월일</label>
-							<div class="form-control form-control-lg" th:text="*{birthday}"></div>
+							<input type="text" class="form-control" th:field="*{birthday}" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">입사일</label>
-							<div class="form-control form-control-lg" th:text="*{hire_date}"></div>
+							<input type="text" class="form-control" th:field="*{hire_date}" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">회사명</label>
-							<div class="form-control form-control-lg" th:text="*{company_id}"></div>
+							<input type="text" class="form-control" th:field="*{company_id}" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">부서 정보</label>
-							<div class="form-control form-control-lg" th:text="*{department_id}"></div>
+							<input type="text" class="form-control" th:field="*{department_id}" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">직책</label>
-							<div class="form-control form-control-lg" th:text="*{position_id}"></div>
+							<input type="text" class="form-control" th:field="*{position_id}" disabled/>
 						</div>
 						<div class="d-grid gap-2 mt-3">
 							<input type="submit" value="수정하기" class="btn btn-lg btn-primary">

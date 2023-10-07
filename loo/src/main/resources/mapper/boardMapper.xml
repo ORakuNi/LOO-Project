@@ -71,6 +71,7 @@
     <set>
         <if test="board_title != null">board_title = #{board_title},</if>
         <if test="board_contents != null">board_contents = #{board_contents},</if>
+        edit_time = sysdate
     </set>
     where board_id = #{board_id}
   </update>
