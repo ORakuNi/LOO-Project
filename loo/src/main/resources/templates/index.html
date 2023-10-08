@@ -286,9 +286,9 @@
 									<h5 class="card-title mb-0">Notice</h5>
 									</a>
 								</div>
-								<table class="table" th:object="${board}">
+								<table class="table">
 									<thead>
-										<tr>
+										<tr class="text-center">
 											<th>No</th>
 											<th>제목</th>
 											<th>작성자</th>
@@ -296,7 +296,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="board : ${boards}">
+										<tr th:each="board, boardStat : ${noticeBoardList}">
 											<td class="text-center" th:text="${boardStat.count}"></td>
 											<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
 											<td class="text-center" th:text="${board.member_name}"></td>

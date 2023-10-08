@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.example.loo.model.board.Board;
+import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.commute.Commute;
 import com.example.loo.model.commute.CommuteAttendance;
 import com.example.loo.model.member.Member;
+import com.example.loo.repository.BoardMapper;
 import com.example.loo.repository.CommuteMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class HomeController {
-
+	
+	@Autowired
+	private BoardMapper boardMapper;
+	
 	@GetMapping("/")
 	public String home(@SessionAttribute(name = "status", required = false)
 	@ModelAttribute CommuteAttendance commuteAttendance, HttpServletRequest request, Model model) {
@@ -37,6 +43,10 @@ public class HomeController {
 //			log.info("see : {}", findCommute);
 			model.addAttribute("commute", findCommute.getCommute_status());
 		}
+		
+		// 공지 게시판
+		List<Board> noticeBoardList = boardMapper.findAllBoards(BoardCategory.NOTICE);
+		model.addAttribute("noticeBoardList", noticeBoardList);
 		return "index";
 	}
 	
@@ -98,6 +108,4 @@ public class HomeController {
 		
 		return "commute/list";
 	}
-	
-	
 }
