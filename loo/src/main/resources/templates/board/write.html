@@ -1,139 +1,23 @@
 <!DOCTYPE html>
 <html lang="ko">
+<head th:replace="head :: head"></head>
 <head>
-  <meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="/img/icons/favicon-16x16.png" />
-
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
 	<title>글 작성</title>
-
-	<link href="/css/app.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 	<div class="wrapper">
-		<nav id="sidebar" class="sidebar js-sidebar">
-			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="/">
-					<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;" alt="logo" />
-        		</a>
-				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-						My Pages
-					</li>
-
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/">
-              <i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="/users/update">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="/users/logout">
-              <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
-            </a>
-					</li>
-
-					<li class="sidebar-header">
-						My Schedule
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">근태관리</span>
-            </a>
-					</li>
-
-					<li class="sidebar-header">
-						Community
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="/board/list">
-              <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-header">
-						Life
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
-            </a>
-					</li>
-				</ul>
-
-			</div>
+		<!-- 사이드 메뉴 -->
+		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
+			<div th:replace="sidebar :: login"></div>
 		</nav>
-
+		<!-- 상단 드롭다운 -->
 		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg">
+			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
 				<a class="sidebar-toggle js-sidebar-toggle">
-          <i class="hamburger align-self-center"></i>
-        </a>
-
-				<div class="navbar-collapse collapse">
-					<ul class="navbar-nav navbar-align">
-						<li class="nav-item dropdown">
-							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-                				<i class="align-middle" data-feather="settings"></i>
-              				</a>
-							<!-- 회원이름 표시 -->
-							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                				<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" />
-               					<span class="text-dark">[[${session.loginMember.member_name}]]</span>
-              				</a>
-              				<!-- 드롭다운 내 메뉴 -->
-							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="/users/update"><i class="align-middle me-1" data-feather="user"></i> 내 정보</a>
-								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="check-square"></i> 근태관리</a>
-								<!-- 드롭다운 메뉴 구분선 -->
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="/users/logout"><i class="align-middle me-1" data-feather="log-out"></i> 로그아웃</a>
-							</div>
-						</li>
-					</ul>
-				</div>
+					<i class="hamburger align-self-center"></i>
+    			</a>
+				<div th:replace="dropdown :: login"></div>
 			</nav>
 			
 			<main class="content">
@@ -151,21 +35,22 @@
 												<th class="text-center">제목</th>
 												<td>
 										          <input type="text" class="form-control" th:field="*{board_title}">
-										          <div class="text-danger" th:errors="*{board_title}"></div>
+										          <div class="text-danger" th:if="${#fields.hasErrors('board_title')}" th:errors="*{board_title}"></div>
 										        </td>
 										    </tr>
 							    			<tr>
 												<th class="text-center">내용</th>
 												<td>
 										          <textarea rows="10" class="form-control" th:field="*{board_contents}"></textarea>
-          										  <div th:errorClass="error" th:errors="*{board_contents}"></div>
+          										  <div th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
 										        </td>
 										    </tr>
 										  </tbody>
 										</table>
+										<input type="hidden" th:field="*{board_category}">
 									    <p>
 									    <div class="text-center">
-									      <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/board/list'" value="목록으로">
+									      <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/list(board_category=${param.board_category})}'|" value="목록으로">
 									      <input type="submit" class="btn btn-primary btn-sm" value="등록하기">
 									      <input type="reset" class="btn btn-primary btn-sm" value="취소">
 									    </div>
