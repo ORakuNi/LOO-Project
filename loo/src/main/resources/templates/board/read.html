@@ -13,7 +13,7 @@
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
 
-	<title>글 작성</title>
+	<title>글 조회</title>
 
 	<link href="/css/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -30,7 +30,7 @@
 						My Pages
 					</li>
 
-					<li class="sidebar-item active">
+					<li class="sidebar-item">
 						<a class="sidebar-link" href="/">
               <i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
             </a>
@@ -74,7 +74,7 @@
             </a>
 					</li>
 					
-					<li class="sidebar-item">
+					<li class="sidebar-item active">
 						<a class="sidebar-link" href="/board/list">
               <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
             </a>
@@ -147,20 +147,22 @@
 									        <td th:text="*{board_title}"></td>
 									    </tr>
 									    <tr>
-									        <th class="text-center">내용</th>
-									        <td th:text="*{board_contents}"></td>
-									    </tr>
-									    <tr>
-									        <th class="text-center">조회수</th>
-									        <td th:text="*{hit}"></td>
-									    </tr>
-									    <tr>
 									        <th class="text-center">작성일</th>
 									        <td th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
 									    </tr>
 									    <tr>
 									        <th class="text-center">작성자</th>
 									        <td th:text="*{member_name}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">조회수</th>
+									        <td th:text="*{hit}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">내용</th>
+									        <td>
+												<textarea rows="10" class="form-control" th:text="*{board_contents}" readonly></textarea>
+											</td>
 									    </tr>
 									</tbody>
     							</table>
@@ -178,9 +180,6 @@
 				</main>
 			</div>
 		</div>
-
 		<script src="/js/app.js"></script>
-
 	</body>
-
 </html>

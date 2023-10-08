@@ -14,10 +14,13 @@ public class BoardWriteForm {
 	@NotBlank
 	private String board_contents; //내용
 	
+	private BoardCategory board_category;
+	
 	public static Board toBoard(BoardWriteForm boardWriteForm) {
 		Board board = new Board();
 		board.setBoard_title(boardWriteForm.getBoard_title());
 		board.setBoard_contents(boardWriteForm.getBoard_contents());
+		board.setBoard_category(boardWriteForm.getBoard_category());
 		return board;
 	}
 }

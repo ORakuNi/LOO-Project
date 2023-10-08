@@ -37,6 +37,7 @@
     from
     	board b join member m
     	on (b.member_mail = m.member_mail)
+    where b.board_category = #{board_category}
   </select>
   
   <select id="findBoard" resultType="board">

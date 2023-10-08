@@ -71,19 +71,19 @@
 					</li>
 
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
+						<a class="sidebar-link" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
               <i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
             </a>
 					</li>
 					
 					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/board/list">
+						<a class="sidebar-link" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).FREE})}">
               <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
             </a>
 					</li>
 					
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
+						<a class="sidebar-link" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).CLUB})}">
               <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
             </a>
 					</li>
@@ -144,8 +144,16 @@
 					<div class="card">
 						<div class="card-body">
 							<div class="row">
-								<div class="card-header">
-									<h5 class="card-title mb-0">게시판</h5>
+								<div class="card-header" th:switch="${param.board_category.toString()}">
+										<span th:case="${'NOTICE'}">
+											<h5 class="card-title mb-0">공지사항</h5>
+										</span>
+										<span th:case="${'FREE'}">
+											<h5 class="card-title mb-0">자유게시판</h5>
+										</span>
+										<span th:case="${'CLUB'}">
+											<h5 class="card-title mb-0">동호회</h5>
+										</span>
 								</div>
 							  <table class="table">
 								  <tbody>
@@ -169,7 +177,7 @@
 							  <p>
 							  <div class="text-center">
 							    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'" value="메인으로">
-							    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/board/write'" value="글쓰기">   
+							    <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|" value="글쓰기">   
 							  </div>
 							</div>
 						</div>

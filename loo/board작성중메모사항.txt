@@ -1,12 +1,16 @@
 
-controller와 html에서 로그인 관련 부분 뻄
 
 
-read에서 <th:block th:if="${session.loginMember.member_id == board.member_id}"> 뺌
+게시판에서 다른 게시판 눌렀을때 안 넘어가는 이유
 
-<th:block th:if="${session.loginMember.member_mail == board.member_mail}"> 수정
+게시판마다 불 들어오는거 어쩔지
+
+게시판마다 특성은 따로 없는지
 
 
+list의 
+th:if="param.board_category == 'FREE'"
 
+<span class="align-middle">자유게시판</span>
 
-
+공공데이터목록
