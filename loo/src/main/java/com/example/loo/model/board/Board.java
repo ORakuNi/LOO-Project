@@ -1,7 +1,6 @@
 package com.example.loo.model.board;
 
 import java.time.LocalDateTime;
-
 import lombok.Data;
 
 @Data
@@ -16,5 +15,8 @@ public class Board {
 	private LocalDateTime create_time; //작성일
 	private LocalDateTime edit_time;  // 수정시간
 	private Long hit; //조회수
+
+
+	
 
 }
