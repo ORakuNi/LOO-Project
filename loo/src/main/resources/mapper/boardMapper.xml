@@ -4,6 +4,7 @@
 		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.loo.repository.BoardMapper">
+  
 
   <insert id="saveBoard">
     <selectKey keyProperty="board_id" resultType="long" order="BEFORE">
@@ -37,7 +38,8 @@
     from
     	board b join member m
     	on (b.member_mail = m.member_mail)
-    where b.board_category = #{board_category}
+    where
+    	b.board_category = #{board_category}
   </select>
   
   <select id="findBoard" resultType="board">
@@ -69,6 +71,7 @@
     <set>
         <if test="board_title != null">board_title = #{board_title},</if>
         <if test="board_contents != null">board_contents = #{board_contents},</if>
+        edit_time = sysdate
     </set>
     where board_id = #{board_id}
   </update>

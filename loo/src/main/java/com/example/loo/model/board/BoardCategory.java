@@ -1,7 +1,7 @@
 package com.example.loo.model.board;
 
-public enum BoardCategory{
 
+public enum BoardCategory {
 	NOTICE("공지 게시판"),
 	FREE("자유 게시판"),
 	CLUB("동호회 게시판");
@@ -14,9 +14,5 @@ public enum BoardCategory{
 	
 	public String getDescription() {
 		return description;
-	}
-	
-//	public static BoardCategory setNotice() {
-//		return NOTICE;
-//	}
+	}	
 }

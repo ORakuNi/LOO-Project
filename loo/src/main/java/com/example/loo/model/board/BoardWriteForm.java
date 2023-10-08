@@ -13,8 +13,8 @@ public class BoardWriteForm {
 	private String board_title; //글 제목
 	@NotBlank
 	private String board_contents; //내용
+	private BoardCategory board_category; // 카테고리 추가
 	
-	private BoardCategory board_category;
 	
 	public static Board toBoard(BoardWriteForm boardWriteForm) {
 		Board board = new Board();

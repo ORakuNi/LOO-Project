@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import javax.validation.constraints.NotBlank;
 
-import com.example.loo.model.member.Member;
 
 import lombok.Data;
 
