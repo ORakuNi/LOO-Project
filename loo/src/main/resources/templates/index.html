@@ -251,10 +251,11 @@
 						<div class="col-12 col-lg-6 col-xxl-9 d-flex">
 							<div class="card flex-fill">
 								<div class="card-header">
-
+									<a th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
 									<h5 class="card-title mb-0">Notice</h5>
+									</a>
 								</div>
-								<table class="table table-hover my-0">
+								<table class="table" th:object="${board}">
 									<thead>
 										<tr>
 											<th>No</th>
@@ -264,11 +265,11 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td></td>
+										<tr th:each="board : ${boards}">
+											<td class="text-center" th:text="${boardStat.count}"></td>
+											<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
+											<td class="text-center" th:text="${board.member_name}"></td>
+											<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
 										</tr>
 									</tbody>
 								</table>

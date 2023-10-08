@@ -50,6 +50,7 @@ public class BoardController {
         
         // Board 리스트를 model 에 저장한다.
         model.addAttribute("boards", boards);
+        
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
 		
