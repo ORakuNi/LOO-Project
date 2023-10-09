@@ -1,183 +1,62 @@
 <!DOCTYPE html>
 <html lang="ko">
-
+<head th:replace="head :: head"></head>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-	<meta name="author" content="AdminKit">
-	<meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link rel="shortcut icon" href="/img/icons/favicon-16x16.png" />
-
-	<link rel="canonical" href="https://demo-basic.adminkit.io/" />
-
-	<title>자유게시판</title>
-
-	<link href="/css/app.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+	<title th:text="${param.board_category} ? ${T(com.example.loo.model.board.BoardCategory).valueOf(param.board_category).description} : ''"></title>
 </head>
 
 <body>
 	<div class="wrapper">
-		<nav id="sidebar" class="sidebar js-sidebar">
-			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="/">
-					<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;" alt="logo" />
-        		</a>
-				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-						My Pages
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="/">
-              <i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="/users/update">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="/users/logout">
-              <i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
-            </a>
-					</li>
-
-					<li class="sidebar-header">
-						My Schedule
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
-            </a>
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">근태관리</span>
-            </a>
-					</li>
-
-					<li class="sidebar-header">
-						Community
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="/board/list">
-              <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-header">
-						Life
-					</li>
-
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
-            </a>
-					</li>
-					
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#">
-              <i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
-            </a>
-					</li>
-				</ul>
-
-			</div>
+		<!-- 사이드 메뉴 -->
+		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
+			<div th:replace="sidebar :: login"></div>
 		</nav>
-
+		<!-- 상단 드롭다운 -->
 		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg">
+			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
 				<a class="sidebar-toggle js-sidebar-toggle">
-          <i class="hamburger align-self-center"></i>
-        </a>
-
-				<div class="navbar-collapse collapse">
-					<ul class="navbar-nav navbar-align">
-						<li class="nav-item dropdown">
-							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
-                				<i class="align-middle" data-feather="settings"></i>
-              				</a>
-							<!-- 회원이름 표시 -->
-							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-                				<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" />
-               					<span class="text-dark">[[${session.loginMember.member_name}]]</span>
-              				</a>
-              				<!-- 드롭다운 내 메뉴 -->
-							<div class="dropdown-menu dropdown-menu-end">
-								<a class="dropdown-item" href="/users/update"><i class="align-middle me-1" data-feather="user"></i> 내 정보</a>
-								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="check-square"></i> 근태관리</a>
-								<!-- 드롭다운 메뉴 구분선 -->
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="/users/logout"><i class="align-middle me-1" data-feather="log-out"></i> 로그아웃</a>
-							</div>
-						</li>
-					</ul>
-				</div>
+					<i class="hamburger align-self-center"></i>
+    			</a>
+				<div th:replace="dropdown :: login"></div>
 			</nav>
 
 			<main class="content">
 				<div class="container-fluid p-0">
-
-
-					<div class="card">
-						<div class="card-body">
-							<div class="row">
-								<div class="card-header">
-									<h5 class="card-title mb-0">게시판</h5>
+					<th:block th:with="board_category=${T(com.example.loo.model.board.BoardCategory).valueOf(param.board_category)}">
+						<h1 class="h3 mb-3" th:text="${board_category.description}"></h1>
+					</th:block>
+					<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+								  	<table class="table">
+									  	<tbody>
+							    			<tr class="text-center">
+									      		<th>No</th>
+									      		<th>제목</th>
+											    <th>작성자</th>
+											    <th>조회수</th>
+											    <th>작성일</th>
+											</tr>
+											<tr th:each="board : ${boards}">
+											    <td class="text-center" th:text="${boardStat.count}"></td>
+				   								<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
+				     							<td class="text-center" th:text="${board.member_name}"></td>
+				   								<td class="text-center" th:text="${board.hit}"></td>
+				   								<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+											</tr>
+								    	</tbody>
+								  	</table>
+								  <div class="text-center">
+								    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'" value="메인으로">
+								    <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|"  value="글쓰기">   
+								  </div>
 								</div>
-							  <table class="table">
-								  <tbody>
-							    	<tr class="text-center">
-							      		<th>No</th>
-							      		<th>제목</th>
-									    <th>작성자</th>
-									    <th>조회수</th>
-									    <th>작성일</th>
-									</tr>
-									<tr th:each="board : ${boards}">
-									    <td class="text-center" th:text="${boardStat.count}"></td>
-		   								<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
-		     							<td class="text-center" th:text="${board.member_name}"></td>
-		   								<td class="text-center" th:text="${board.hit}"></td>
-		   								<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
-									</tr>
-							    </tbody>
-							  </table>
-							  <p>
-							  <div class="text-center">
-							    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'" value="메인으로">
-							    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/board/write'" value="글쓰기">   
-							  </div>
 							</div>
 						</div>
 					</div>
-
 				</div>
 			</main>
-
 		</div>
 	</div>
 
