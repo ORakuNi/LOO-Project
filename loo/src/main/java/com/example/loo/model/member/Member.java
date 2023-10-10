@@ -1,7 +1,7 @@
 package com.example.loo.model.member;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
