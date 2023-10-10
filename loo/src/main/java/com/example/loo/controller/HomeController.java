@@ -19,16 +19,35 @@ import com.example.loo.model.commute.CommuteAttendance;
 import com.example.loo.model.member.Member;
 import com.example.loo.repository.CommuteMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import com.example.loo.model.board.Board;
+import com.example.loo.model.board.BoardCategory;
+import com.example.loo.repository.BoardMapper;
+
 @Controller
+@RequiredArgsConstructor
 @Slf4j
 public class HomeController {
+	
+	private final BoardMapper boardMapper;
+	private final CommuteMapper commuteMapper;
+	private Commute findCommute;
+
 
 	@GetMapping("/")
 	public String home(@SessionAttribute(name = "status", required = false)
-	@ModelAttribute CommuteAttendance commuteAttendance, HttpServletRequest request, Model model) {
+					@ModelAttribute CommuteAttendance commuteAttendance, 
+					HttpServletRequest request, 
+					Model model) {
 		
+	    // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
+	    List<Board> boards = boardMapper.findAllBoards(BoardCategory.NOTICE);
+	    // Board 리스트를 model 에 저장한다.
+	    model.addAttribute("boards", boards);
+	
+	
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("status");
 //		log.info("attribute : {}", attribute);
@@ -39,15 +58,7 @@ public class HomeController {
 		}
 		return "index";
 	}
-	
-	private final CommuteMapper commuteMapper;
-	private Commute findCommute;
-	
-	@Autowired
-	public HomeController(CommuteMapper commuteMapper) {
-		this.commuteMapper = commuteMapper;
-	}
-	
+
 	
 	
 	// 출근하기
