@@ -55,13 +55,6 @@ public class MemberController {
          return "users/signup";
       }
       
-      
-      //이메일 주소검증
-      if(!memberSignUp.getMember_mail().contains("@")) {
-         result.reject("emailError", "이메일 형식이 맞지 않습니다.");
-         return "users/signup";
-      }
-      
       //회원가입 중복 확인
       Member checkToEmail = memberMapper.findMember(memberSignUp.getMember_mail());
       if (checkToEmail != null) {
@@ -84,7 +77,8 @@ public class MemberController {
    // 로그인
    @PostMapping("login")
    public String login(@SessionAttribute(name="loginMember", required = false) 
-   						@Validated @ModelAttribute MemberLogin memberLogin, BindingResult result,
+   						@Validated @ModelAttribute("login") MemberLogin memberLogin,
+   						BindingResult result,
    						HttpServletRequest request) {
       
       log.info("MemberLogin: {}", memberLogin);
@@ -132,19 +126,23 @@ public class MemberController {
 	
 	@PostMapping("update")
 	public String update(@SessionAttribute(name="loginMember", required = false) Member loginMember,
-						@RequestParam String company_mail,
-						@ModelAttribute("member") MemberUpdate memberUpdate,
+						@RequestParam String member_mail,
+						@Validated @ModelAttribute("update") MemberUpdate memberUpdate,
 						BindingResult result) {
 		if(loginMember == null) {
 			return "redirect:/users/login";
 		}
-		log.info("company_mail: {}, member:{}", company_mail, memberUpdate);
+		log.info("company_mail: {}, member:{}", member_mail, memberUpdate);
 		if(result.hasErrors()) {
 			return "users/update";
 		}
-		Member member = memberMapper.findMember(company_mail);
+		Member member = memberMapper.findMember(member_mail);
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
-			return "redirect:/board/list";
+			return "redirect:/";
+		}
+		if(memberUpdate.getPassword().equals(member.getPassword()) || memberUpdate.getPhone().equals(member.getPhone())) {
+			result.reject("update none","수정된 사항이 없습니다.");
+			return "users/update";
 		}
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());

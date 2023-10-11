@@ -42,7 +42,7 @@
 												<th class="text-center">내용</th>
 												<td>
 										          <textarea rows="10" class="form-control" th:field="*{board_contents}"></textarea>
-          										  <div th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
+          										  <div class="text-danger" th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
 										        </td>
 										    </tr>
 										  </tbody>

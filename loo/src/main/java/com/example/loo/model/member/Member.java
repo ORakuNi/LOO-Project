@@ -1,7 +1,7 @@
 package com.example.loo.model.member;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
@@ -16,4 +16,5 @@ public class Member {
 	private String company_id;
 	private String department_id;
 	private String position_id;
+	private String department_name;
 }

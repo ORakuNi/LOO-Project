@@ -25,54 +25,63 @@
                            <form action="signup" method="post" th:object="${member}">
                               <div class="mb-3">
                                  <label class="form-label">아이디(Email)</label>
-                                 <input class="form-control form-control-lg" type="email" th:field="*{member_mail}" placeholder="회사 이메일을 입력해주세요." />
+                                 <input class="form-control form-control-lg" type="email" th:field="*{member_mail}" placeholder="회사 이메일을 입력해주세요."/>
+                                 <div class="text-danger" th:errors="*{member_mail}"></div>
                               </div>
+                              <div th:if="${#fields.hasGlobalErrors()}">
+							  	  <p class="text-danger" th:each="err : ${#fields.globalErrors}" th:text="${err}">
+							  </div>
                               <div class="mb-3">
                                  <label class="form-label">비밀번호</label>
                                  <input class="form-control form-control-lg" type="password" th:field="*{password}" placeholder="비밀번호를 입력해주세요." />
+                                 <div class="text-danger" th:errors="*{password}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">이름</label>
                                  <input class="form-control form-control-lg" type="text" th:field="*{member_name}" placeholder="이름을 입력해주세요." />
+                                 <div class="text-danger" th:errors="*{member_name}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">전화번호</label>
                                  <input class="form-control form-control-lg" type="text" th:field="*{phone}" placeholder="연락처를 입력해주세요." />
+                                 <div class="text-danger" th:errors="*{phone}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">생년월일</label>
                                  <input class="form-control form-control-lg" type="date" th:field="*{birthday}"/>
+                                 <div class="text-danger" th:errors="*{birthday}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">입사일</label>
                                  <input class="form-control form-control-lg" type="date" th:field="*{hire_date}"/>
+                                 <div class="text-danger" th:errors="*{hire_date}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">회사명</label>
-                           <select class="form-select mb-3" th:field="*{company_id}" th:value="${company_id}">
-                               <option th:value="'null'" selected>회사를 선택해주세요.</option>
-                               <option th:value="'C001'">LOO</option>
-                             </select>
-                                 <!--<input class="form-control form-control-lg" type="text" th:field="*{company_id}" placeholder="회사명을 입력해주세요."/>-->
+                          		 <select class="form-select mb-3" th:field="*{company_id}" th:value="${company_id}">
+                               		<option th:value="''" selected>회사를 선택해주세요.</option>
+                               		<option th:value="'C001'">LOO</option>
+                             	</select>
+                             	<div class="text-danger" th:errors="*{company_id}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">부서 정보</label>
                                  <select class="form-select mb-3" th:field="*{department_id}" th:value="${department_id}">
-                                        <option th:value="'null'" selected>부서를 선택해주세요.</option>
+                                        <option th:value="''" selected>부서를 선택해주세요.</option>
                                         <option th:value="${'C001-D'}">개발팀</option>
                                         <option th:value="${'C001-P'}">인사팀</option>
                                         <option th:value="${'C001-F'}">총무팀</option>
                                       </select>
-                                 <!--<input class="form-control form-control-lg" type="text" th:field="*{department_id}" placeholder="부서 정보를 입력해주세요."/>-->
+	                             <div class="text-danger" th:errors="*{department_id}"></div>
                               </div>
                               <div class="mb-3">
                                  <label class="form-label">직책</label>
                                  <select class="form-select mb-3" th:field="*{position_id}" th:value="${position_id}">
-                               <option th:value="'null'" selected>직책을 선택해주세요.</option>
-                               <option th:value="${'employee'}">사원</option>
-                               <option th:value="${'manager'}">매니저</option>
-                             </select>
-                                 <!--<input class="form-control form-control-lg" type="text" th:field="*{position_id}" placeholder="직책 정보를 입력해주세요."/>-->
+	                               <option th:value="''" selected>직책을 선택해주세요.</option>
+	                               <option th:value="${'employee'}">사원</option>
+	                               <option th:value="${'manager'}">매니저</option>
+	                             </select>
+	                             <div class="text-danger" th:errors="*{position_id}"></div>
                               </div>
                               <div class="d-grid gap-2 mt-3">
                                  <input type="submit" value="회원가입" class="btn btn-lg btn-primary">
