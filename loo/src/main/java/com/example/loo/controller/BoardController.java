@@ -44,13 +44,15 @@ public class BoardController {
 	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 						@RequestParam BoardCategory board_category,
 						Model model) {
+		
+		log.info("게시판");
 
 		
-		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-
-            return "redirect:/users/login";
-        }
+//		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
+//        if (loginMember == null) {
+//
+//            return "redirect:/users/login";
+//        }
 		
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
         List<Board> boards = boardMapper.findAllBoards(board_category);
