@@ -58,7 +58,7 @@
 								<div class="text-center">
 								     <a th:href="@{/board/list(board_category=${board_category})}" class="btn btn-primary btn-sm">목록으로</a>
 								    <th:block >
-								    	<input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='/board/update?board_id=${board.board_id}'|" value="수정하기">
+								    	<input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
 								        <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
 								    </th:block>
 								    <hr />

@@ -273,6 +273,7 @@ public class BoardController {
     @GetMapping("update")
     public String updateForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     						@RequestParam Long board_id,
+    						@RequestParam BoardCategory board_category,
             				Model model) {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
@@ -280,7 +281,6 @@ public class BoardController {
             return "redirect:/users/login";
         }
 
-    	
     	Board board = boardMapper.findBoard(board_id);
     	// board_id에 해당하는 게시글이 없거나
     	// 게시글의 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.

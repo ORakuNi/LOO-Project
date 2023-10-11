@@ -18,6 +18,7 @@
 					console.log(matgip_data)
 	
 				},
+				async: false,
 				error: function () {  //불러오지 못했을때 할일
 					alert('Error loading XML document');
 				}
@@ -28,15 +29,17 @@
 	
 		function put_data1(num, title, contents, add, tel, img) {
 			let html = `
-						<div class="col-12 col-md-6">
+						<div class="col-12 col-md-4 d-flex">
 						<div class="card">
 							<img class="card-img-top" src="${img}" alt="Unsplash">
 							<div class="card-header">
-								<h5 class="card-title mb-0">${num + 1}.${title}</h5>
+								<h5 class="card-title">${num + 1}.${title}</h5>
 							</div>
 							<div class="card-body">
-								<p class="card-text">${contents}</p>
-								<a href="tel:${tel}" class="card-link">${tel}</a>
+								<p class="card-text">${contents}
+							</div>
+							<div class="card-body">
+								<a href="tel:${tel}" class="card-link">${tel}</a></p>
 								<a href="#" class="card-link">${add}</a>
 							</div>
 						</div>
@@ -71,15 +74,17 @@
 		})
 		function put_data(num, title, contents, add, tel, img) {
 			let html = `
-						<div class="col-12 col-md-6">
+						<div class="col-12 col-md-4 d-flex">
 						<div class="card">
 							<img class="card-img-top" src="${img}" alt="Unsplash">
 							<div class="card-header">
-								<h5 class="card-title mb-0">${num}.${title}</h5>
+								<h5 class="card-title">${num + 1}.${title}</h5>
 							</div>
 							<div class="card-body">
-								<p class="card-text">${contents}</p>
-								<a href="tel:${tel}" class="card-link">${tel}</a>
+								<p class="card-text">${contents}
+							</div>
+							<div class="card-body">
+								<a href="tel:${tel}" class="card-link">${tel}</a></p>
 								<a href="#" class="card-link">${add}</a>
 							</div>
 						</div>
@@ -97,24 +102,12 @@
 <body>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
-		<!-- 로그아웃 시 -->
-		<nav id="sidebar" class="sidebar js-sidebar" th:unless="${session.loginMember}">
-			<div th:replace="sidebar :: logout"></div>
-		</nav>
-		<!-- 로그인 시 -->
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
 			<div th:replace="sidebar :: login"></div>
 		</nav>
 
 		<div class="main">
-		<!-- 로그아웃 시 드롭다운 -->
-			<nav class="navbar navbar-expand navbar-light navbar-bg" th:unless="${session.loginMember}">
-				<a class="sidebar-toggle js-sidebar-toggle">
-					<i class="hamburger align-self-center"></i>
-    			</a>
-				<div th:replace="dropdown :: logout"></div>
-			</nav>
-		<!-- 로그인 시 드롭다운 -->
+		<!-- 드롭다운 -->
 			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
@@ -131,7 +124,7 @@
 						</a>
 					</div>
 
-					<div class="row" id="matgip">
+					<div class="row" id="matgip" >
 
 					</div>
 				</div>

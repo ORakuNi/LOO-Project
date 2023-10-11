@@ -4,19 +4,25 @@ import java.time.LocalDate;
 
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.validator.constraints.Length;
+
+import com.example.loo.model.company.Company;
+import com.example.loo.model.position.Position;
+
 import lombok.Data;
 
 @Data
 public class MemberUpdate {
 	private String member_mail;
-	@NotBlank
+	@NotBlank(message = "새 비밀번호를 입력해 주세요.")
+	@Length(min = 8, max = 20, message = "비밀번호는 8 ~ 20자내로 입력해 주세요.")
 	private String password;
 	private String member_name;
-	@NotBlank
+	@NotBlank(message = "연락처를 입력해 주세요.")
 	private String phone;
 	private LocalDate birthday;
 	private String hire_date;
-	private String company_id;
+	private Company company_id;
 	private String department_id;
-	private String position_id;
+	private Position position_id;
 }
