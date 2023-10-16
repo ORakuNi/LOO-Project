@@ -16,7 +16,4 @@ public class Board {
 	private LocalDateTime edit_time;  // 수정시간
 	private Long hit; //조회수
 
-
-	
-
 }
