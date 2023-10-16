@@ -7,6 +7,7 @@
 		function removeFile() {
 			document.getElementById("fileRemoved").value = "true";
 			document.getElementById("attachedFile").style.display = "none";
+			document.getElementById("new").style.display = "block"
 		}
 	</script>
 </head>
@@ -71,7 +72,10 @@
 										            <span th:text="${file.original_filename}"></span>
 										            <input type="button" onclick="removeFile()" value="삭제">
 										          </div>
-										          <input type="file" name="file">
+										          <div th:unless="${file}">
+										          <input type="file" name="file">													  
+												  </div>
+										            <input id="new" style="display: none;" type="file" name="file">
 										        </td>
 									      </tr>
 										</tbody>

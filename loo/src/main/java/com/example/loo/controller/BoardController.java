@@ -361,7 +361,7 @@ public class BoardController {
         board.setBoard_contents(updateBoard.getBoard_contents());
         //파일
         boardService.updateBoard(board, updateBoard.isFileRemoved(), file);
-        
+       
         // 수정한 Board 를 데이터베이스에 update 한다.
         boardMapper.updateBoard(board);
         

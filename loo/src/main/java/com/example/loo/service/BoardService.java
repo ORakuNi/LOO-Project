@@ -52,7 +52,10 @@ public class BoardService {
 			if (attachedFile != null && (isFileRemoved || (file != null && file.getSize() > 0))) {
 				removeAttachedFile(attachedFile.getAttachedFile_id());
 			}
+			
+			
 			if (file != null && file.getSize() > 0) {
+				
 				AttachedFile savedFile = fileService.saveFile(file);
 				savedFile.setBoard_id(updateBoard.getBoard_id());
 				boardMapper.saveFile(savedFile);

@@ -41,36 +41,6 @@
 			member_mail = #{member_mail}
 	</update>
 	
-	<insert id="saveFile">
-	<selectKey keyProperty="attachedFile_id" resultType="long" order="BEFORE">
-        select member_seq.nextval from dual
-    </selectKey>
-		insert into attached_file(
-    	attachedFile_id,
-    	member_mail,
-    	original_filename,
-    	saved_filename,
-    	file_size
-    ) values (
-    	#{attachedFile_id},
-    	#{member_mail},
-    	#{original_filename},
-    	#{saved_filename},
-    	#{file_size}
-    )
 	
-	</insert>
-	
-	<select id="findFileByMail" resultType="com.example.loo.model.member.AttachedFile">
-		select * from attached_file where member_mail = #{member_mail}
-	</select>
-	
-	<select id="findFileByAttachedFileId" resultType="com.example.loo.model.member.AttachedFile">
-		select * from attached_file where attachedFile_id = #{attachedFile_id}
-	</select>
-	
-	<delete id="removeAttachedFile">
-		delete attached_file where attachedFile_id = #{attachedFile_id}
-	</delete>
 	
 </mapper>

@@ -57,6 +57,7 @@
 											<td>
 												<a th:if="${file}" th:text="${file.original_filename}"
 												   th:href="@{/board/download/{id}(id=${file.attachedFile_id})}"></a>
+												<p th:unless="${file}">첨부파일이 없습니다</p>
 											</td>
 										</tr>
 									</tbody>

@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.loo.model.member.AttachedFile;
+
 import com.example.loo.model.member.Member;
 import com.example.loo.model.member.MemberLogin;
 import com.example.loo.model.member.MemberSignUp;
 import com.example.loo.model.member.MemberUpdate;
-import com.example.loo.model.member.service.MemberService;
-import com.example.loo.model.member.util.FileService;
 import com.example.loo.repository.MemberMapper;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,6 @@ public class MemberController {
 	@Value("${file.upload.path}")
 	private String uploadPath;
    private MemberMapper memberMapper;
-   private final MemberService memberService;
    
    
    @Autowired
