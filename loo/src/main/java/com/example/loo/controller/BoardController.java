@@ -41,18 +41,10 @@ public class BoardController {
 	private final CommentsMapper commentsMapper;
 	
 	@GetMapping("list")
-	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-						@RequestParam BoardCategory board_category,
+	public String list(@RequestParam BoardCategory board_category,
 						Model model) {
 		
 		log.info("게시판");
-
-		
-//		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-//        if (loginMember == null) {
-//
-//            return "redirect:/users/login";
-//        }
 		
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
         List<Board> boards = boardMapper.findAllBoards(board_category);
@@ -68,15 +60,9 @@ public class BoardController {
 	
     // 글쓰기 페이지 이동
     @GetMapping("write")
-    public String writeForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    						@RequestParam BoardCategory board_category,
+    public String writeForm(@RequestParam BoardCategory board_category,
     						Model model) {
-    	
-    	// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
 
-            return "redirect:/users/login";
-        }
 
         BoardWriteForm boardWriteForm = new BoardWriteForm();
         boardWriteForm.setBoard_category(board_category);
@@ -94,14 +80,7 @@ public class BoardController {
     					@Validated @ModelAttribute("writeForm") BoardWriteForm boardWriteForm,
                         BindingResult result,
                         RedirectAttributes redirect) {
-
-
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-
-            return "redirect:/users/login";
-        }
-        
+    	
         log.info("board: {}", boardWriteForm);
         
         // validation 에러가 있으면 board/write.html 페이지를 다시 보여준다.
@@ -127,16 +106,11 @@ public class BoardController {
     }
     
     @GetMapping("read")
-    public String read(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    					@RequestParam Long board_id,
+    public String read(@RequestParam Long board_id,
     					@RequestParam(required = false) Long comment_id,
     					Model model) {
     	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
 
-            return "redirect:/users/login";
-        }
         log.info("id: {}", board_id);
     	
         // 조회수 1 증가
@@ -183,10 +157,6 @@ public class BoardController {
     							@RequestParam Long board_id,
     							BindingResult results) {
     	
-    	if(loginMember == null) {
-    		return "redirect:/users/login";
-    	}
-    	
     	if(results.hasErrors()) {
     		return "redirect:/board/read?board_id=" + board_id;
     	}
@@ -204,10 +174,6 @@ public class BoardController {
     public String updateComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 								@RequestParam Long comment_id,
 								Model model) {
-    	
-    	if(loginMember == null) {
-    		return "redirect:/users/login";
-    	}
     	
     	Comments updateComment = commentsMapper.findComment(comment_id);
     	
@@ -228,10 +194,6 @@ public class BoardController {
     							@RequestParam Long comment_id,
     							@Validated @ModelAttribute("updateComment") CommentsUpdate commentsUpdate,
     							BindingResult result) {
-    	// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
         
         log.info("commentsUpdate: {}", commentsUpdate);
         
@@ -259,11 +221,6 @@ public class BoardController {
     @GetMapping("deleteComment")
     public String deleteComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     							@RequestParam Long comment_id) {
-    	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
         
         // board_id 에 해당하는 게시글을 가져온다.
         Comments comments = commentsMapper.findComment(comment_id);
@@ -288,12 +245,6 @@ public class BoardController {
     						@RequestParam Long board_id,
     						@RequestParam BoardCategory board_category,
             				Model model) {
-    	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-        	
-            return "redirect:/users/login";
-        }
 
     	Board board = boardMapper.findBoard(board_id);
     	// board_id에 해당하는 게시글이 없거나
@@ -315,12 +266,6 @@ public class BoardController {
     					@Validated @ModelAttribute("board") BoardUpdateForm updateBoard,
     					BindingResult result,
     					RedirectAttributes redirect) {
-
-    	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/member/login";
-        }
         
         log.info("board: {}", updateBoard);
     	
@@ -358,13 +303,6 @@ public class BoardController {
     					@RequestParam Long board_id,
     					RedirectAttributes redirect) {
 
-    	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-
-            return "redirect:/users/login";
-        }
-        
         // board_id 에 해당하는 게시글을 가져온다.
         Board board = boardMapper.findBoard(board_id);
         

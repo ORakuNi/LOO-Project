@@ -76,12 +76,13 @@ public class MemberController {
    
    // 로그인
    @PostMapping("login")
-   public String login(@SessionAttribute(name="loginMember", required = false) 
-   						@Validated @ModelAttribute("login") MemberLogin memberLogin,
+   public String login(@Validated @ModelAttribute("login") MemberLogin memberLogin,
    						BindingResult result,
-   						HttpServletRequest request) {
+   						HttpServletRequest request,
+   						@RequestParam(defaultValue = "/") String redirectURL) {
       
       log.info("MemberLogin: {}", memberLogin);
+      log.info("redirectURL: {}", redirectURL);
       if(result.hasErrors()) {
          return "users/login";
       }
@@ -98,7 +99,7 @@ public class MemberController {
    HttpSession session = request.getSession();
    session.setAttribute("loginMember", findMember);
    
-   return "redirect:/";
+   return "redirect:" + redirectURL;
    }
    
    //로그아웃
@@ -113,9 +114,7 @@ public class MemberController {
    @GetMapping("update")
 	public String update(Model model,
 						@SessionAttribute(name="loginMember", required = false) Member loginMember) {
-		if(loginMember == null) {
-			return "redirect:/users/login";
-		}
+
 		Member member = memberMapper.findMember(loginMember.getMember_mail());
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
@@ -129,9 +128,7 @@ public class MemberController {
 						@RequestParam String member_mail,
 						@Validated @ModelAttribute("update") MemberUpdate memberUpdate,
 						BindingResult result) {
-		if(loginMember == null) {
-			return "redirect:/users/login";
-		}
+
 		log.info("company_mail: {}, member:{}", member_mail, memberUpdate);
 		if(result.hasErrors()) {
 			return "users/update";

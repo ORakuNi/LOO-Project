@@ -60,7 +60,8 @@ public class LoginCheckFilter implements Filter {
 		
 		// 로그인 체크 X. 로그인 하지 않아도 들어갈 수 있는 경로들   -- 추가 필요
 		String[] whiteList = {"/", "/users/login", "/users/signup", "/users/logout", 
-				"/*.css", "/*.fonts", "/*.js", "/*.img", "/*.ico", "/error"};
+				"/*.css", "/*.fonts", "/*.js", "/*.img", "/*.ico", "/error"
+				,"/img/*"};
 	
 		// 매치되는 값이 있으면 true, 매치되는 값이 없으면 false
 		// !: 매치되는 값이 있으면 false, 매치되는 값이 없으면 true

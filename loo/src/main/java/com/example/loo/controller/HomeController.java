@@ -47,7 +47,6 @@ public class HomeController {
 	    // Board 리스트를 model 에 저장한다.
 	    model.addAttribute("boards", boards);
 	
-	
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("status");
 //		log.info("attribute : {}", attribute);
