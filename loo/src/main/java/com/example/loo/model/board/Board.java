@@ -1,6 +1,7 @@
 package com.example.loo.model.board;
 
 import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
@@ -16,4 +17,16 @@ public class Board {
 	private LocalDateTime edit_time;  // 수정시간
 	private Long hit; //조회수
 
+    public static BoardUpdateForm toBoardUpdateForm(Board board) {
+        BoardUpdateForm boardUpdateForm = new BoardUpdateForm();
+        boardUpdateForm.setBoard_id(board.getBoard_id());
+        boardUpdateForm.setBoard_title(board.getBoard_title());
+        boardUpdateForm.setBoard_contents(board.getBoard_contents());
+        boardUpdateForm.setMember_mail(board.getMember_mail());
+        boardUpdateForm.setMember_name(board.getMember_name());
+        boardUpdateForm.setHit(board.getHit());
+        boardUpdateForm.setBoard_category(board.getBoard_category());
+        boardUpdateForm.setCreate_time(board.getCreate_time());
+        return boardUpdateForm;
+    }
 }

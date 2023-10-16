@@ -20,8 +20,8 @@
 				<div th:replace="dropdown :: login"></div>
 			</nav>
 			
-			<main class="content">
-				<form action="write" method="post" th:object="${writeForm}">
+			<main class="content">											
+				<form action="write" method="post" th:object="${writeForm}" enctype="multipart/form-data">
 					<div class="container-fluid p-0">
 						<div class="card">
 							<div class="card-body">
@@ -45,6 +45,12 @@
           										  <div class="text-danger" th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
 										        </td>
 										    </tr>
+										    <tr>
+												<th>첨부파일</th>
+												<td>
+													<input type="file" name="file">
+												</td>
+											</tr>
 										  </tbody>
 										</table>
 										<input type="hidden" th:field="*{board_category}">

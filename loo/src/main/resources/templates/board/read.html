@@ -52,6 +52,13 @@
 												<textarea rows="10" class="form-control" th:text="*{board_contents}" readonly></textarea>
 											</td>
 									    </tr>
+									    <tr>
+											<th class="text-center">첨부파일</th>
+											<td>
+												<a th:if="${file}" th:text="${file.original_filename}"
+												   th:href="@{/board/download/{id}(id=${file.attachedFile_id})}"></a>
+											</td>
+										</tr>
 									</tbody>
     							</table>
     							<input type="hidden" th:field="*{board_category}">
