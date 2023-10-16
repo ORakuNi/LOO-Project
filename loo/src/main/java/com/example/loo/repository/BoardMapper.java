@@ -12,6 +12,7 @@ import com.example.loo.model.board.BoardCategory;
 @Mapper
 public interface BoardMapper {
 	
+
 	void saveBoard(Board board);
 	
 	List<Board> findAllBoards(BoardCategory board_category);

@@ -16,7 +16,7 @@ spring:
         1MB
       max-request-size:
         10MB
-        
+
 mybatis:
   type-aliases-package: com.example.loo.model
   config-location: classpath:config/mybatis-config.xml

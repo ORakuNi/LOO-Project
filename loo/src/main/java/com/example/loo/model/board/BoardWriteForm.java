@@ -19,6 +19,7 @@ public class BoardWriteForm {
 	private BoardCategory board_category; // 카테고리 추가
 	private MultipartFile attachedFile;
 	
+	
 	public static Board toBoard(BoardWriteForm boardWriteForm) {
 		Board board = new Board();
 		board.setBoard_title(boardWriteForm.getBoard_title());
