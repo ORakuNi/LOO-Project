@@ -1,9 +1,12 @@
 package com.example.loo.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,21 +17,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.loo.model.member.AttachedFile;
 import com.example.loo.model.member.Member;
 import com.example.loo.model.member.MemberLogin;
 import com.example.loo.model.member.MemberSignUp;
 import com.example.loo.model.member.MemberUpdate;
+import com.example.loo.model.member.service.MemberService;
+import com.example.loo.model.member.util.FileService;
 import com.example.loo.repository.MemberMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("users")
 @Controller
+@RequiredArgsConstructor
 public class MemberController {
 
+	@Value("${file.upload.path}")
+	private String uploadPath;
    private MemberMapper memberMapper;
+   private final MemberService memberService;
+   
    
    @Autowired
    public void setMemberMapper(MemberMapper memberMapper) {
@@ -128,27 +141,49 @@ public class MemberController {
 	public String update(@SessionAttribute(name="loginMember", required = false) Member loginMember,
 						@RequestParam String member_mail,
 						@Validated @ModelAttribute("update") MemberUpdate memberUpdate,
-						BindingResult result) {
+						BindingResult result,
+						@RequestParam(required = false) MultipartFile file) {
 		if(loginMember == null) {
 			return "redirect:/users/login";
 		}
-		log.info("company_mail: {}, member:{}", member_mail, memberUpdate);
-		if(result.hasErrors()) {
-			return "users/update";
+		
+		
+		log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
+	
+		
+		
+		List<AttachedFile> previousFile = memberMapper.findFileByMail(member_mail);
+		if(file != null && previousFile != null && file.getSize() >0) {
+		
+			int n=0;
+			for(AttachedFile fileE : previousFile) {
+				n++;
+			}
+			
+			log.info("파일은 {}개 존재한다고", n);
 		}
+//		if(result.hasErrors()) {
+//			return "users/update";
+//		}
+		
 		Member member = memberMapper.findMember(member_mail);
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
-		if(memberUpdate.getPassword().equals(member.getPassword()) || memberUpdate.getPhone().equals(member.getPhone())) {
-			result.reject("update none","수정된 사항이 없습니다.");
-			return "users/update";
-		}
+//		if(memberUpdate.getPassword().equals(member.getPassword()) || memberUpdate.getPhone().equals(member.getPhone())) {
+//			result.reject("update none","수정된 사항이 없습니다.");
+//			return "users/update";
+//		}
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
 		log.info("member: {}", member);
 		memberMapper.updateMember(member);
 		
+		memberService.updateMember(member, previousFile, file);
+
+		
 		return "redirect:/";
 	}
+	
+	
 }
