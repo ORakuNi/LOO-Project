@@ -1,4 +1,4 @@
-package com.example.loo.controller;
+	package com.example.loo.controller;
 
 import java.util.List;
 
@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.loo.model.member.AttachedFile;
+
 import com.example.loo.model.member.Member;
 import com.example.loo.model.member.MemberLogin;
 import com.example.loo.model.member.MemberSignUp;
 import com.example.loo.model.member.MemberUpdate;
-import com.example.loo.model.member.service.MemberService;
-import com.example.loo.model.member.util.FileService;
 import com.example.loo.repository.MemberMapper;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,6 @@ public class MemberController {
 	@Value("${file.upload.path}")
 	private String uploadPath;
    private MemberMapper memberMapper;
-   private final MemberService memberService;
    
    
    @Autowired
@@ -89,12 +87,13 @@ public class MemberController {
    
    // 로그인
    @PostMapping("login")
-   public String login(@SessionAttribute(name="loginMember", required = false) 
-   						@Validated @ModelAttribute("login") MemberLogin memberLogin,
+   public String login(@Validated @ModelAttribute("login") MemberLogin memberLogin,
    						BindingResult result,
-   						HttpServletRequest request) {
+   						HttpServletRequest request,
+   						@RequestParam(defaultValue = "/") String redirectURL) {
       
       log.info("MemberLogin: {}", memberLogin);
+      log.info("redirectURL: {}", redirectURL);
       if(result.hasErrors()) {
          return "users/login";
       }
@@ -111,7 +110,7 @@ public class MemberController {
    HttpSession session = request.getSession();
    session.setAttribute("loginMember", findMember);
    
-   return "redirect:/";
+   return "redirect:" + redirectURL;
    }
    
    //로그아웃
@@ -126,9 +125,7 @@ public class MemberController {
    @GetMapping("update")
 	public String update(Model model,
 						@SessionAttribute(name="loginMember", required = false) Member loginMember) {
-		if(loginMember == null) {
-			return "redirect:/users/login";
-		}
+
 		Member member = memberMapper.findMember(loginMember.getMember_mail());
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
@@ -137,50 +134,28 @@ public class MemberController {
 		return "users/update";
 	}
 	
-	@PostMapping("update")
+   @PostMapping("update")
 	public String update(@SessionAttribute(name="loginMember", required = false) Member loginMember,
 						@RequestParam String member_mail,
 						@Validated @ModelAttribute("update") MemberUpdate memberUpdate,
-						BindingResult result,
-						@RequestParam(required = false) MultipartFile file) {
-		if(loginMember == null) {
-			return "redirect:/users/login";
+						BindingResult result) {
+
+		log.info("company_mail: {}, member:{}", member_mail, memberUpdate);
+		if(result.hasErrors()) {
+			return "users/update";
 		}
-		
-		
-		log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
-	
-		
-		
-		List<AttachedFile> previousFile = memberMapper.findFileByMail(member_mail);
-		if(file != null && previousFile != null && file.getSize() >0) {
-		
-			int n=0;
-			for(AttachedFile fileE : previousFile) {
-				n++;
-			}
-			
-			log.info("파일은 {}개 존재한다고", n);
-		}
-//		if(result.hasErrors()) {
-//			return "users/update";
-//		}
-		
 		Member member = memberMapper.findMember(member_mail);
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
-//		if(memberUpdate.getPassword().equals(member.getPassword()) || memberUpdate.getPhone().equals(member.getPhone())) {
-//			result.reject("update none","수정된 사항이 없습니다.");
-//			return "users/update";
-//		}
+		if(memberUpdate.getPassword().equals(member.getPassword()) || memberUpdate.getPhone().equals(member.getPhone())) {
+			result.reject("update none","수정된 사항이 없습니다.");
+			return "users/update";
+		}
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
 		log.info("member: {}", member);
 		memberMapper.updateMember(member);
-		
-		memberService.updateMember(member, previousFile, file);
-
 		
 		return "redirect:/";
 	}

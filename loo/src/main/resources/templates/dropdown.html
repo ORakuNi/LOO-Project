@@ -17,18 +17,18 @@
 	</div>
 	
 	<!-- 로그인 시 -->
-	<div class="navbar-collapse collapse" th:fragment="login" enctype="multipart/form-data">
+	<div class="navbar-collapse collapse" th:fragment="login">
 		<ul class="navbar-nav navbar-align">
-			<li class="nav-item dropdown" th:if="${session.loginMember}" enctype="multipart/form-data">
+			<li class="nav-item dropdown" th:if="${session.loginMember}">
 				<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
     				<i class="align-middle" data-feather="settings"></i>
   				</a>
 				<!-- 회원이름 표시 -->
-				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown" enctype="multipart/form-data">
+				<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
 				
     				<!--<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" />
     				<img src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" alt="basic" /> -->
-    				<img th:src="@{'/img/avatars/' + ${session.loginMember.phone} + '.jpg'}" class="avatar img-fluid rounded me-1" alt="basic" />
+    				<!--<img th:src="@{'/img/avatars/' + ${session.loginMember.phone} + '.jpg'}" class="avatar img-fluid rounded me-1" alt="basic" />-->
     				<!--<span>[[${session.loginMember.phone}]]</span>-->
     				<!--<img th:src="|/img/avatars/${session.loginMember.phone}.jpg}|" class="avatar img-fluid rounded me-1" alt="basic" />-->
     				<!--systemtime?-->

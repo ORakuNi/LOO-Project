@@ -13,48 +13,58 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.util.PatternMatchUtils;
 
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class LoginCheckFilter implements Filter{
+public class LoginCheckFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		
-		
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
+		HttpServletRequest httpRequest = (HttpServletRequest)request;
+		HttpServletResponse httpReponse = (HttpServletResponse)response;
 		
 		try {
 			log.info("LoginCheckFilter 실행");
-			String requestURI = httpRequest.getRequestURI();
+			String requestURI = httpRequest.getRequestURI();		
 			
-			if(isLoginCheckPath(requestURI)) {
-				HttpSession session = httpRequest.getSession(false);
+			if(isLoingCheckPath(requestURI)) {
 				
+				HttpSession session = httpRequest.getSession(false); 
+				// false -> 세션 정보가 없으면 null값 되게 함
+
 				if(session == null || session.getAttribute("loginMember") == null) {
-					//로그인 하지 않은 상태
-					log.info("로그인 하지 않은 사용자의 요청");
-					httpResponse.sendRedirect("/member/login");
-					return;
+				// 로그인 하지 않은 상태
+				log.info("로그인 하지 않은 사용자의 요청");
+				
+				// 스프링 방식의 redirect를 쓸 수 없어서 사용
+				httpReponse.sendRedirect("/users/login");
+				
+				return;
 				}
+//				log.info("로그인한 사용자: {}", session.getAttribute("loginMember"));
 			}
+			chain.doFilter(request, response);
 			
-			chain.doFilter(request, response);			
 		} catch (Exception e) {
-			// TODO: handle exception
+			
 		} finally {
 			log.info("LoginCheckFilter 종료");
 		}
-	}
-	
-	private boolean isLoginCheckPath(String requestURI) {
-		//로그인 체크 X. 로그인을 하지 않아도 들어갈 수 있는 경로들
-		String[] whiteList = {"/","/member/login","/member/join","/default.css"};
 		
-		//매치되는 값이 있으면 true, 매치되는 값이 없으면 false
-		//!: 매치되는 값이 있으면 false, 매치되는 값이 없으면 true
+	}
+
+	private boolean isLoingCheckPath(String requestURI) {
+		
+		// 로그인 체크 X. 로그인 하지 않아도 들어갈 수 있는 경로들   -- 추가 필요
+		String[] whiteList = {"/", "/users/login", "/users/signup", "/users/logout", 
+				"/*.css", "/*.fonts", "/*.js", "/*.img", "/*.ico", "/error"
+				,"/img/*"};
+	
+		// 매치되는 값이 있으면 true, 매치되는 값이 없으면 false
+		// !: 매치되는 값이 있으면 false, 매치되는 값이 없으면 true
 		return !PatternMatchUtils.simpleMatch(whiteList, requestURI);
 	}
 	

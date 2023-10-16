@@ -1,20 +1,33 @@
 package com.example.loo.controller;
 
+import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriUtils;
 
+import com.example.loo.model.board.AttachedFile;
 import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.board.BoardUpdateForm;
@@ -25,6 +38,8 @@ import com.example.loo.model.comments.CommentsWrite;
 import com.example.loo.model.member.Member;
 import com.example.loo.repository.BoardMapper;
 import com.example.loo.repository.CommentsMapper;
+import com.example.loo.service.BoardService;
+import com.example.loo.util.FileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +52,10 @@ public class BoardController {
 	
 	private final BoardMapper boardMapper;
 	private final CommentsMapper commentsMapper;
+	private final FileService fileService;
+	private final BoardService boardService;
+	@Value("${file.upload.path}")
+	private String uploadPath;
 	
 	@GetMapping("list")
 	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
@@ -53,6 +72,7 @@ public class BoardController {
         
         // Board 리스트를 model 에 저장한다.
         model.addAttribute("boards", boards);
+        
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
 		
@@ -83,7 +103,9 @@ public class BoardController {
     @PostMapping("write")
     public String write(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@Validated @ModelAttribute("writeForm") BoardWriteForm boardWriteForm,
-                        BindingResult result, RedirectAttributes redirect) {
+                        BindingResult result, 
+                        @RequestParam(required = false) MultipartFile file,
+                        RedirectAttributes redirect) {
 
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
@@ -104,8 +126,10 @@ public class BoardController {
         board.setMember_mail(loginMember.getMember_mail());
         
         // 데이터베이스에 저장한다.
-        boardMapper.saveBoard(board);
+        boardService.saveBoard(board, file);
         
+        log.info("filesize:{}", file.getSize());
+                
         //다시 redirect 원래 페이지로 돌아오게 할 때?
         redirect.addAttribute("board_category", board.getBoard_category());
         
@@ -127,6 +151,12 @@ public class BoardController {
     	
         // 조회수 1 증가
     	boardMapper.addHit(board_id); 
+    	
+    	//첨부파일
+    	AttachedFile attachedFile = boardMapper.findFileByBoardId(board_id);
+    	log.info("첨부파일{}", attachedFile);
+    	
+    	model.addAttribute("file", attachedFile);
     	
     	// board_id에 해당하는 게시글 찾기
     	Board board = boardMapper.findBoard(board_id);
@@ -289,7 +319,11 @@ public class BoardController {
         }
         
         // model 에 board 객체를 저장한다.
-    	model.addAttribute("board", board);
+    	model.addAttribute("board", Board.toBoardUpdateForm(board));
+    	
+    	//첨부파일 찾기
+    	AttachedFile attachedFile = boardService.findFileByBoardId(board_id);
+    	model.addAttribute("file", attachedFile);
     	
     	return "board/update";
     }
@@ -298,7 +332,9 @@ public class BoardController {
     public String update(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id,
     					@Validated @ModelAttribute("board") BoardUpdateForm updateBoard,
-    					BindingResult result, RedirectAttributes redirect) {
+    					BindingResult result,
+    					@RequestParam(required = false) MultipartFile file,
+    					RedirectAttributes redirect) {
     	
         // 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
@@ -323,7 +359,9 @@ public class BoardController {
         // 제목과 내용 수정
         board.setBoard_title(updateBoard.getBoard_title());
         board.setBoard_contents(updateBoard.getBoard_contents());
-        
+        //파일
+        boardService.updateBoard(board, updateBoard.isFileRemoved(), file);
+       
         // 수정한 Board 를 데이터베이스에 update 한다.
         boardMapper.updateBoard(board);
         
@@ -353,11 +391,34 @@ public class BoardController {
     	
         // 댓글 삭제
         commentsMapper.removeAllComments(board_id);
-        // 게시글 삭제
-    	boardMapper.removeBoard(board_id);
+        
+        //게시글 삭제
+        boardService.removeBoard(board_id);
     	
     	redirect.addAttribute("board_category", board.getBoard_category());
     	
     	return "redirect:/board/list";
+    }
+    
+    @GetMapping("download/{id}")
+    public ResponseEntity<Resource> download(@PathVariable Long id) throws MalformedURLException {
+    	
+    	//첨부파일 아이디로 첨부파일 정보를 가져온다.
+    	AttachedFile attachedFile = boardService.findFileByAttachedFileId(id);
+    	
+    	//다운로드 하려는 파일의 절대경로 값을 만든다.
+    	String fullPath = uploadPath + "/" + attachedFile.getSaved_filename();
+    	
+    	UrlResource resource = new UrlResource("file:" + fullPath);
+    	
+    	//한글 파일명이 깨지지 않도록 UTF-8로 파일명을 인코딩한다.
+    	String encodingFileName = UriUtils.encode(attachedFile.getOriginal_filename(), StandardCharsets.UTF_8);
+    	
+    	//응답헤더에 담을 Content Disposition 값을 생성한다.
+    	String contentDispostion = "attachment; filename=\""+ encodingFileName + "\"";
+    	
+    	return ResponseEntity.ok()
+    						 .header(HttpHeaders.CONTENT_DISPOSITION, contentDispostion)
+    						 .body(resource);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.loo.model.board;
 
+
 public enum BoardCategory {
 	NOTICE("공지 게시판"),
 	FREE("자유 게시판"),

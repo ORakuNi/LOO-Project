@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class Member {
+
 	private String member_mail;
 	private String password;
 	private String member_name;
@@ -16,5 +17,4 @@ public class Member {
 	private String department_id;
 	private String position_id;
 	private String department_name;
-	private Long attachedFile_id;
 }

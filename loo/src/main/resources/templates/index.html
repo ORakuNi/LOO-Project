@@ -3,7 +3,6 @@
 <head th:replace="head :: head"></head>
 <head>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 	<script defer src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
 		integrity="sha384-vuFJ2JiSdUpXLKGK+tDteQZBqNlMwAjhZ3TvPaDfN9QmbPb7Q8qUpbSNapQev3YF"
 		crossorigin="anonymous"></script>
@@ -205,6 +204,7 @@
 											<div class=" text-center" th:unless="${session.status}">
 												<span
 													th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+													<span style="font-weight: bold;">[[${session.loginMember.member_name}]]님 출근하세요!!</span>
 												<button class="btn btn-danger btn-lg mr-12" id="comcheck">출근</button>
 											</div>
 
@@ -218,7 +218,7 @@
 												<th:block th:unless="${commute == '1'}">
 													<span
 														th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
-													<p style="color: red; font-weight: bold; font-size: large;">오늘 하루도
+													<p style="color: red; font-weight: bold; font-size:large;">오늘 하루도
 														수고하셨습니다! 업무는 하실수 없습니다.</p>
 												</th:block>
 											</div>
@@ -282,12 +282,13 @@
 						<div class="col-12 col-lg-6 col-xxl-9 d-flex">
 							<div class="card flex-fill">
 								<div class="card-header">
-
+									<a th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
 									<h5 class="card-title mb-0">Notice</h5>
+									</a>
 								</div>
-								<table class="table table-hover my-0">
+								<table class="table">
 									<thead>
-										<tr>
+										<tr class="text-center">
 											<th>No</th>
 											<th>제목</th>
 											<th>작성자</th>
@@ -295,12 +296,12 @@
 										</tr>
 									</thead>
 									<tbody>
-									<tr th:each="board : ${boards}">
-									    <td class="text-center" th:text="${boardStat.count}"></td>
-		   								<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
-		     							<td class="text-center" th:text="${board.member_name}"></td>
-		   								<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
-									</tr>
+										<tr th:each="board, boardStat : ${noticeBoardList}">
+											<td class="text-center" th:text="${boardStat.count}"></td>
+											<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
+											<td class="text-center" th:text="${board.member_name}"></td>
+											<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+										</tr>
 									</tbody>
 								</table>
 							</div>

@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 import com.example.loo.model.company.Company;
-import com.example.loo.model.position.Position;
 
 import lombok.Data;
 
