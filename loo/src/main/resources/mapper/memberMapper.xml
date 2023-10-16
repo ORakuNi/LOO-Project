@@ -41,6 +41,6 @@
 			member_mail = #{member_mail}
 	</update>
 	
-	
+
 	
 </mapper>
