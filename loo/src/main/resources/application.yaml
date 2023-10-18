@@ -10,9 +10,17 @@ spring:
     username: LOO
     password: 1234
     driver-class-name: oracle.jdbc.driver.OracleDriver
+  servlet:
+    multipart:
+      max-file-size:
+        1MB
+      max-request-size:
+        10MB
+
 
 mybatis:
-  type-aliases-package: com.example.loo.model
+#  type-aliases-package: com.example.loo.model
+  config-location: classpath:config/mybatis-config.xml
   mapper-locations: classpath:mapper/**/*.xml
 
 

@@ -77,31 +77,15 @@
 				Office
 			</li>
 
-			<li class="sidebar-item">
-				<a class="sidebar-link" href="/phones/list">
- 		     		<i class="align-middle" data-feather="users"></i> <span class="align-middle">전화번호부</span>
-    			</a>
-			</li>
-
-			<li class="sidebar-header">
-				Community
-			</li>
-			
 			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'NOTICE')} ? 'active' : ''">
 				<a class="sidebar-link" href="/board/list?board_category=NOTICE">
       				<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
     			</a>
 			</li>
-			
-			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'FREE')} ? 'active' : ''">
-				<a class="sidebar-link" href="/board/list?board_category=FREE">
-      				<i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">자유게시판</span>
-    			</a>
-			</li>
-			
-			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'CLUB')} ? 'active' : ''">
-				<a class="sidebar-link" href="/board/list?board_category=CLUB">
-      				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
+
+			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/phones/list' ? 'active' : ''}">
+				<a class="sidebar-link" href="/phones/list">
+ 		     		<i class="align-middle" data-feather="users"></i> <span class="align-middle">전화번호부</span>
     			</a>
 			</li>
 			
@@ -109,18 +93,32 @@
 				Life
 			</li>
 
+			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'FREE')} ? 'active' : ''">
+				<a class="sidebar-link" href="/board/list?board_category=FREE">
+      				<i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">게시판</span>
+    			</a>
+			</li>
+			
+			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/board/club' ? 'active' : ''}">
+				<a class="sidebar-link" href="/board/club">
+      				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
+    			</a>
+			</li>
+			
 			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/api/restaurant' ? 'active' : ''}">
 				<a class="sidebar-link" href="/api/restaurant">
       				<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
     			</a>
 			</li>
 			
-			<li class="sidebar-item">
+			<!--<li class="sidebar-item">
 				<a class="sidebar-link" href="#">
       				<i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
     			</a>
-			</li>
+			</li>-->
 		</ul>
-
+		<div>
+			<br>
+		</div>
 	</div>
 </html>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.loo.model.board.AttachedFile;
 import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
 
@@ -22,4 +23,9 @@ public interface BoardMapper {
 	void updateBoard(Board board);
 	
 	void removeBoard(Long board_id);
+	
+	void saveFile(AttachedFile attachedFile);
+	
+    List<AttachedFile> findFiles();
+    
 }
