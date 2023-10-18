@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 	private String[] excludePaths = {"/", "/head", "/dropdown", "/sidebar", 
 					"/users/login", "/users/signup", "/users/logout", "/users/js/app.js",
-					"/*.css", "/*.fonts", "/*.js", "/*.img", "/*.ico", "/error",
+					"/*.css", "/*.fonts", "/**/*.js", "/*.img", "/*.ico", "/error",
 					"/css/**", "/fonts/**", "/img/**", "/js/**", "/src/**"};
 	
 	

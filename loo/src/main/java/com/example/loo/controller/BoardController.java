@@ -309,8 +309,11 @@ public class BoardController {
         // 리다이렉트 할때 파라미터를 추가해줌
         redirect.addAttribute("board_category", board.getBoard_category());    
         
-        // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
-        if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
+        // 게시글이 존재하지 않거나 
+        // 작성자와 로그인 사용자의 아이디가 다르면고 직급이 매니저가 아니면 리스트로 리다이렉트 한다.
+        if (board == null || 
+        		(!board.getMember_mail().equals(loginMember.getMember_mail()) &&
+        		!loginMember.getPosition_id().equals("manager"))) {
             log.info("삭제 권한 없음");
             return "redirect:/board/list";
         }

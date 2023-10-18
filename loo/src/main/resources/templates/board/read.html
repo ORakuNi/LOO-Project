@@ -58,8 +58,10 @@
 								<div class="text-center">
 								    <a th:href="@{/board/list(board_category=${board_category})}" class="btn btn-primary btn-sm">목록으로</a>
 								    <th:block >
-								    	<input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
-								        <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+								    	<input th:if="${board.member_mail == session.loginMember.member_mail}" type="button" 
+								    		class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
+								        <input th:if="${board.member_mail == session.loginMember.member_mail || session.loginMember.getPosition_id == 'manager'}" type="button" 
+								        	class="btn btn-primary btn-sm" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
 								    </th:block>
 								    <hr />
 								</div>
@@ -95,8 +97,10 @@
 													<small class="text-muted" th:text="'- ' + ${comments.member_name}"></small><br />
 													<small class="float-end text-navy" th:text="'작성일 : ' + ${#temporals.format(comments.comment_create_time, 'yyyy-MM-dd HH:mm')}"></small><br />
 													<small th:if="${comments.comment_edit_time != null}" class="float-end text-navy" th:text="'수정일 : ' + ${#temporals.format(comments.comment_edit_time, 'yyyy-MM-dd HH:mm')}"></small><br />
-													<th:block th:if="${session.loginMember.member_mail == comments.member_mail}">
+													<th:block th:if="${session.loginMember.member_mail == comments.member_mail || session.loginMember.getPosition_id == 'manager'}">
 														<a th:onclick="|location.href='/board/deleteComment?comment_id=${comments.comment_id}'|"><i class="float-end feather-sm" data-feather="trash-2" style="margin-left: 5px;"></i></a>
+													</th:block>
+													<th:block th:if="${session.loginMember.member_mail == comments.member_mail}">
 														<a th:onclick="|location.href='/board/updateComment?comment_id=${comments.comment_id}'|"><i class="float-end feather-sm" data-feather="edit-3"></i></a>
 													</th:block>
 												</div>
