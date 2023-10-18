@@ -146,7 +146,7 @@
 								schedule_type: $('#typ').val()
 							};
 							 console.log(data.schedule_date);
-							 console.log(new Date(data.deadline));
+							 console.log(typeof(new Date(data.deadline)));
 							$.ajax({
 								url: url,
 								type: "POST",
