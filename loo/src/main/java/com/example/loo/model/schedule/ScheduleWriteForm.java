@@ -12,12 +12,12 @@ public class ScheduleWriteForm {
 	
 	private String schedule_name;
 	private String schedule_contents;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate schedule_date;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime schedule_date;
 	private String importance;
 	private String schedule_type;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate deadline;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private LocalDateTime deadline;
 	
 	public static Schedule toSchedule(ScheduleWriteForm scheduleWriteForm) {
 		Schedule schedule = new Schedule();
