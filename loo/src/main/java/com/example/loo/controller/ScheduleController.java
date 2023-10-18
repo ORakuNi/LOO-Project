@@ -56,7 +56,7 @@ public class ScheduleController {
 	public String registSchedule(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 			HttpServletRequest request, @ModelAttribute("data") ScheduleWriteForm scheduleWriteForm) {
 
-//		log.info("가져온거 : {} " , scheduleWriteForm);
+		log.info("가져온거 : {} " , scheduleWriteForm);
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("loginMember");
 

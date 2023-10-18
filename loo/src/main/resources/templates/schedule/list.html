@@ -6,7 +6,7 @@
 <head>
 	<title>스케줄</title>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar-scheduler@6.1.9/index.global.min.js'></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@fullcalendar/google-calendar@6.1.9/index.global.min.js"></script>
 
@@ -17,21 +17,24 @@
 			var allObject = [[${allschedules}]]
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
-			
-			googleCalendarApiKey: 'AIzaSyAgGNHIbmXLXhRPanmc-xAAt_qdwPxHUOk',
-			
-				
+
+				googleCalendarApiKey: 'AIzaSyAgGNHIbmXLXhRPanmc-xAAt_qdwPxHUOk',
+
+
 				initialView: 'dayGridMonth',
 				initialDate: new Date(),
 				locale: 'ko',
 				expandRows: true,
 				contentHeight: 500,
+				dayMaxEvents: true,
+				dayMaxEvents: 4,
 				headerToolbar: {
 					left: 'prev,next',
 					center: 'title',
 					right: 'dayGridMonth,timeGridWeek'
 				},
-		
+
+
 				/* 마우스 올렸을 때 내용보이기(수정을 할수없어서 보류) eventDidMount: function (info) {
 					for (var i = 0; i < object.length; i++) {
 						if (info.event.title === object[i].schedule_name) {
@@ -58,13 +61,14 @@
 									"start": object[i].schedule_date,
 									"end": object[i].deadline,
 									"title": object[i].schedule_name,
+									allDay: false,
 
 								});
 							}
 							successCallback(events)
 						},
-						color : "#ff385c"
-                    , textColor : "white"
+						color: "#ff385c"
+						, textColor: "white"
 
 					},
 					// 회사일정 갖고오 
@@ -76,6 +80,7 @@
 									"start": objects[i].schedule_date,
 									"end": objects[i].deadline,
 									"title": objects[i].schedule_name,
+									allDay: false,
 
 								});
 							}
@@ -85,15 +90,17 @@
 						textColor: 'white',
 
 					},
+
+					{	// 구글 한국꺼 
+						googleCalendarId: 'ko.south_korea#holiday@group.v.calendar.google.com',
+						color: 'white',
+						textColor: 'black'
+					},
 					
-					
-					{ 
-						events : {
-						googleCalendarId : 'ko.south_korea#holiday@group.v.calendar.google.com',
-						color : 'white',
-						textColor : 'red'
-							
-						}	
+					{	// 구글 일본꺼
+					 	googleCalendarId :'ja.japanese#holiday@group.v.calendar.google.com',
+					 	color : 'white',
+					 	textColor : 'black'
 					}
 				],
 
@@ -108,9 +115,9 @@
 							<label for="con">상세설명</label>
   							<input type="text" id="con" class="form-control form-control-lg" name="schedule_contents"><p>
   							<label for="sta">시작일</label>
-  							<input type="date" id="sta" class="form-control form-control-lg" name="schedule_date" value="${info.dateStr}"><p>
+  							<input type="datetime-local" id="sta" class="form-control form-control-lg" name="schedule_date" value="${info.dateStr}"><p>
 						    <label for="sta">마감일</label>
-  							<input type="date" id="ded" class="form-control form-control-lg" name="deadline"><p>
+  							<input type="datetime-local" id="ded" class="form-control form-control-lg" name="deadline"><p>
   							<label for="typ">일정종류</label>
   							<select class="form-select mb-3" name="schedule_type" id="typ">
 							   <option value="null" selected>일정종류를 선택해주세요.</option>
@@ -136,8 +143,10 @@
 								schedule_date: $('#sta').val(),
 								deadline: $('#ded').val(),
 								importance: $('#imp').val(),
-								schedule_type : $('#typ').val()
+								schedule_type: $('#typ').val()
 							};
+							 console.log(data.schedule_date);
+							 console.log(new Date(data.deadline));
 							$.ajax({
 								url: url,
 								type: "POST",
@@ -159,6 +168,8 @@
 					var 누른거 = allObject.find(function (event) {
 						return event.schedule_name === info.event._def.title;
 						console.log(누른거)
+						 info.event.jsEvent.cancelBubble = true;
+    					 info.event.jsEvent.preventDefault();
 					});
 
 					Swal.fire({
@@ -169,9 +180,9 @@
 				            <label for="con">상세설명</label>
 				            <input type="text" id="con" class="form-control form-control-lg" value="${누른거.schedule_contents}" disabled><p>
 				            <label for="sta">시작일</label>
-				            <input type="text" id="sta" class="form-control form-control-lg"  value="${누른거.schedule_date}" disabled><p>
+				            <input type="datetime-local" id="sta" class="form-control form-control-lg"  value="${누른거.schedule_date}" disabled><p>
 				            <label for="sta">마감일</label>
-				            <input type="text" id="ded" class="form-control form-control-lg"  value="${누른거.deadline}" disabled><p>
+				            <input type="datetime-local" id="ded" class="form-control form-control-lg"  value="${누른거.deadline}" disabled><p>
 							<labe for="typ">일정종류</label>
 							<input type="text" id="typ" class="form-control form-control-lg" value="${누른거.schedule_type}" disabled><p>
 				            <label for="imp">중요도</label>
@@ -179,26 +190,26 @@
            
         `,
 						confirmButtonText: '삭제하기'
-					}).then((result)=>{
-						if(result.isConfirmed){
+					}).then((result) => {
+						if (result.isConfirmed) {
 							const url = "/schedule/delete";
 							const data = {
-								schedule_name : $('#sch').val() // 스케줄 이름 보내서 지울떄 쓸려고 
+								schedule_name: $('#sch').val() // 스케줄 이름 보내서 지울떄 쓸려고 
 							}
-						
-						
-						$.ajax({
-							url : url,
-							method : "POST",
-							data : data,
-							success: function (result) {
+
+
+							$.ajax({
+								url: url,
+								method: "POST",
+								data: data,
+								success: function (result) {
 									Swal.fire(
 										'일정이 삭제되었씁니다'
 									).then(() => {
 										location.reload();
 									})
 								}
-						}) 
+							})
 						}
 					})
 				}
