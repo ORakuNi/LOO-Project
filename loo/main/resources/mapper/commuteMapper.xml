@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.loo.repository.CommuteMapper">
+
+<insert id="insertCommute"> 
+	<selectKey keyProperty="commute_id" resultType="long" order="BEFORE" >
+		select commute_seq.nextval from dual
+	</selectKey>
+	
+	insert into commute (
+		commute_id,
+		member_mail,
+		attendance_time,
+		commute_status
+	) values (
+		#{commute_id},
+		#{member_mail},
+		SYSDATE,
+		1
+		
+	)
+	
+</insert>
+
+
+<select id="findCommute" resultType="commute">
+	select * from commute where commute_id = #{commute_id}
+</select>
+ 
+ <update id="updateCommute">
+ 	update commute
+ 	<set>
+ 		<if test="commute_status != 0">commute_status = '0',</if>
+ 		<if test="leave_time == null">leave_time = SYSDATE</if>
+ 	</set>
+ 	where commute_id = #{commute_id}
+ </update>
+  
+ 
+  
+  <select id="findAllCommutes" resultType="commute">
+  	select
+  		c.commute_id,
+    	c.member_mail,
+    	c.commute_date,
+    	c.attendance_time,
+    	c.leave_time,
+    	c.commute_status,
+    	m.member_name
+    from
+    	commute c join member m
+    	on (c.member_mail = m.member_mail)
+    where
+    	c.member_mail = #{member_mail}
+  </select>
+  
+ 
+  
+ 
+  
+</mapper>

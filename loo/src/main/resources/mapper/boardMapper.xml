@@ -83,26 +83,34 @@
   </delete>
   
   <insert id="saveFile">
-  	<selectKey keyProperty="attachedFile_id" resultType="Long" order="BEFORE">
+  	<selectKey keyProperty="attachedFile_id" resultType="long" order="BEFORE">
   		select board_seq.nextval from dual
   	</selectKey>
-  		insert into attached_file(
-  			attachedFile_id,
-  			board_id,
-  			original_filename,
-  			saved_filename,
-  			file_size
-  		) values (
-  			#{attachedFile_id},
-  			#{board_id},
-  			#{original_filename},
-  			#{saved_filename},
-  			#{file_size}
-  		)
+  	insert into attached_file(
+  		attachedFile_id,
+  		board_id,
+  		original_filename,
+  		saved_filename,
+  		file_size
+  	) values (
+  		#{attachedFile_id},
+  		#{board_id},
+  		#{original_filename},
+  		#{saved_filename},
+  		#{file_size}
+  	)
   </insert>
   
-  <select id="findFiles" resultType="file">
-  	select * from attached_file
+  <select id="findFileByBoardId" resultType="file">
+  	select * from attached_file where board_id = #{board_id}
   </select>
   
+  <select id="findFileByAttachedFileId" resultType="file">
+	select * from attached_file where attachedFile_id = #{attachedFile_id}  
+  </select>
+  
+  <delete id="removeAttachedFile">
+  	delete from attached_file where attachedFile_id = #{attachedFile_id}
+  </delete>
+
 </mapper>
