@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head th:replace="head :: head"></head>
+<head>
+	<title>글 조회</title>
+</head>
+
+<body>
+	<div class="wrapper">
+		<!-- 사이드 메뉴 -->
+		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
+			<div th:replace="sidebar :: login"></div>
+		</nav>
+		<!-- 상단 드롭다운 -->
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
+				<a class="sidebar-toggle js-sidebar-toggle">
+					<i class="hamburger align-self-center"></i>
+    			</a>
+				<div th:replace="dropdown :: login"></div>
+			</nav>
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<table class="table" th:object="${board}">
+									<tbody>
+										<tr>
+									    	<th class="text-center">제목</th>
+									        <td th:text="*{board_title}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">작성일</th>
+									        <td th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">수정일</th>
+									        <td th:text="${#temporals.format(board.edit_time, 'yyyy-MM-dd HH:mm')}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">작성자</th>
+									        <td th:text="*{member_name}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">조회수</th>
+									        <td th:text="*{hit}"></td>
+									    </tr>
+									    <tr>
+									        <th class="text-center">내용</th>
+									        <td>
+												<textarea rows="10" class="form-control" th:text="*{board_contents}" readonly></textarea>
+											</td>
+									    </tr>
+									    <tr>
+											<th class="text-center">첨부파일</th>
+											<td>
+												<a th:if="${file}" th:text="${file.original_filename}"
+												   th:href="@{/board/download/{id}(id=${file.attachedFile_id})}"></a>
+												<p th:unless="${file}">첨부파일이 없습니다</p>
+											</td>
+										</tr>
+									</tbody>
+    							</table>
+    							<input type="hidden" th:field="*{board_category}">
+								<div class="text-center">
+								     <a th:href="@{/board/list(board_category=${board_category})}" class="btn btn-primary btn-sm">목록으로</a>
+								    <th:block >
+								    	<input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
+								        <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+								    </th:block>
+								    <hr />
+								</div>
+								<div class="col-12">
+									<div class="card">
+										<div class="card-header">
+											<h5 class="card-title mb-0">댓글</h5>
+										</div>
+										<div class="card-body">
+											<div class="d-flex align-items-start" th:unless="${param.comment_id}">
+												<div class="flex-grow-1">
+													<form action="writeComment" method="post" th:object="${newComment}">
+														<input type="hidden" th:field="${board.board_id}">
+														<textarea rows="2" class="form-control" th:field="*{comment_contents}" placeholder="댓글을 입력하세요."></textarea>
+														<input type="submit" class="float-end btn btn-primary btn-sm" value="댓글 작성" style="margin-top: 10px;">
+													</form>
+												</div>
+											</div>
+											<!-- 수정버튼클릭 시 작성창에서 수정창으로 변경 -->
+											<div class="d-flex align-items-start" th:if="${param.comment_id}">
+												<div class="flex-grow-1">
+													<form action="updateComment" method="post" th:object="${updateComment}">
+														<input type="hidden" th:field="*{comment_id}">
+														<textarea rows="2" class="form-control" th:field="*{comment_contents}"></textarea>
+														<input type="submit" class="float-end btn btn-primary btn-sm" value="댓글 수정" style="margin-top: 10px;">
+													</form>
+												</div>
+											</div>
+											<div class="d-flex align-items-start" th:each="comments : ${comments}">
+												<div class="flex-grow-1">
+													<hr />
+													<th:block th:text="${comments.comment_contents}"></th:block>
+													<small class="text-muted" th:text="'- ' + ${comments.member_name}"></small><br />
+													<small class="float-end text-navy" th:text="'작성일 : ' + ${#temporals.format(comments.comment_create_time, 'yyyy-MM-dd HH:mm')}"></small><br />
+													<small th:if="${comments.comment_edit_time != null}" class="float-end text-navy" th:text="'수정일 : ' + ${#temporals.format(comments.comment_edit_time, 'yyyy-MM-dd HH:mm')}"></small><br />
+													<th:block th:if="${session.loginMember.member_mail == comments.member_mail}">
+														<a th:onclick="|location.href='/board/deleteComment?comment_id=${comments.comment_id}'|"><i class="float-end feather-sm" data-feather="trash-2" style="margin-left: 5px;"></i></a>
+														<a th:onclick="|location.href='/board/updateComment?comment_id=${comments.comment_id}'|"><i class="float-end feather-sm" data-feather="edit-3"></i></a>
+													</th:block>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<script src="/js/app.js"></script>
+
+</body>
+
+</html>
