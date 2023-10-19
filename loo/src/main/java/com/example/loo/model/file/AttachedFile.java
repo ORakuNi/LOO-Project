@@ -1,4 +1,4 @@
-package com.example.loo.model.board;
+package com.example.loo.model.file;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AttachedFile {
 	private Long attachedFile_id;
-	private Long board_id;
 	private String original_filename;
 	private String saved_filename;
 	private Long file_size;

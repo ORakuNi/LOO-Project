@@ -86,7 +86,7 @@
   	<selectKey keyProperty="attachedFile_id" resultType="Long" order="BEFORE">
   		select board_seq.nextval from dual
   	</selectKey>
-  		insert into attached_file(
+  		insert into board_attached_file(
   			attachedFile_id,
   			board_id,
   			original_filename,
@@ -101,8 +101,8 @@
   		)
   </insert>
   
-  <select id="findFiles" resultType="file">
-  	select * from attached_file
+  <select id="findFiles" resultType="boardfile">
+  	select * from board_attached_file
   </select>
   
 </mapper>

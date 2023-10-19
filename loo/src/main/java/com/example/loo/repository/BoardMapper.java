@@ -2,12 +2,12 @@ package com.example.loo.repository;
 
 import java.util.List;
 
-
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.loo.model.board.AttachedFile;
 import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
+import com.example.loo.model.file.AttachedFile;
+import com.example.loo.model.file.BoardAttachedFile;
 
 @Mapper
 public interface BoardMapper {
@@ -26,6 +26,6 @@ public interface BoardMapper {
 	
 	void saveFile(AttachedFile attachedFile);
 	
-    List<AttachedFile> findFiles();
+    List<BoardAttachedFile> findFiles();
     
 }
