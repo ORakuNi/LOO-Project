@@ -101,6 +101,18 @@
   		)
   </insert>
   
+  <select id="findFileByBoardId" resultType="boardfile">
+  	select * from board_attached_file where board_id = #{board_id}
+  </select>
+  
+  <select id="findFileByAttachedFileId" resultType="boardfile">
+	select * from board_attached_file where attachedFile_id = #{attachedFile_id}  
+  </select>
+  
+  <delete id="removeAttachedFile">
+  	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
+  </delete>
+  
   <select id="findFiles" resultType="boardfile">
   	select * from board_attached_file
   </select>
