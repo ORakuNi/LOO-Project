@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
+
 <head th:replace="head :: head"></head>
+
 <head>
 	<title>맛집</title>
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script type="text/javascript">
 		$(document).ready(function () {
 			$.ajax({
@@ -16,24 +19,27 @@
 						put_data1(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
 					}
 					console.log(matgip_data)
-	
+
 				},
 				async: false,
 				error: function () {  //불러오지 못했을때 할일
 					alert('Error loading XML document');
 				}
-	
+
 			})
-	
+
 		})
-	
+
 		function put_data1(num, title, contents, add, tel, img) {
 			let html = `
 						<div class="col-12 col-md-4 d-flex">
 						<div class="card">
 							<img class="card-img-top" src="${img}" alt="Unsplash">
 							<div class="card-header">
-								<h5 class="card-title">${num + 1}.${title}</h5>
+								<h5 class="card-title">${num + 1}.${title}
+								<button class="btn btn-danger p-1" id="button-${num + 1}" onclick="addFavorites('${title}','${add}','${tel}')"><span>찜하기</span></button>
+								</h5>
+								
 							</div>
 							<div class="card-body">
 								<p class="card-text">${contents}
@@ -47,9 +53,26 @@
 						`
 			$('#matgip').append(html);
 		}
-	
+
+
+		function addFavorites(title, add, tel) {
+
+			$.ajax({
+				type: "POST",
+				url: "restaurant",
+				data: {matgip_title: title, matgip_add: add, matgip_tel: tel}, // 보낼 데이터를 이와 같이 설정
+				success: function (result) {
+					Swal.fire(
+						'찜 등록되었습니다'
+					).then(() => {
+						location.reload();
+					})
+				}
+			});
+		}
+
 	</script>
-	
+
 	<script type="text/javascript">
 		$(document).ready(function () {
 			$("#more").click(function () {
@@ -63,12 +86,12 @@
 							put_data(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
 						}
 						console.log(matgip_data)
-	
+
 					},
 					error: function () {  //불러오지 못했을때 할일
 						alert('Error loading XML document');
 					}
-	
+
 				})
 			})
 		})
@@ -79,6 +102,7 @@
 							<img class="card-img-top" src="${img}" alt="Unsplash">
 							<div class="card-header">
 								<h5 class="card-title">${num + 1}.${title}</h5>
+								<button></button>
 							</div>
 							<div class="card-body">
 								<p class="card-text">${contents}
@@ -90,12 +114,12 @@
 						</div>
 					</div>
 						`
-			
-			$("#matgip").map(function(){
+
+			$("#matgip").map(function () {
 				return this.firstChild;
 			}).before(html)
 		}
-	
+
 	</script>
 </head>
 
@@ -107,11 +131,11 @@
 		</nav>
 
 		<div class="main">
-		<!-- 드롭다운 -->
+			<!-- 드롭다운 -->
 			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
-    			</a>
+				</a>
 				<div th:replace="dropdown :: login"></div>
 			</nav>
 
@@ -122,9 +146,38 @@
 						<a class="badge bg-dark text-white ms-2" id="more">
 							오늘의 맛집 추천이 맘에 들지 않는다면?
 						</a>
+						
+							<a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown" align="left">
+								<span class="position-relative">
+									<button class="btn btn-primary"> 찜 목록</button>
+								</span>
+							</a>
+							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
+								<div class="dropdown-menu-header">
+									<div class="position-relative">
+										내가 찜한 맛집 리스트
+									</div>
+								</div>
+								<div class="list-group">
+									<a href="#" class="list-group-item">
+										<div class="row g-0 align-items-center">
+											<div class="col-2">
+												
+											</div>
+											<div class="col-10 ps-2">
+												
+											</div>
+										</div>
+									</a>
+									
+								</div>
+								<div class="dropdown-menu-footer">
+									<a href="#" class="text-muted">Show all messages</a>
+								</div>
+							</div>
+			
 					</div>
-
-					<div class="row" id="matgip" >
+					<div class="row" id="matgip">
 
 					</div>
 				</div>

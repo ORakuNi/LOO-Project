@@ -59,7 +59,6 @@
 		schedule_name,
 		schedule_contents,
 		schedule_date,
-		member_mail,
 		schedule_type,
 		importance,
 		deadline
@@ -68,7 +67,7 @@
 
 	</select>
 	<select id="allSchedules" resultType="schedule">
-		select * from schedule where member_mail = #{member_mail}
+		select * from schedule
 	</select>
 	
 	<delete id="deleteSchedule">

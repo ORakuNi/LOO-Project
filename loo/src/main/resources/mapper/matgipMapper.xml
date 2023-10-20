@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.loo.repository.MatgipMapper">
+
+	<insert id="saveMatgip">
+		<selectKey keyProperty="matgip_id" resultType="long"
+			order="BEFORE">
+			select mat_sequence.nextval from dual
+		</selectKey>
+
+		insert into matgip(
+			matgip_id,
+			matgip_title,
+			matgip_add,
+			matgip_date,
+			member_mail,
+			matgip_tel
+		) values (
+			#{matgip_id},
+			#{matgip_title},
+			#{matgip_add},
+			SYSDATE,
+			#{member_mail},
+			#{matgip_tel}
+		)
+	</insert>
+
+	
+
+
+</mapper>
