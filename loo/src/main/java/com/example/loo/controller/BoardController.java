@@ -60,8 +60,13 @@ public class BoardController {
 	
     // 글쓰기 페이지 이동
     @GetMapping("write")
-    public String writeForm(@RequestParam BoardCategory board_category,
+    public String writeForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
+    						@RequestParam BoardCategory board_category,
     						Model model) {
+    	
+    	if(!loginMember.getPosition_id().equals("manager")) {
+    		return "redirect:/board/list";
+    	}
 
 
         BoardWriteForm boardWriteForm = new BoardWriteForm();
