@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <typeAliases>
+  	<typeAlias type="com.example.loo.model.board.Board" alias="board"/>
+  	<typeAlias type="com.example.loo.model.file.AttachedFile" alias="file"/>
+  	<typeAlias type="com.example.loo.model.file.BoardAttachedFile" alias="boardfile"/>
+  	<typeAlias type="com.example.loo.model.file.MemberAttachedFile" alias="memberfile"/>
+  	<typeAlias type="com.example.loo.model.comments.Comments" alias="comments"/>
+  	<typeAlias type="com.example.loo.model.commute.Commute" alias="commute"/>
+  	<typeAlias type="com.example.loo.model.member.Member" alias="member"/>
+  </typeAliases>
+</configuration>

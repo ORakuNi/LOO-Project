@@ -40,6 +40,8 @@
     	on (b.member_mail = m.member_mail)
     where
     	b.board_category = #{board_category}
+    order by
+    	create_time desc
   </select>
   
   <select id="findBoard" resultType="board">
@@ -79,5 +81,40 @@
   <delete id="removeBoard">
   	delete from board where board_id = #{board_id}
   </delete>
+  
+  <insert id="saveFile">
+  	<selectKey keyProperty="attachedFile_id" resultType="Long" order="BEFORE">
+  		select board_seq.nextval from dual
+  	</selectKey>
+  		insert into board_attached_file(
+  			attachedFile_id,
+  			board_id,
+  			original_filename,
+  			saved_filename,
+  			file_size
+  		) values (
+  			#{attachedFile_id},
+  			#{board_id},
+  			#{original_filename},
+  			#{saved_filename},
+  			#{file_size}
+  		)
+  </insert>
+  
+  <select id="findFileByBoardId" resultType="boardfile">
+  	select * from board_attached_file where board_id = #{board_id}
+  </select>
+  
+  <select id="findFileByAttachedFileId" resultType="boardfile">
+	select * from board_attached_file where attachedFile_id = #{attachedFile_id}  
+  </select>
+  
+  <delete id="removeAttachedFile">
+  	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
+  </delete>
+  
+  <select id="findFiles" resultType="boardfile">
+  	select * from board_attached_file
+  </select>
   
 </mapper>

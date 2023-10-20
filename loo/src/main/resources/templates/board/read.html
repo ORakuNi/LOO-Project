@@ -52,16 +52,24 @@
 												<textarea rows="10" class="form-control" th:text="*{board_contents}" readonly></textarea>
 											</td>
 									    </tr>
+									    <tr>
+											<th class="text-center">첨부파일</th>
+											<td>
+												<a th:if="${file}" th:text="${file.original_filename}"
+												   th:href="@{/board/download/{id}(id=${file.attachedFile_id})}"></a>
+												<p th:unless="${file}">첨부파일이 없습니다</p>
+											</td>
+										</tr>
 									</tbody>
     							</table>
     							<input type="hidden" th:field="*{board_category}">
 								<div class="text-center">
-								    <a th:href="@{/board/list(board_category=${board_category})}" class="btn btn-primary btn-sm">목록으로</a>
+								     <a th:href="@{/board/list(board_category=${board_category})}" class="btn btn-primary btn-sm">목록으로</a>
 								    <th:block >
-								    	<input th:if="${board.member_mail == session.loginMember.member_mail}" type="button" 
-								    		class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
-								        <input th:if="${board.member_mail == session.loginMember.member_mail || session.loginMember.getPosition_id == 'manager'}" type="button" 
-								        	class="btn btn-primary btn-sm" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+								    	<input type="button" class="btn btn-primary btn-sm" th:if="${session.loginMember.member_mail == board.member_mail}"
+								    		 th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
+								        <input type="button" class="btn btn-primary btn-sm" th:if="${session.loginMember.member_mail == board.member_mail}"
+								        	 th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
 								    </th:block>
 								    <hr />
 								</div>
