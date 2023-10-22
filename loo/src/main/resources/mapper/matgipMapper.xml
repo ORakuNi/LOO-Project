@@ -28,7 +28,9 @@
 		)
 	</insert>
 
-	
+	<select id="findMatgip" resultType="restaurant">
+		select * from matgip where matgip_title = #{matgip_title} and member_mail = #{member_mail}
+	</select>
 
 
 </mapper>

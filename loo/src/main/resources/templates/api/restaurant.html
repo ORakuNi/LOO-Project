@@ -7,8 +7,9 @@
 	<title>맛집</title>
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	<script type="text/javascript">
+	<script th:inline="javascript">
 		$(document).ready(function () {
+
 			$.ajax({
 				url: "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=kL00C7wEpGgpo2n%2FErweSgWemnixWZxI2N%2BTzlkyWrugWrGVQTQGO0lpetrDfzp88yDNXbcJJDyN2mTGdowblw%3D%3D&pageNo=1&numOfRows=10&resultType=json",           //파일 경로, 어떤 파일을 불러올 것인지               //캐시 사용여부 true false
 				dataType: "json",             //타입
@@ -19,28 +20,31 @@
 						put_data1(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
 					}
 					console.log(matgip_data)
-
 				},
 				async: false,
 				error: function () {  //불러오지 못했을때 할일
 					alert('Error loading XML document');
 				}
-
 			})
-
 		})
 
 		function put_data1(num, title, contents, add, tel, img) {
+			let like = [[${session.like}]]
+			let likes = []
+			likes.push(like)
 			let html = `
 						<div class="col-12 col-md-4 d-flex">
 						<div class="card">
-							<img class="card-img-top" src="${img}" alt="Unsplash">
+							<img class="card-img-top pic" src="${img}" alt="Unsplash">
 							<div class="card-header">
 								<h5 class="card-title">${num + 1}.${title}
-								<button class="btn btn-danger p-1" id="button-${num + 1}" onclick="addFavorites('${title}','${add}','${tel}')"><span>찜하기</span></button>
-								</h5>
-								
-							</div>
+									
+                <button class="btn btn-danger p-1" id="button-${num + 1}" onclick="addFavorites('${title}','${add}','${tel}')">
+                  찜하기
+                </button> 
+                <span style="font-size : 30px; text-align:center;">${like == title ? '❤️' : ''}</span>
+				</h5>					
+					</div>
 							<div class="card-body">
 								<p class="card-text">${contents}
 							</div>
@@ -121,6 +125,19 @@
 		}
 
 	</script>
+	<style>
+		.pic {
+			width: 400px;
+			transition: all 0.2s linear;
+			overflow: hidden;
+		}
+
+		.pic:hover {
+			transform: scale(1.2);
+			overflow: hidden;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -146,12 +163,13 @@
 						<a class="badge bg-dark text-white ms-2" id="more">
 							오늘의 맛집 추천이 맘에 들지 않는다면?
 						</a>
-						
+						<!-- 
 							<a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown" align="left">
 								<span class="position-relative">
 									<button class="btn btn-primary"> 찜 목록</button>
 								</span>
 							</a>
+						
 							<div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
 								<div class="dropdown-menu-header">
 									<div class="position-relative">
@@ -176,11 +194,11 @@
 								</div>
 							</div>
 			
-					</div>
-					<div class="row" id="matgip">
+					</div> -->
+						<div class="row" id="matgip">
 
+						</div>
 					</div>
-				</div>
 			</main>
 
 		</div>

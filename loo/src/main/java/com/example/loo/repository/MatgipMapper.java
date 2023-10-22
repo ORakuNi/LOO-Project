@@ -8,4 +8,6 @@ import com.example.loo.model.restaurant.Restaurant;
 public interface MatgipMapper {
 
 	void saveMatgip(Restaurant restaurant);
+	
+	Restaurant findMatgip(String matgip_title, String member_mail);
 }
