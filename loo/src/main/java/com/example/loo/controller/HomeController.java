@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,8 @@ import com.example.loo.model.commute.CommuteAttendance;
 import com.example.loo.model.member.Member;
 import com.example.loo.repository.BoardMapper;
 import com.example.loo.repository.CommuteMapper;
+import com.example.loo.service.BoardService;
+import com.example.loo.util.PageNavigator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,32 +41,42 @@ public class HomeController {
 	private BoardMapper boardMapper;
 	
 	private final CommuteMapper commuteMapper;
+	private final BoardService boardService;
 	private Commute findCommute;
-
+	private final int countPerPage = 10;
+	private final int pagePerGroup = 1;
 
 	@GetMapping("/")
 	public String home(@SessionAttribute(name = "status", required = false)
 					@ModelAttribute CommuteAttendance commuteAttendance, 
-					HttpServletRequest request, 
+					HttpServletRequest request,
 					Model model) {
 		
-	    // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-	    List<Board> boards = boardMapper.findAllBoards(BoardCategory.NOTICE);
+        //페이징
+        int total = boardService.getTotal();
+        int page = 1;
+        
+		PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
+		
+		RowBounds rowBounds = new RowBounds(0, countPerPage);
+		
+        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
+        List<Board> boards = boardMapper.findAllBoards(BoardCategory.NOTICE, rowBounds);
+		
 	    // Board 리스트를 model 에 저장한다.
 	    model.addAttribute("boards", boards);
-	
-	
+
 		HttpSession session = request.getSession();
+		
 		Object attribute = session.getAttribute("status");
-//		log.info("attribute : {}", attribute);
+		
 		if(attribute != null) {
 			Commute findCommute = commuteMapper.findCommute(((Commute)attribute).getCommute_id());
-//			log.info("see : {}", findCommute);
 			model.addAttribute("commute", findCommute.getCommute_status());
 		}
 		
 		// 공지 게시판
-		List<Board> noticeBoardList = boardMapper.findAllBoards(BoardCategory.NOTICE);
+		List<Board> noticeBoardList = boardMapper.findAllBoards(BoardCategory.NOTICE, rowBounds);
 		model.addAttribute("noticeBoardList", noticeBoardList);
 		return "index";
 	}

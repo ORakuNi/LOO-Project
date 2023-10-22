@@ -3,6 +3,7 @@ package com.example.loo.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
 
 import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
@@ -14,8 +15,10 @@ public interface BoardMapper {
 
 	void saveBoard(Board board);
 	
-	List<Board> findAllBoards(BoardCategory board_category);
-		
+	int getTotal();
+	
+	List<Board> findAllBoards(BoardCategory board_category, RowBounds rowBounds);		
+	
 	Board findBoard(Long board_id);
 	
 	void addHit(Long board_id);
@@ -33,4 +36,6 @@ public interface BoardMapper {
 	void removeAttachedFile(Long attachedFile_id);
 	
 	List<BoardAttachedFile> findFiles();
+
+
 }

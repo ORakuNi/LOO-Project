@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -37,6 +38,7 @@ import com.example.loo.repository.BoardMapper;
 import com.example.loo.repository.CommentsMapper;
 import com.example.loo.service.BoardService;
 import com.example.loo.util.FileService;
+import com.example.loo.util.PageNavigator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,21 +56,37 @@ public class BoardController {
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
+	//페이징 처리를 위한 상수값
+	private final int countPerPage = 10;
+	private final int pagePerGroup = 5;
+	
 	@GetMapping("list")
 	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 						@RequestParam BoardCategory board_category,
+						@RequestParam(value = "page", defaultValue="1") int page,
 						Model model) {
 		
 		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
             return "redirect:/users/login";
         }
+        
+        //페이징
+        int total = boardService.getTotal();
+        
+		PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
+		
+//		log.info("페이지 정보: {}", navi);
+		
+		RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
 		
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardMapper.findAllBoards(board_category);
+        List<Board> boards = boardMapper.findAllBoards(board_category, rowBounds);
         
         // Board 리스트를 model 에 저장한다.
         model.addAttribute("boards", boards);
+        
+        model.addAttribute("navi", navi);
         
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);

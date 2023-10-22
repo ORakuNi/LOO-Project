@@ -1,11 +1,15 @@
 package com.example.loo.service;
 
+import java.util.List;
+
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
+import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.file.AttachedFile;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.repository.BoardMapper;
@@ -88,6 +92,10 @@ public class BoardService {
 	
 	public BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id) {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
+	}
+
+	public int getTotal() {
+		return boardMapper.getTotal();
 	}
 	
 }
