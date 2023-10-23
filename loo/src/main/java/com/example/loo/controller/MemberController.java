@@ -1,11 +1,8 @@
-	package com.example.loo.controller;
-
-import java.util.List;
+package com.example.loo.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.example.loo.model.file.MemberAttachedFile;
 import com.example.loo.model.member.Member;
 import com.example.loo.model.member.MemberLogin;
 import com.example.loo.model.member.MemberSignUp;
 import com.example.loo.model.member.MemberUpdate;
 import com.example.loo.repository.MemberMapper;
-
+import com.example.loo.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,13 +35,8 @@ public class MemberController {
 
 	@Value("${file.upload.path}")
 	private String uploadPath;
-   private MemberMapper memberMapper;
-   
-   
-   @Autowired
-   public void setMemberMapper(MemberMapper memberMapper) {
-      this.memberMapper = memberMapper;
-   }
+   private final MemberMapper memberMapper;
+   private final MemberService memberService;
    
    //회원가입 페이지 이동
    @GetMapping("signup")
@@ -98,19 +90,19 @@ public class MemberController {
          return "users/login";
       }
       
-   //로그인 검증
-   Member findMember = memberMapper.findMember(memberLogin.getMember_mail());
-   log.info("findMember:{}", findMember);
-   if(findMember == null || !findMember.getPassword().equals(memberLogin.getPassword())) {
-      result.reject("loginError", "아이디가 존재하지 않거나 패스워드가 다릅니다");
-      return "users/login";
+	   //로그인 검증
+	   Member findMember = memberMapper.findMember(memberLogin.getMember_mail());
+	   log.info("findMember:{}", findMember);
+	   if(findMember == null || !findMember.getPassword().equals(memberLogin.getPassword())) {
+	      result.reject("loginError", "아이디가 존재하지 않거나 패스워드가 다릅니다");
+	      return "users/login";
       }
    
-   //세션을 이용한 로그인 처리
-   HttpSession session = request.getSession();
-   session.setAttribute("loginMember", findMember);
-   
-   return "redirect:" + redirectURL;
+	   //세션을 이용한 로그인 처리
+	   HttpSession session = request.getSession();
+	   session.setAttribute("loginMember", findMember);
+	   
+	   return "redirect:" + redirectURL;
    }
    
    //로그아웃
@@ -130,6 +122,10 @@ public class MemberController {
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
+		
+		MemberAttachedFile file = memberMapper.findFileByMail(member.getMember_mail());
+		
+		model.addAttribute("file", file);
 		model.addAttribute("update", member);
 		return "users/update";
 	}
@@ -138,17 +134,22 @@ public class MemberController {
 	public String update(@SessionAttribute(name="loginMember", required = false) Member loginMember,
 						@RequestParam String member_mail,
 						@Validated @ModelAttribute("update") MemberUpdate memberUpdate,
-						BindingResult result) {
+						BindingResult result,
+						@RequestParam(required = false) MultipartFile file) {
 
-		log.info("company_mail: {}, member:{}", member_mail, memberUpdate);
+	   log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
+		
 		if(result.hasErrors()) {
 			return "users/update";
 		}
+		MemberAttachedFile previousFile = memberMapper.findFileByMail(member_mail);
+		
 		Member member = memberMapper.findMember(member_mail);
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
-		if(memberUpdate.getPassword().equals(member.getPassword()) || memberUpdate.getPhone().equals(member.getPhone())) {
+		if(memberUpdate.getPassword().equals(member.getPassword())
+				&& memberUpdate.getPhone().equals(member.getPhone())) {
 			result.reject("update none","수정된 사항이 없습니다.");
 			return "users/update";
 		}
@@ -157,8 +158,11 @@ public class MemberController {
 		log.info("member: {}", member);
 		memberMapper.updateMember(member);
 		
+		if(file != null && file.getSize() > 0) {
+			memberService.updateMember(loginMember, member, previousFile, file);
+		}
+		
 		return "redirect:/";
 	}
-	
-	
+   
 }

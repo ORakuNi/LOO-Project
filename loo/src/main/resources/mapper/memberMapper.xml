@@ -34,13 +34,45 @@
 	
 	<update id="updateMember">
 		update member
-		set
+		<set>
 			password = #{password},
-			phone = #{phone}
+			<if test="phone != null">phone = #{phone},</if>
+       		<if test="saved_filename != null">saved_filename = #{saved_filename}</if>
+    	</set>
 		where
 			member_mail = #{member_mail}
 	</update>
 	
-
+	<insert id="saveFile">
+	<selectKey keyProperty="attachedFile_id" resultType="long" order="BEFORE">
+        select board_seq.nextval from dual
+    </selectKey>
+		insert into member_attached_file(
+    	attachedFile_id,
+    	member_mail,
+    	original_filename,
+    	saved_filename,
+    	file_size
+    ) values (
+    	#{attachedFile_id},
+    	#{member_mail},
+    	#{original_filename},
+    	#{saved_filename},
+    	#{file_size}
+    )
+	
+	</insert>
+	
+	<select id="findFileByMail" resultType="memberfile">
+		select * from member_attached_file where member_mail = #{member_mail}
+	</select>
+	
+	<select id="findFileByAttachedFileId" resultType="memberfile">
+		select * from member_attached_file where attachedFile_id = #{attachedFile_id}
+	</select>
+	
+	<delete id="removeAttachedFile">
+		delete member_attached_file where attachedFile_id = #{attachedFile_id}
+	</delete>
 	
 </mapper>

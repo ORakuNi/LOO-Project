@@ -1,5 +1,7 @@
 package com.example.loo.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +61,9 @@ public class ScheduleController {
 		log.info("가져온거 : {} " , scheduleWriteForm);
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("loginMember");
+		
+
+
 
 		Schedule schedule = ScheduleWriteForm.toSchedule(scheduleWriteForm);
 		schedule.setMember_mail(((Member) attribute).getMember_mail());

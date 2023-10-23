@@ -17,4 +17,5 @@ public class Member {
 	private String department_id;
 	private String position_id;
 	private String department_name;
+	private String saved_filename;
 }

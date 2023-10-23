@@ -50,17 +50,10 @@
       				<i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
     			</a>
 			</li>
-
+			
 			<li class="sidebar-item">
 				<a class="sidebar-link" href="/users/logout">
       				<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
-    			</a>
-			</li>
-			
-			
-			<li class="sidebar-item" th:if="${session.loginMember.getPosition_id == 'manager'}">
-				<a class="sidebar-link" href="/admin/admin">
-      				<i class="align-middle" data-feather="user"></i> <span class="align-middle">관리자 테스트</span>
     			</a>
 			</li>
 
@@ -69,7 +62,7 @@
 			</li>
 
 			<li class="sidebar-item">
-				<a class="sidebar-link" href="/schedule/list">
+				<a class="sidebar-link" href="#">
       				<i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
     			</a>
 			</li>
@@ -107,7 +100,7 @@
 			</li>
 			
 			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/board/club' ? 'active' : ''}">
-				<a class="sidebar-link" href="/board/club">
+				<a class="sidebar-link" href="/club/list">
       				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
     			</a>
 			</li>

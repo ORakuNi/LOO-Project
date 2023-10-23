@@ -1,15 +1,14 @@
 package com.example.loo.util;
 
-import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.example.loo.model.board.AttachedFile;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.loo.model.file.AttachedFile;
 
 @Component
 public class FileService {

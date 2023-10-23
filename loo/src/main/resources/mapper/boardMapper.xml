@@ -83,34 +83,54 @@
   </delete>
   
   <insert id="saveFile">
-  	<selectKey keyProperty="attachedFile_id" resultType="long" order="BEFORE">
+  	<selectKey keyProperty="attachedFile_id" resultType="Long" order="BEFORE">
   		select board_seq.nextval from dual
   	</selectKey>
-  	insert into attached_file(
-  		attachedFile_id,
-  		board_id,
-  		original_filename,
-  		saved_filename,
-  		file_size
-  	) values (
-  		#{attachedFile_id},
-  		#{board_id},
-  		#{original_filename},
-  		#{saved_filename},
-  		#{file_size}
-  	)
+  		insert into board_attached_file(
+  			attachedFile_id,
+  			board_id,
+  			original_filename,
+  			saved_filename,
+  			file_size
+  		) values (
+  			#{attachedFile_id},
+  			#{board_id},
+  			#{original_filename},
+  			#{saved_filename},
+  			#{file_size}
+  		)
   </insert>
   
-  <select id="findFileByBoardId" resultType="file">
-  	select * from attached_file where board_id = #{board_id}
+  <select id="findFileByBoardId" resultType="boardfile">
+  	select * from board_attached_file where board_id = #{board_id}
   </select>
   
-  <select id="findFileByAttachedFileId" resultType="file">
-	select * from attached_file where attachedFile_id = #{attachedFile_id}  
+  <select id="findFileByAttachedFileId" resultType="boardfile">
+	select * from board_attached_file where attachedFile_id = #{attachedFile_id}  
   </select>
   
   <delete id="removeAttachedFile">
-  	delete from attached_file where attachedFile_id = #{attachedFile_id}
+  	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
   </delete>
-
+  
+  <select id="findAllClubs" resultType="board">
+    select
+    	b.board_id,
+    	b.board_title,
+		b.board_contents,
+		b.member_mail,
+		b.board_category,
+		b.create_time,
+		b.edit_time,
+		b.hit,
+		f.saved_filename
+    from
+    	board b LEFT OUTER JOIN board_attached_file f
+		ON (b.BOARD_ID = f.BOARD_ID)
+    where
+    	b.board_category = 'CLUB'
+    order by
+    	create_time desc
+  </select>
+  
 </mapper>

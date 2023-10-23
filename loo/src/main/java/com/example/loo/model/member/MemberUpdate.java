@@ -24,5 +24,4 @@ public class MemberUpdate {
 	private Company company_id;
 	private String department_id;
 	private Position position_id;
-	//private Long attachedFile_id;
 }

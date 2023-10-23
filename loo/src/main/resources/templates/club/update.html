@@ -2,18 +2,24 @@
 <html lang="ko">
 <head th:replace="head :: head"></head>
 <head>
-	<title>글 작성</title>
+	<title>동호회 수정</title>
+	<script>
+	  function removeFile(){
+		  document.getElementById("fileRemoved").value = "true";
+		  document.getElementById("attachedFile").style.display = "none";
+	  }
+  	</script>
 </head>
 
 <body>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
-		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
+		<nav id="sidebar" class="sidebar js-sidebar">
 			<div th:replace="sidebar :: login"></div>
 		</nav>
 		<!-- 상단 드롭다운 -->
 		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
+			<nav class="navbar navbar-expand navbar-light navbar-bg">
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
     			</a>
@@ -21,42 +27,46 @@
 			</nav>
 			
 			<main class="content">
-				<form action="write" method="post" th:object="${writeForm}" enctype="multipart/form-data">
+				<form action="update" method="post" th:object="${club}" enctype="multipart/form-data">
 					<div class="container-fluid p-0">
 						<div class="card">
 							<div class="card-body">
 								<div class="row">
 									<div class="card-header">
-										<h5 class="card-title mb-0">글쓰기</h5>
+										<h5 class="card-title mb-0">동호회 수정</h5>
 									</div>
 								 	<table class="table">
 								  		<tbody>
 							    			<tr>
-												<th class="text-center">제목</th>
+												<th class="text-center">동호회 명</th>
 												<td>
 										          <input type="text" class="form-control" th:field="*{board_title}">
 										          <div class="text-danger" th:if="${#fields.hasErrors('board_title')}" th:errors="*{board_title}"></div>
 										        </td>
 										    </tr>
 							    			<tr>
-												<th class="text-center">내용</th>
+												<th class="text-center">한줄 소개</th>
 												<td>
-										          <textarea rows="10" class="form-control" th:field="*{board_contents}"></textarea>
-          										  <div class="text-danger" th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
+										          <input type="text" class="form-control" th:field="*{board_contents}">
+										          <div class="text-danger" th:if="${#fields.hasErrors('board_contents')}" th:errors="*{board_contents}"></div>
 										        </td>
 										    </tr>
 										    <tr>
 												<th class="text-center">첨부파일</th>
 												<td>
+													<div th:if="${file}" id="file" style="margin-bottom: 5px;">
+														<input class="btn btn-danger btn-sm" type="button" onclick="removeFile()" value="삭제">
+														<span th:text="${file.original_filename}"></span>
+													</div>
 													<input class="form-control" type="file" name="file">
 												</td>
 											</tr>
 										  </tbody>
 										</table>
-										<input type="hidden" th:field="*{board_category}">
 									    <p>
+										<input type="hidden" th:field="*{board_id}">
 									    <div class="text-center">
-									      <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/list(board_category=${param.board_category})}'|" value="목록으로">
+									      <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/club/list'" value="목록으로">
 									      <input type="submit" class="btn btn-primary btn-sm" value="등록하기">
 									      <input type="reset" class="btn btn-primary btn-sm" value="취소">
 									    </div>
