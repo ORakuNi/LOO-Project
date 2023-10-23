@@ -79,9 +79,12 @@ public class BoardController {
     @GetMapping("write")
     public String writeForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     						@RequestParam BoardCategory board_category,
-    						Model model) {
+    						Model model, 
+    						RedirectAttributes redirect) {
     	
-    	if(!loginMember.getPosition_id().equals("manager")) {
+    	redirect.addAttribute("board_category", board_category);
+    	
+    	if(board_category.toString().equals("NOTICE") && !loginMember.getPosition_id().equals("manager")) {
     		return "redirect:/board/list";
     	}
 
@@ -123,7 +126,7 @@ public class BoardController {
         
         log.info("filesize:{}", file.getSize());
                 
-        //다시 redirect 원래 페이지로 돌아오게 할 때?
+        //다시 redirect 원래 페이지로 돌아오게 할 때
         redirect.addAttribute("board_category", board.getBoard_category());
         
         // board/list 로 리다이렉트한다.

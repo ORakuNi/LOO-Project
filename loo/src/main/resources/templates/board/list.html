@@ -46,14 +46,15 @@
 				   								<td class="text-center" th:text="${board.hit}"></td>
 				   								<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
 				   								<td class="text-center" th:if="${session.loginMember.getPosition_id == 'manager'}">
-													<input type="button" th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+													<input type="button" class="btn btn-primary btn-sm" 
+															th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
 												</td>
 											</tr>
 								    	</tbody>
 								  	</table>
 								  <div class="text-center">
 								    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'" value="메인으로">
-								    <input th:unless="${board_category == T(com.example.loo.model.board.BoardCategory).NOTICE && session.loginMember.getPosition_id != 'manager'}" 
+								    <input th:unless="${board_category.toString().equals('NOTICE') && session.loginMember.getPosition_id != 'manager'}" 
 								    		type="button" class="btn btn-primary btn-sm" 
 								    		th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|"  value="글쓰기">   
 								  </div>

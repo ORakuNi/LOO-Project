@@ -77,7 +77,8 @@ public class CommuteController {
 	
 	// 전체 출퇴근 기록 가져오기
 	@GetMapping("list")
-	public String list(@RequestParam String member_mail, Model model) {
+	public String list(@RequestParam String member_mail, 
+						Model model) {
 		
 		List<Commute> findAllCommutes = commuteMapper.findAllCommutes(member_mail);
 		log.info("findAllCommutes : {}", findAllCommutes);

@@ -23,5 +23,6 @@ public class MemberUpdate {
 	private String hire_date;
 	private Company company_id;
 	private String department_id;
-	private Position position_id;
+	private String position_id;
+	private String saved_filename;
 }
