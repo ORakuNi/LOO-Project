@@ -117,4 +117,27 @@
   	select * from board_attached_file
   </select>
   
+  <select id="findBoards" resultType="board">
+  	select 
+  	    b.board_id,
+    	b.board_title,
+    	b.board_contents,
+    	m.member_name,
+    	b.board_category,
+    	b.create_time,
+    	b.edit_time,
+    	b.hit
+    from
+    	board b join member m
+    	on (b.member_mail = m.member_mail)
+  	 where
+  	 	b.board_title LIKE '%' || #{searchText} || '%'
+  	 	and
+  	 	b.board_category = #{board_category}
+  	 order by
+  	 	create_time desc
+  	 
+  </select>
+
+  
 </mapper>

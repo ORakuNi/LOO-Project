@@ -155,12 +155,15 @@ public class MemberController {
 		}
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
-		log.info("member: {}", member);
-		memberMapper.updateMember(member);
-		
+
 		if(file != null && file.getSize() > 0) {
 			memberService.updateMember(member, previousFile, file);
+			MemberAttachedFile nowFile = memberMapper.findFileByMail(member_mail);
+			member.setSaved_filename(nowFile.getSaved_filename());
 		}
+
+		log.info("member: {}", member);
+		memberMapper.updateMember(member);
 		
 		return "redirect:/";
 	}

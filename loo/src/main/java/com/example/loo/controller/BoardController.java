@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +50,6 @@ public class BoardController {
 	
 	private final BoardMapper boardMapper;
 	private final CommentsMapper commentsMapper;
-	private final FileService fileService;
 	private final BoardService boardService;
 	@Value("${file.upload.path}")
 	private String uploadPath;
@@ -57,24 +57,58 @@ public class BoardController {
 	@GetMapping("list")
 	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 						@RequestParam BoardCategory board_category,
+						@RequestParam(value = "searchText", defaultValue="", required = false) String searchText,
 						Model model) {
 		
+		log.info("list 컨트롤러 들어왔음");
+		System.out.println(board_category);
 		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
         if (loginMember == null) {
             return "redirect:/users/login";
         }
 		
-        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardMapper.findAllBoards(board_category);
+        List<Board> boards;
+        System.out.println(searchText);
         
-        // Board 리스트를 model 에 저장한다.
+        if(searchText.equals("")) {
+        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
+        boards =boardMapper.findAllBoards(board_category);
         model.addAttribute("boards", boards);
+        }
+        
+        else {
+        boards = boardMapper.findBoards(searchText, board_category);
+        model.addAttribute("boards", boards);
+        
+        }
         
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
-		
+   
+
+        
 		return "board/list";
 	}
+	
+	
+	@GetMapping("search")
+	public String search(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
+						@RequestParam BoardCategory board_category,
+						@RequestParam(value = "searchText", defaultValue="", required = false) String searchText,
+						Model model) {
+		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
+        if (loginMember == null) {
+            return "redirect:/users/login";
+        }
+		
+		List<Board> boards;
+		if(searchText != null) {
+			boards= boardMapper.findBoards(searchText, board_category);
+			model.addAttribute("boards", boards);
+		}
+		return "board/list";
+	}
+	
 	
     // 글쓰기 페이지 이동
     @GetMapping("write")
@@ -413,4 +447,5 @@ public class BoardController {
     						 .header(HttpHeaders.CONTENT_DISPOSITION, contentDispostion)
     						 .body(resource);
     }
+    
 }

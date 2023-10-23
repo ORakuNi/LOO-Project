@@ -36,7 +36,8 @@
 		update member
 		set
 			password = #{password},
-			phone = #{phone}
+			phone = #{phone},
+			saved_filename = #{saved_filename}
 		where
 			member_mail = #{member_mail}
 	</update>
