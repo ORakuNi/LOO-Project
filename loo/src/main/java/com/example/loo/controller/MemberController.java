@@ -148,11 +148,7 @@ public class MemberController {
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
-		if(memberUpdate.getPassword().equals(member.getPassword())
-				&& memberUpdate.getPhone().equals(member.getPhone())) {
-			result.reject("update none","수정된 사항이 없습니다.");
-			return "users/update";
-		}
+
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
 		log.info("member: {}", member);
