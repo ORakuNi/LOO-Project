@@ -278,7 +278,6 @@
 						<div class="col-12 col-lg-6 col-xxl-9 d-flex">
 							<div class="card flex-fill">
 								<div class="card-header">
-									<a th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
 									<h5 class="card-title mb-0">Notice</h5>
 									</a>
 								</div>
@@ -300,6 +299,11 @@
 										</tr>
 									</tbody>
 								</table>
+								<div class="card-header">
+									<a class="btn btn-primary d-block text-white" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
+										<span id="공지사항">더보기</span>
+									</a>									
+								</div>
 							</div>
 						</div>
 

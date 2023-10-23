@@ -43,7 +43,7 @@ public class HomeController {
 	private final CommuteMapper commuteMapper;
 	private final BoardService boardService;
 	private Commute findCommute;
-	private final int countPerPage = 10;
+	private final int countPerPage = 5;
 	private final int pagePerGroup = 1;
 
 	@GetMapping("/")
