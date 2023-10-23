@@ -158,7 +158,7 @@ public class MemberController {
 		
 		
 		if(file != null && file.getSize() > 0) {
-			memberService.updateMember(member, previousFile, file);
+			memberService.updateMember(loginMember, member, previousFile, file);
 			MemberAttachedFile nowFile = memberMapper.findFileByMail(member_mail);
 			member.setSaved_filename(nowFile.getSaved_filename());
 		}
@@ -166,8 +166,11 @@ public class MemberController {
 		log.info("member: {}", member);
 		memberMapper.updateMember(member);
 		
+		if(file != null && file.getSize() > 0) {
+			memberService.updateMember(loginMember, member, previousFile, file);
+		}
+		
 		return "redirect:/";
 	}
-	
-	
+   
 }

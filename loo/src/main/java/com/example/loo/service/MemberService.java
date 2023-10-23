@@ -1,5 +1,8 @@
 package com.example.loo.service;
 
+
+import javax.websocket.Session;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +29,7 @@ public class MemberService {
     private String uploadPath;
 	  
 	@Transactional
-	public void updateMember(Member givenmember, MemberAttachedFile previousFile, MultipartFile newFile) {
+	public void updateMember(Member loginMember, Member givenmember, MemberAttachedFile previousFile, MultipartFile newFile) {
 		
 		log.info("첨부파일:{}", newFile.getSize());
 
@@ -39,8 +42,13 @@ public class MemberService {
 			//첨부파일을 서버에 저장한다.
 			AttachedFile attachedFile = fileService.saveFile(newFile);
 			MemberAttachedFile savedFile = new MemberAttachedFile(attachedFile, givenmember.getMember_mail());
+
+			givenmember.setSaved_filename(savedFile.getSaved_filename());
+			loginMember.setSaved_filename(savedFile.getSaved_filename());
+
 			//첨부파일 내용을 데이터베이스 저장
 			memberMapper.saveFile(savedFile);
+			memberMapper.updateMember(givenmember);
 		}
 	}
 	

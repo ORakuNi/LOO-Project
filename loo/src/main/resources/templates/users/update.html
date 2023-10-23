@@ -29,12 +29,20 @@
 							<label class="form-label">아이디(Email)</label>
 							<input type="text" class="form-control" th:field="*{member_mail}" disabled/>
 						</div>
+<<<<<<< HEAD
 						<div class="mb-3">
 							<label class="form-label">내 사진</label>
 							<input class="form-control" type="file" name="file"/><br>
 							<img th:if="${file}" th:src="@{'/img/upload/' + ${file.saved_filename}}" class="img-fluid rounded mb-2" width="128" height="128" />
 				        </div>
+=======
+>>>>>>> ffe920c6fa8819b2b0fb3d4773dda0144914d6cf
 						<div class="mb-3">
+							<label class="form-label">내 사진</label>
+							<input class="form-control" type="file" name="file"/><br>
+							<img th:if="${file}" th:src="@{'/img/upload/' + ${file.saved_filename}}" class="img-fluid rounded mb-2" width="128" height="128" />
+				        </div>
+				        <div class="mb-3">
 							<label class="form-label">비밀번호</label>
 							<input class="form-control form-control-lg" type="password" th:field="*{password}" placeholder="새 비밀번호를 입력해주세요." />
 							<div class="text-danger" th:errors="*{password}"></div>
@@ -73,6 +81,7 @@
 		  				</div>
 						<div class="d-grid gap-2 mt-3">
 							<input type="submit" value="수정하기" class="btn btn-lg btn-primary">
+							<input type="hidden" th:field="*{password}">
 						</div>
 					</form>
 				</div>

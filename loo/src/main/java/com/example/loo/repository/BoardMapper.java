@@ -32,5 +32,5 @@ public interface BoardMapper {
 	//첨부파일 삭제
 	void removeAttachedFile(Long attachedFile_id);
 	
-	List<BoardAttachedFile> findFiles();
+	List<Board> findAllClubs();
 }

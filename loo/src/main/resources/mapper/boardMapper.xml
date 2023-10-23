@@ -113,8 +113,24 @@
   	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
   </delete>
   
-  <select id="findFiles" resultType="boardfile">
-  	select * from board_attached_file
+  <select id="findAllClubs" resultType="board">
+    select
+    	b.board_id,
+    	b.board_title,
+		b.board_contents,
+		b.member_mail,
+		b.board_category,
+		b.create_time,
+		b.edit_time,
+		b.hit,
+		f.saved_filename
+    from
+    	board b LEFT OUTER JOIN board_attached_file f
+		ON (b.BOARD_ID = f.BOARD_ID)
+    where
+    	b.board_category = 'CLUB'
+    order by
+    	create_time desc
   </select>
   
 </mapper>

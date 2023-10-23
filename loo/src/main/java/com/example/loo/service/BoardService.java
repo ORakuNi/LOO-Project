@@ -1,11 +1,16 @@
 package com.example.loo.service;
 
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
+
+import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.file.AttachedFile;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.repository.BoardMapper;
@@ -88,6 +93,27 @@ public class BoardService {
 	
 	public BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id) {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
+	}
+
+	public List<Board> findAllClubs() {
+		return boardMapper.findAllClubs();
+	}
+
+	public Board findBoard(Long board_id) {
+		return boardMapper.findBoard(board_id);
+	}
+	
+	public Board readBoard(Long board_id) {
+		Board board = findBoard(board_id);
+		// 조회수 1 증가
+        board.addHit();
+        // 조회수를 증가하여 데이터베이스에 업데이트 한다.
+        updateBoard(board, false, null);
+		return board;
+	}
+
+	public List<Board> findAllBoards(BoardCategory board_category) {
+		return boardMapper.findAllBoards(board_category);
 	}
 	
 }
