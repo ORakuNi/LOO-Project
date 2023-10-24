@@ -6,11 +6,20 @@
 	<head>		
 	<title>전화번호부</title>
 	</head>
-
-
-
 <body>
-
+	<script>
+		function search() {
+			let department_name = document.getElementById("department_name").value;
+			let member_mail = document.getElementById("member_mail").value;
+			let member_name = document.getElementById("member_name").value;
+			let phone = document.getElementById("phone").value;
+			
+			if(department_name || member_mail || member_name || phone){
+				location.href = "/phones/list?department_name=" + department_name + "&member_mail=" + member_mail
+				+"&member_name=" + member_name + "&phone=" +phone;
+			}
+		}
+	</script>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
@@ -52,10 +61,13 @@
 	 	 <tbody>
 			<tr class="text-center">
 				<th>
-					<form th:action="@{/phones/read}" method="get" class="text-center">
-   					
-				<select class="form-select mb-1" id="department_name" name="department_name">
-					 <label for="department_name">부서:</label>
+					<!--<form th:action="@{/phones/read}" method="get" class="text-center">
+   					<input  id="department_name" name="department_name" th:value="${department_name}"></input>
+<select class="form-select mb-1" id="department_name" name="department_name">
+					<label for="department_name"></label>-->
+				
+				<select class="form-select mb-1" id="department_name" name="department_name" th:value="${department_name}">
+
 					<option value="" selected>부서</option>
 					<option value="개발팀">개발팀</option>
 					<option value="인사팀">인사팀</option>
@@ -64,17 +76,16 @@
 				</th>
 				<th>
 						 <label for="member_mail">이메일:</label>
-					       <input type="text" id="member_mail" name="member_mail">
+					       <input type="search" id="member_mail" name="member_mail" th:value="${member_mail}">
 				</th>
 				<th>	  <label for="member_name">이름:</label>
-					        <input type="text" id="member_name" name="member_name">
+					        <input type="search" id="member_name" name="member_name" th:value="${member_name}">
 				</th>
 				<th>    <label for="phone">전화번호:</label>
-					    <input type="text" id="phone" name="phone">
+					    <input type="search" id="phone" name="phone" th:value="${phone}">
 				</th>
-		<th> <input class="btn btn-primary btn-sm" type="submit" onclick="location.href='/phones/read'" value="검색">
+		<th> <input class="btn btn-primary btn-sm" type="button" onclick="search()" value="검색">
 		</th>			
-							</form>
 			</tr>
 	 	 </tbody>
 		</table>				    

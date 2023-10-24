@@ -22,4 +22,5 @@ public class BoardUpdateForm {
     private Long hit;
     private LocalDateTime create_time;
 	boolean FileRemoved;
+
 }

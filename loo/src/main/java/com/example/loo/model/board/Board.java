@@ -31,7 +31,9 @@ public class Board {
         return boardUpdateForm;
     }
 
+
 	public void addHit() {
 		this.hit++;
 	}
+
 }
