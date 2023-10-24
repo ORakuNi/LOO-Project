@@ -72,24 +72,25 @@ public class BoardController {
         }
         
         //페이징
-        int total = boardService.getTotal();
+        int total = boardService.getTotal(board_category);
         
-		PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
-		
-//		log.info("페이지 정보: {}", navi);
-		
-		RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
-		
-        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardMapper.findAllBoards(board_category, rowBounds);
-        
-        // Board 리스트를 model 에 저장한다.
-        model.addAttribute("boards", boards);
-        
-        model.addAttribute("navi", navi);
-        
-        // 카테고리 정보를 전달할 때 사용
-        model.addAttribute("board_category", board_category);
+        if(total >= 0) {
+        	PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
+        	
+        	RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
+        	
+        	// 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
+        	List<Board> boards = boardMapper.findAllBoards(board_category, rowBounds);
+        	
+        	// Board 리스트를 model 에 저장한다.
+        	model.addAttribute("boards", boards);
+        	
+        	model.addAttribute("navi", navi);
+        	
+        	// 카테고리 정보를 전달할 때 사용
+        	model.addAttribute("board_category", board_category);
+        	
+        }
 		
 		return "board/list";
 	}

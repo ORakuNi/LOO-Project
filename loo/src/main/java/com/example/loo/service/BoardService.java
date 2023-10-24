@@ -94,7 +94,7 @@ public class BoardService {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
 
-	public int getTotal() {
+	public int getTotal(BoardCategory board_category) {
 		return boardMapper.getTotal();
 	}
 	

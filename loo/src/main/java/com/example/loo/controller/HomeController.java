@@ -53,7 +53,7 @@ public class HomeController {
 					Model model) {
 		
         //페이징
-        int total = boardService.getTotal();
+        int total = boardService.getTotal(BoardCategory.NOTICE);
         int page = 1;
         
 		PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
