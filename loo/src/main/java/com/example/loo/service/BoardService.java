@@ -2,7 +2,6 @@ package com.example.loo.service;
 
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,8 +93,30 @@ public class BoardService {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
 
+<<<<<<< HEAD
 	public int getTotal(BoardCategory board_category) {
 		return boardMapper.getTotal();
+=======
+	public List<Board> findAllClubs() {
+		return boardMapper.findAllClubs();
+	}
+
+	public Board findBoard(Long board_id) {
+		return boardMapper.findBoard(board_id);
+	}
+	
+	public Board readBoard(Long board_id) {
+		Board board = findBoard(board_id);
+		// 조회수 1 증가
+        board.addHit();
+        // 조회수를 증가하여 데이터베이스에 업데이트 한다.
+        updateBoard(board, false, null);
+		return board;
+	}
+
+	public List<Board> findAllBoards(BoardCategory board_category) {
+		return boardMapper.findAllBoards(board_category);
+>>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 	}
 	
 }

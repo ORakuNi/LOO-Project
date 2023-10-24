@@ -2,7 +2,13 @@
 <html lang="ko">
 <head th:replace="head :: head"></head>
 <head>
-	<title>동호회 만들기</title>
+	<title>동호회 수정</title>
+	<script>
+	  function removeFile(){
+		  document.getElementById("fileRemoved").value = "true";
+		  document.getElementById("attachedFile").style.display = "none";
+	  }
+  	</script>
 </head>
 
 <body>
@@ -21,13 +27,13 @@
 			</nav>
 			
 			<main class="content">
-				<form action="club-write" method="post" th:object="${club}" enctype="multipart/form-data">
+				<form action="update" method="post" th:object="${club}" enctype="multipart/form-data">
 					<div class="container-fluid p-0">
 						<div class="card">
 							<div class="card-body">
 								<div class="row">
 									<div class="card-header">
-										<h5 class="card-title mb-0">동호회 만들기</h5>
+										<h5 class="card-title mb-0">동호회 수정</h5>
 									</div>
 								 	<table class="table">
 								  		<tbody>
@@ -48,14 +54,19 @@
 										    <tr>
 												<th class="text-center">첨부파일</th>
 												<td>
+													<div th:if="${file}" id="file" style="margin-bottom: 5px;">
+														<input class="btn btn-danger btn-sm" type="button" onclick="removeFile()" value="삭제">
+														<span th:text="${file.original_filename}"></span>
+													</div>
 													<input class="form-control" type="file" name="file">
 												</td>
 											</tr>
 										  </tbody>
 										</table>
 									    <p>
+										<input type="hidden" th:field="*{board_id}">
 									    <div class="text-center">
-									      <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/board/club'" value="목록으로">
+									      <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/club/list'" value="목록으로">
 									      <input type="submit" class="btn btn-primary btn-sm" value="등록하기">
 									      <input type="reset" class="btn btn-primary btn-sm" value="취소">
 									    </div>

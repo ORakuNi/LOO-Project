@@ -76,7 +76,11 @@ public class HomeController {
 		}
 		
 		// 공지 게시판
+<<<<<<< HEAD
 		List<Board> noticeBoardList = boardMapper.findAllBoards(BoardCategory.NOTICE, rowBounds);
+=======
+		List<Board> noticeBoardList = boardMapper.findAllBoards(BoardCategory.NOTICE);
+>>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 		model.addAttribute("noticeBoardList", noticeBoardList);
 		return "index";
 	}
