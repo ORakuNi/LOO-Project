@@ -13,11 +13,11 @@
 	<script th:inline="javascript">
 		document.addEventListener('DOMContentLoaded', function () {
 			// 개인 스케줄
-			var object = [[${schedule}]]
+			var object = /*[[${schedule}]]*/'';
 			// 회사 스케줄
-			var objects = [[${schedules}]]
+			var objects = /*[[${schedules}]]*/'';
 			// 전체 스케줄 
-			var allObject = [[${allschedules}]]
+			var allObject = /*[[${allschedules}]]*/'';
 
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -37,7 +37,6 @@
 					right: 'dayGridMonth,timeGridWeek'
 				},
 
-
 				/* 마우스 올렸을 때 내용보이기(수정을 할수없어서 보류) eventDidMount: function (info) {
 					for (var i = 0; i < object.length; i++) {
 						if (info.event.title === object[i].schedule_name) {
@@ -50,7 +49,6 @@
 						}
 					}
 				}, */
-
 				navLinks: false,
 				fixedWeekCount: false, // 이전달 다음달 선택 막기 
 				eventSources: [
