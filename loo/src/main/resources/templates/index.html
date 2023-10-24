@@ -205,6 +205,7 @@
 											<div class=" text-center" th:unless="${session.status}">
 												<span
 													th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+													<span style="font-weight: bold;">[[${session.loginMember.member_name}]]님 출근하세요!!</span>
 												<button class="btn btn-danger btn-lg mr-12" id="comcheck">출근</button>
 											</div>
 

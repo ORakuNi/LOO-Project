@@ -1,9 +1,8 @@
 package com.example.loo.model.schedule;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Date;
 
-import org.springframework.format.annotation.DateTimeFormat;
+
 
 import lombok.Data;
 
@@ -12,12 +11,10 @@ public class ScheduleWriteForm {
 	
 	private String schedule_name;
 	private String schedule_contents;
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-	private LocalDateTime schedule_date;
+	private Date schedule_date;
 	private String importance;
 	private String schedule_type;
-	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-	private LocalDateTime deadline;
+	private Date deadline;
 	
 	public static Schedule toSchedule(ScheduleWriteForm scheduleWriteForm) {
 		Schedule schedule = new Schedule();

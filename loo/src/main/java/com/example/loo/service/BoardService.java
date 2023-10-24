@@ -114,4 +114,14 @@ public class BoardService {
 		return boardMapper.findAllBoards(board_category);
 	}
 	
+	public List<Board> searchBoards(BoardCategory board_category, String searchText){
+		if(searchText.equals("")) {
+			  List<Board> boards = boardMapper.findAllBoards(board_category);
+			  return boards;
+		} else 
+			 return boardMapper.findBoards(searchText, board_category);
+		
+		
+	}
+	
 }

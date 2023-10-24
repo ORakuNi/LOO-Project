@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head th:replace="head :: head"></head>
+
 <head>
-	<title th:text="${param.board_category} ? ${T(com.example.loo.model.board.BoardCategory).valueOf(param.board_category).description} : ''"></title>
+	<title
+		th:text="${param.board_category} ? ${T(com.example.loo.model.board.BoardCategory).valueOf(param.board_category).description} : ''">
+	</title>
 </head>
 
 <body>
+	<script>
+		function search() {
+			let searchText = document.getElementById("searchText").value;
+			let board_category = document.getElementById("board_category").value;
+			location.href = "/board/list?board_category=" + board_category + "&searchText=" + searchText;
+
+		}
+	</script>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
@@ -16,41 +28,65 @@
 			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
-    			</a>
+				</a>
 				<div th:replace="dropdown :: login"></div>
 			</nav>
 
 			<main class="content">
 				<div class="container-fluid p-0">
-					<th:block th:with="board_category=${T(com.example.loo.model.board.BoardCategory).valueOf(param.board_category)}">
+					<th:block
+						th:with="board_category=${T(com.example.loo.model.board.BoardCategory).valueOf(param.board_category)}">
 						<h1 class="h3 mb-3" th:text="${board_category.description}"></h1>
 					</th:block>
 					<div class="row">
 						<div class="col-12">
 							<div class="card">
 								<div class="card-body">
-								  	<table class="table">
-									  	<tbody>
-							    			<tr class="text-center">
-									      		<th>No</th>
-									      		<th>제목</th>
-											    <th>작성자</th>
-											    <th>조회수</th>
-											    <th>작성일</th>
+									<table class="table">
+										<tbody>
+											<tr class="text-center">
+												<th>No</th>
+												<th>제목</th>
+												<th>작성자</th>
+												<th>조회수</th>
+												<th>작성일</th>
 											</tr>
-											<tr th:each="board : ${boards}">
-											    <td class="text-center" th:text="${boardStat.count}"></td>
-				   								<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
-				     							<td class="text-center" th:text="${board.member_name}"></td>
-				   								<td class="text-center" th:text="${board.hit}"></td>
-				   								<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+
+
+
+
+											<tr th:if="${boards != null}" th:each="board : ${boards}">
+												<td class="text-center" th:text="${boardStat.count}"></td>
+												<td><a th:href="@{/board/read(board_id=${board.board_id})}"
+														th:text="${board.board_title}"></a></td>
+												<td class="text-center" th:text="${board.member_name}"></td>
+												<td class="text-center" th:text="${board.hit}"></td>
+												<td class="text-center"
+													th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}">
+												</td>
 											</tr>
-								    	</tbody>
-								  	</table>
-								  <div class="text-center">
-								    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'" value="메인으로">
-								    <input type="button" class="btn btn-primary btn-sm" th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|"  value="글쓰기">   
-								  </div>
+										</tbody>
+									</table>
+
+
+
+<div class="text-center">
+									<form>
+										<label for="searchText">제목:</label>
+										<input type="search" id="searchText" name="searchText" th:value="${searchText}">
+										<input type="hidden" id="board_category" name="board_category"
+											th:value="${board_category}">
+										<input type="button" onclick="search()" value="검색">
+									</form>
+</div>
+<p>
+									<div class="text-center">
+										<input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'"
+											value="메인으로">
+										<input type="button" class="btn btn-primary btn-sm"
+											th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|"
+											value="글쓰기">
+									</div>
 								</div>
 							</div>
 						</div>
