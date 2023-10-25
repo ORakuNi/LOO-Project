@@ -34,10 +34,13 @@ import com.example.loo.model.comments.CommentsUpdate;
 import com.example.loo.model.comments.CommentsWrite;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.model.member.Member;
+
 import com.example.loo.repository.BoardMapper;
 import com.example.loo.repository.CommentsMapper;
 import com.example.loo.service.BoardService;
 import com.example.loo.util.FileService;
+
+import com.example.loo.service.CommentsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,32 +51,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BoardController {
 	
-	private final BoardMapper boardMapper;
-	private final CommentsMapper commentsMapper;
 	private final BoardService boardService;
+	private final BoardMapper boardMapper;
+	
+	private final CommentsService commentsService;
+
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
 	@GetMapping("list")
 	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-						@RequestParam BoardCategory board_category,
-						@RequestParam(value = "searchText", defaultValue="", required = false) String searchText,
-						Model model) {
+			@RequestParam BoardCategory board_category,
+			@RequestParam(value = "searchText", defaultValue="", required = false) String searchText,
+			Model model) {
 		
-		log.info("list 컨트롤러 들어왔음");
-		System.out.println(board_category);
-		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
-		
+        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
+        //List<Board> boards = boardService.findAllBoards(board_category);
+
         List<Board> boards;
-        System.out.println(searchText);
         
         if(searchText.equals("")) {
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
         boards =boardMapper.findAllBoards(board_category);
         model.addAttribute("boards", boards);
+
         }
         
         else {
@@ -81,7 +82,7 @@ public class BoardController {
         model.addAttribute("boards", boards);
         
         }
-        
+
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
    
@@ -112,14 +113,8 @@ public class BoardController {
 	
     // 글쓰기 페이지 이동
     @GetMapping("write")
-    public String writeForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    						Model model, @RequestParam BoardCategory board_category) {
+    public String writeForm(Model model, @RequestParam BoardCategory board_category) {
     	
-    	// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
-        
         BoardWriteForm boardWriteForm = new BoardWriteForm();
         boardWriteForm.setBoard_category(board_category);
         
@@ -138,11 +133,6 @@ public class BoardController {
                         @RequestParam(required = false) MultipartFile file,
                         RedirectAttributes redirect) {
 
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
-        
         log.info("board: {}", boardWriteForm);
         
         // validation 에러가 있으면 board/write.html 페이지를 다시 보여준다.
@@ -169,28 +159,23 @@ public class BoardController {
     }
     
     @GetMapping("read")
-    public String read(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    					@RequestParam Long board_id,
+    public String read(@RequestParam Long board_id,
     					@RequestParam(required = false) Long comment_id,
     					Model model) {
     	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
         log.info("id: {}", board_id);
     	
         // 조회수 1 증가
-    	boardMapper.addHit(board_id); 
+        boardService.readBoard(board_id); 
     	
     	//첨부파일
-    	BoardAttachedFile attachedFile = boardMapper.findFileByBoardId(board_id);
+    	BoardAttachedFile attachedFile = boardService.findFileByBoardId(board_id);
     	log.info("첨부파일{}", attachedFile);
     	
     	model.addAttribute("file", attachedFile);
     	
     	// board_id에 해당하는 게시글 찾기
-    	Board board = boardMapper.findBoard(board_id);
+    	Board board = boardService.findBoard(board_id);
     	
     	// board_id에 해당하는 게시글이 없으면 리스트로 리다이렉트 시킨다.
         if (board == null) {
@@ -199,7 +184,7 @@ public class BoardController {
         }
         
         // 댓글을 조회한다.
-        List<Comments> comments = commentsMapper.findAllComments(board_id);
+        List<Comments> comments = commentsService.findAllComments(board_id);
         log.info("comments: {}", comments);
         
         // 댓글이 있으면 모두 model에 담아 return
@@ -215,7 +200,7 @@ public class BoardController {
         model.addAttribute("newComment", new CommentsWrite());
         
         if(comment_id != null) {
-        	Comments updateComment = commentsMapper.findComment(comment_id);
+        	Comments updateComment = commentsService.findComment(comment_id);
         	// 댓글 수정 시 받을 model
         	model.addAttribute("updateComment", updateComment);
         }
@@ -228,11 +213,8 @@ public class BoardController {
     public String writeComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     							@ModelAttribute("newComment") CommentsWrite commentsWrite,
     							@RequestParam Long board_id,
+    							@RequestParam BoardCategory board_category,
     							BindingResult results) {
-    	
-    	if(loginMember == null) {
-    		return "redirect:/users/login";
-    	}
     	
     	if(results.hasErrors()) {
     		return "redirect:/board/read?board_id=" + board_id;
@@ -241,7 +223,7 @@ public class BoardController {
     	Comments comments = commentsWrite.toComments(commentsWrite);
     	comments.setBoard_id(board_id);
     	comments.setMember_mail(loginMember.getMember_mail());
-    	commentsMapper.saveComments(comments);
+    	commentsService.saveComments(comments);
     	
     	return "redirect:/board/read?board_id=" + board_id;
     }
@@ -250,20 +232,16 @@ public class BoardController {
     @GetMapping("updateComment")
     public String updateComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 								@RequestParam Long comment_id,
+								@RequestParam BoardCategory board_category,
 								Model model) {
     	
-    	if(loginMember == null) {
-    		return "redirect:/users/login";
-    	}
-    	
-    	Comments updateComment = commentsMapper.findComment(comment_id);
-    	
+    	Comments updateComment = commentsService.findComment(comment_id);
+    	Long board_id = updateComment.getBoard_id();
+
     	if(updateComment == null || !updateComment.getMember_mail().equals(loginMember.getMember_mail())) {
     		log.info("댓글 수정 권한 없음");
-    		return "redirect:/users/login";
+    		return "redirect:/board/read?board_id=" + board_id;
     	}
-    	
-    	Long board_id = updateComment.getBoard_id();
     	
     	return "redirect:/board/read?board_id=" + board_id + "&comment_id=" + updateComment.getComment_id();
     	
@@ -273,17 +251,16 @@ public class BoardController {
     @PostMapping("updateComment")
     public String updateComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     							@RequestParam Long comment_id,
+    							@RequestParam BoardCategory board_category,
     							@Validated @ModelAttribute("updateComment") CommentsUpdate commentsUpdate,
     							BindingResult result) {
-    	// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
         
         log.info("commentsUpdate: {}", commentsUpdate);
         
-        Comments comments = commentsMapper.findComment(comment_id);
-    	
+        Comments comments = commentsService.findComment(comment_id);
+        
+        Long board_id = comments.getBoard_id();
+        
         // Board 객체가 없거나 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
         if (comments == null || !comments.getMember_mail().equals(loginMember.getMember_mail())) {
             log.info("수정 권한 없음");
@@ -294,10 +271,8 @@ public class BoardController {
         comments.setComment_contents(commentsUpdate.getComment_contents());
         
         // 수정한 Board 를 데이터베이스에 update 한다.
-        commentsMapper.updateComments(comments);
+        commentsService.updateComments(comments);
         
-        Long board_id = comments.getBoard_id();
-    	
     	return "redirect:/board/read?board_id=" + board_id;
     }
     
@@ -305,16 +280,14 @@ public class BoardController {
     // 댓글 삭제
     @GetMapping("deleteComment")
     public String deleteComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
+    							@RequestParam BoardCategory board_category,
     							@RequestParam Long comment_id) {
     	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
-        
         // board_id 에 해당하는 게시글을 가져온다.
-        Comments comments = commentsMapper.findComment(comment_id);
+        Comments comments = commentsService.findComment(comment_id);
         
+        Long board_id = comments.getBoard_id();
+
         // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
         if (comments == null || !comments.getMember_mail().equals(loginMember.getMember_mail())) {
             log.info("삭제 권한 없음");
@@ -322,9 +295,7 @@ public class BoardController {
         }
     	
         // 댓글 삭제
-    	commentsMapper.removeComment(comment_id);
-    	
-    	Long board_id = comments.getBoard_id();
+        commentsService.removeComment(comment_id);
     	
     	return "redirect:/board/read?board_id=" + board_id;
     }
@@ -335,8 +306,9 @@ public class BoardController {
     						@RequestParam Long board_id,
     						@RequestParam BoardCategory board_category,
             				Model model) {
-    	
-    	Board board = boardMapper.findBoard(board_id);
+    
+    	Board board = boardService.findBoard(board_id);
+
     	// board_id에 해당하는 게시글이 없거나
     	// 게시글의 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
         if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
@@ -362,11 +334,6 @@ public class BoardController {
     					@RequestParam(required = false) MultipartFile file,
     					RedirectAttributes redirect) {
     	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/member/login";
-        }
-        
         log.info("board: {}", updateBoard);
     	
     	// validation 에 에러가 있으면 board/update.html 페이지로 돌아간다.
@@ -374,7 +341,7 @@ public class BoardController {
             return "board/update";
         }
         
-        Board board = boardMapper.findBoard(board_id);
+        Board board = boardService.findBoard(board_id);
     	
         // Board 객체가 없거나 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
         if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
@@ -385,11 +352,9 @@ public class BoardController {
         // 제목과 내용 수정
         board.setBoard_title(updateBoard.getBoard_title());
         board.setBoard_contents(updateBoard.getBoard_contents());
-        //파일
-        boardService.updateBoard(board, updateBoard.isFileRemoved(), file);
        
         // 수정한 Board 를 데이터베이스에 update 한다.
-        boardMapper.updateBoard(board);
+        boardService.updateBoard(board, updateBoard.isFileRemoved(), file);
         
         redirect.addAttribute("board_category", board.getBoard_category());
         
@@ -401,13 +366,8 @@ public class BoardController {
     public String delete(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id, RedirectAttributes redirect) {
     	
-        // 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
-        
         // board_id 에 해당하는 게시글을 가져온다.
-        Board board = boardMapper.findBoard(board_id);
+        Board board = boardService.findBoard(board_id);
         
         // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
         if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
@@ -415,8 +375,7 @@ public class BoardController {
             return "redirect:/board/list";
         }
     	
-        // 댓글 삭제
-        commentsMapper.removeAllComments(board_id);
+        commentsService.removeAllComments(board_id);
         
         //게시글 삭제
         boardService.removeBoard(board_id);

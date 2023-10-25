@@ -105,6 +105,26 @@
   	select * from board_attached_file where board_id = #{board_id}
   </select>
   
+  <select id="findAllClubs" resultType="board">
+    select
+    	b.board_id,
+    	b.board_title,
+		b.board_contents,
+		b.member_mail,
+		b.board_category,
+		b.create_time,
+		b.edit_time,
+		b.hit,
+		f.saved_filename
+    from
+    	board b LEFT OUTER JOIN board_attached_file f
+		ON (b.BOARD_ID = f.BOARD_ID)
+    where
+    	b.board_category = 'CLUB'
+    order by
+    	create_time desc
+  </select>
+  
   <select id="findFileByAttachedFileId" resultType="boardfile">
 	select * from board_attached_file where attachedFile_id = #{attachedFile_id}  
   </select>

@@ -34,10 +34,11 @@
 	
 	<update id="updateMember">
 		update member
-		set
+		<set>
 			password = #{password},
-			phone = #{phone},
-			saved_filename = #{saved_filename}
+			<if test="phone != null">phone = #{phone},</if>
+       		<if test="saved_filename != null">saved_filename = #{saved_filename}</if>
+    	</set>
 		where
 			member_mail = #{member_mail}
 	</update>

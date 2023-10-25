@@ -2,7 +2,7 @@
 <html lang="ko">
 <head th:replace="head :: head"></head>
 <head>
-	<title>동호회 게시판</title>
+	<title>동호회</title>
 </head>
 
 <body>
@@ -26,24 +26,26 @@
 					<!-- 검은글씨 제목 -->
 					<div class="mb-3">
 						<h1 class="h3 d-inline mb-3">동호회 게시판</h1>
-						<a class="badge bg-primary me-1 my-1" href="/board/club-write">
+						<a class="badge bg-primary me-1 my-1" href="/club/write">
 							새 동호회 만들기
 						</a>
 					</div>
 					<div class="row">
 						<div class="col-12 col-md-3" th:each="board : ${boards}" th:object="${board}">
 							<div class="card">
-								<th:block th:each="file : ${files}">
-									<img class="card-img-top" style="height:180px;" th:src="'/img/upload/' + ${file.saved_filename}"  th:if="${file.board_id == board.board_id}" alt="IMG">
+								<th:block th:if="${board.saved_filename}">
+									<img class="card-img-top" id="image" style="height: 200px" th:src="'/img/upload/' + ${board.saved_filename}">
+								</th:block>
+								<th:block th:unless="${board.saved_filename}">
+									<img class="card-img-top" id="image" style="height: 200px" src="/img/icons/Loo_Letter.png">
+								</th:block>
 								</th:block>
 								<div class="card-header">
 									<h5 class="card-title mb-0" th:text="*{board_title}"></h5>
-									<small class="text-muted" th:text="'작성자 : ' + *{member_name}"></small><br/>
-									<small class="text-muted" th:text="'작성일 : ' + ${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></small>
+									<small class="text-muted" th:text="'시작일 : ' + ${#temporals.format(board.create_time, 'yyyy-MM-dd')}"></small>
 								</div>
 								<div class="card-body">
-									<p class="card-text" th:text="*{board_contents}"></p>
-									<a th:href="@{/board/club-join(board_id=*{board_id})}" class="card-link">참여하기</a>
+									<a th:href="@{/club/chat(board_id=*{board_id})}" class="card-link">참여하기</a>
 								</div>
 							</div>
 						</div>

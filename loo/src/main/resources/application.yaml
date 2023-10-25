@@ -19,7 +19,6 @@ spring:
 
 
 mybatis:
-#  type-aliases-package: com.example.loo.model
   config-location: classpath:config/mybatis-config.xml
   mapper-locations: classpath:mapper/**/*.xml
 

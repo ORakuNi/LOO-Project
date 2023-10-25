@@ -36,4 +36,6 @@ public interface BoardMapper {
 	List<BoardAttachedFile> findFiles();
 
 	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category);
+	
+	List<Board> findAllClubs();
 }

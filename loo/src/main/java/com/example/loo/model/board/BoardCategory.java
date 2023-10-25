@@ -16,7 +16,4 @@ public enum BoardCategory {
 	public String getDescription() {
 		return description;
 	}	
-	
-	
-	
 }
