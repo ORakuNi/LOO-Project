@@ -34,16 +34,12 @@ import com.example.loo.model.comments.CommentsUpdate;
 import com.example.loo.model.comments.CommentsWrite;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.model.member.Member;
-<<<<<<< HEAD
 import com.example.loo.repository.BoardMapper;
 import com.example.loo.repository.CommentsMapper;
 import com.example.loo.service.BoardService;
 import com.example.loo.util.FileService;
 import com.example.loo.util.PageNavigator;
-=======
-import com.example.loo.service.BoardService;
 import com.example.loo.service.CommentsService;
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,11 +50,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BoardController {
 	
-<<<<<<< HEAD
 	private final BoardMapper boardMapper;
-	private final CommentsMapper commentsMapper;
-	private final FileService fileService;
 	private final BoardService boardService;
+	private final CommentsService commentsService;
+	private final FileService fileService;
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
@@ -67,56 +62,28 @@ public class BoardController {
 	private final int pagePerGroup = 5;
 	
 	@GetMapping("list")
-	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-						@RequestParam BoardCategory board_category,
+	public String list(	@RequestParam BoardCategory board_category,
 						@RequestParam(value = "page", defaultValue="1") int page,
 						Model model) {
-		
-		// 로그인 상태가 아니면 로그인 페이지로 보낸다.
-        if (loginMember == null) {
-            return "redirect:/users/login";
-        }
         
         //페이징
         int total = boardService.getTotal(board_category);
         
-        if(total >= 0) {
-        	PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
-        	
-        	RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
-        	
-        	// 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        	List<Board> boards = boardMapper.findAllBoards(board_category, rowBounds);
-        	
-        	// Board 리스트를 model 에 저장한다.
-        	model.addAttribute("boards", boards);
-        	
-        	model.addAttribute("navi", navi);
-        	
-        	// 카테고리 정보를 전달할 때 사용
-        	model.addAttribute("board_category", board_category);
-        	
-        }
-=======
-	private final BoardService boardService;
-	private final CommentsService commentsService;
-	@Value("${file.upload.path}")
-	private String uploadPath;
-	
-	@GetMapping("list")
-	public String list(@RequestParam BoardCategory board_category,
-						Model model) {
+			PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
+		
+			RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
 		
         // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardService.findAllBoards(board_category);
+        List<Board> boards = boardMapper.findAllBoards(board_category, rowBounds);
         
         // Board 리스트를 model 에 저장한다.
         model.addAttribute("boards", boards);
         
+        model.addAttribute("navi", navi);
+        
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
-		
+        	
 		return "board/list";
 	}
 	
@@ -179,12 +146,6 @@ public class BoardController {
     	
     	//첨부파일
     	BoardAttachedFile attachedFile = boardService.findFileByBoardId(board_id);
-    	log.info("첨부파일{}", attachedFile);
-    	
-    	model.addAttribute("file", attachedFile);
-    	
-    	//첨부파일
-    	BoardAttachedFile attachedFile = boardMapper.findFileByBoardId(board_id);
     	log.info("첨부파일{}", attachedFile);
     	
     	model.addAttribute("file", attachedFile);
@@ -322,11 +283,7 @@ public class BoardController {
     						@RequestParam BoardCategory board_category,
             				Model model) {
     	
-<<<<<<< HEAD
-    	Board board = boardMapper.findBoard(board_id);
-=======
     	Board board = boardService.findBoard(board_id);
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
     	// board_id에 해당하는 게시글이 없거나
     	// 게시글의 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
         if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
@@ -370,11 +327,9 @@ public class BoardController {
         // 제목과 내용 수정
         board.setBoard_title(updateBoard.getBoard_title());
         board.setBoard_contents(updateBoard.getBoard_contents());
-<<<<<<< HEAD
+
         //파일
         boardService.updateBoard(board, updateBoard.isFileRemoved(), file);
-=======
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
        
         // 수정한 Board 를 데이터베이스에 update 한다.
         boardService.updateBoard(board, updateBoard.isFileRemoved(), file);
@@ -399,11 +354,7 @@ public class BoardController {
         }
     	
         // 댓글 삭제
-<<<<<<< HEAD
-        commentsMapper.removeAllComments(board_id);
-=======
         commentsService.removeAllComments(board_id);
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
         
         //게시글 삭제
         boardService.removeBoard(board_id);
@@ -434,8 +385,4 @@ public class BoardController {
     						 .header(HttpHeaders.CONTENT_DISPOSITION, contentDispostion)
     						 .body(resource);
     }
-<<<<<<< HEAD
-=======
-    
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 }

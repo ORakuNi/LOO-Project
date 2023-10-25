@@ -101,13 +101,11 @@
   		)
   </insert>
   
-<<<<<<< HEAD
   <select id="getTotal" resultType="int">
         select count(*) from board
+        where board_category = #{board_category}
   </select>
   
-=======
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
   <select id="findFileByBoardId" resultType="boardfile">
   	select * from board_attached_file where board_id = #{board_id}
   </select>
@@ -120,10 +118,6 @@
   	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
   </delete>
   
-<<<<<<< HEAD
-  <select id="findFiles" resultType="boardfile">
-  	select * from board_attached_file
-=======
   <select id="findAllClubs" resultType="board">
     select
     	b.board_id,
@@ -142,7 +136,6 @@
     	b.board_category = 'CLUB'
     order by
     	create_time desc
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
   </select>
   
 </mapper>

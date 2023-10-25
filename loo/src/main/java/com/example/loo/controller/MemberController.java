@@ -137,11 +137,7 @@ public class MemberController {
 						BindingResult result,
 						@RequestParam(required = false) MultipartFile file) {
 
-<<<<<<< HEAD
-		log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
-=======
 	   log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 		
 		if(result.hasErrors()) {
 			return "users/update";
@@ -152,34 +148,17 @@ public class MemberController {
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
-<<<<<<< HEAD
-		if(memberUpdate.getPassword().equals(member.getPassword())
-				&& memberUpdate.getPhone().equals(member.getPhone())) {
-			result.reject("update none","수정된 사항이 없습니다.");
-			return "users/update";
-		}
-=======
 
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
 		log.info("member: {}", member);
 		memberMapper.updateMember(member);
 		
 		if(file != null && file.getSize() > 0) {
-<<<<<<< HEAD
-			memberService.updateMember(member, previousFile, file);
-=======
 			memberService.updateMember(loginMember, member, previousFile, file);
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 		}
 		
 		return "redirect:/";
 	}
-<<<<<<< HEAD
-	
-	
-=======
    
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 }

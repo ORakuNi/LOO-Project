@@ -56,9 +56,4 @@
     where
     	c.member_mail = #{member_mail}
   </select>
-  
- 
-  
- 
-  
 </mapper>

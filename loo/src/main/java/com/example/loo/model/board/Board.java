@@ -30,11 +30,8 @@ public class Board {
         boardUpdateForm.setCreate_time(board.getCreate_time());
         return boardUpdateForm;
     }
-<<<<<<< HEAD
-=======
 
 	public void addHit() {
 		this.hit++;
 	}
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 }

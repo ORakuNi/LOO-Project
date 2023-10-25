@@ -1,12 +1,5 @@
 package com.example.loo.config;
 
-<<<<<<< HEAD
-=======
-import javax.servlet.Filter;
-
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
->>>>>>> 986e1e62bddfb799ecc4aa537bd207087168a9f1
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
