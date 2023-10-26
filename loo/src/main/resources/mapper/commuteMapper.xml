@@ -38,6 +38,15 @@
  	</set>
  	where commute_id = #{commute_id}
  </update>
+ 
+ <update id="updateAdminCommute">
+ 	update commute
+ 	set
+ 		attendance_time = #{attendance_time},
+ 		leave_time = #{leave_time}
+ 	where 
+ 		commute_id = #{commute_id}
+ </update>
   
  
   
