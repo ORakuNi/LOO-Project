@@ -1,6 +1,5 @@
 package com.example.loo.service;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -114,6 +113,15 @@ public class BoardService {
 
 	public List<Board> findAllBoards(BoardCategory board_category) {
 		return boardMapper.findAllBoards(board_category);
+
+	}
+	
+	public List<Board> searchBoards(BoardCategory board_category, String searchText){
+		if(searchText.equals("")) {
+			  List<Board> boards = boardMapper.findAllBoards(board_category);
+			  return boards;
+		} else 
+			 return boardMapper.findBoards(searchText, board_category);		
 	}
 	
 }

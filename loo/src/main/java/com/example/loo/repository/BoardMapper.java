@@ -3,6 +3,7 @@ package com.example.loo.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
@@ -31,6 +32,11 @@ public interface BoardMapper {
 	BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id);
 	//첨부파일 삭제
 	void removeAttachedFile(Long attachedFile_id);
-	
+
 	List<Board> findAllClubs();
+
+	List<BoardAttachedFile> findFiles();
+	
+	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category);
+	
 }

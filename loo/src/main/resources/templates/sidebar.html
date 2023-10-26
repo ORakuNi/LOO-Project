@@ -67,15 +67,15 @@
 				My Schedule
 			</li>
 
-			<li class="sidebar-item">
-				<a class="sidebar-link" href="#">
+			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/schedule/list' ? 'active' : ''}">
+				<a class="sidebar-link" href="/schedule/list">
       				<i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
     			</a>
 			</li>
 
 			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/commute/list' ? 'active' : ''}">
 				<a class="sidebar-link" th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}">
-      				<i class="align-middle" data-feather="check-square"></i> <span class="align-middle">근태관리</span>
+      				<i class="align-middle" data-feather="user-check"></i> <span class="align-middle">근태관리</span>
    				</a>
 			</li>
 			
@@ -88,7 +88,11 @@
       				<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
     			</a>
 			</li>
-
+			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'REPORT')} ? 'active' : ''">
+				<a class="sidebar-link" href="/board/list?board_category=NOTICE">
+      				<i class="align-middle" data-feather="inbox"></i> <span class="align-middle">업무보고</span>
+    			</a>
+			</li>
 			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/phones/list' ? 'active' : ''}">
 				<a class="sidebar-link" href="/phones/list">
  		     		<i class="align-middle" data-feather="users"></i> <span class="align-middle">전화번호부</span>
@@ -111,8 +115,8 @@
     			</a>
 			</li>
 			
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/api/restaurant' ? 'active' : ''}">
-				<a class="sidebar-link" href="/api/restaurant">
+			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/api/matgip' ? 'active' : ''}">
+				<a class="sidebar-link" href="/api/matgip">
       				<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
     			</a>
 			</li>

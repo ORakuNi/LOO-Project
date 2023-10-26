@@ -25,5 +25,4 @@ public class MemberUpdate {
 	private String department_id;
 	private String position_id;
 	private String saved_filename;
-
 }

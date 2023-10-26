@@ -35,7 +35,7 @@ import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.model.member.Member;
 import com.example.loo.service.BoardService;
 import com.example.loo.service.CommentsService;
-import com.example.loo.util.FileService;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,24 +46,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BoardController {
 
-
-	private final FileService fileService;
-
 	private final BoardService boardService;
 	private final CommentsService commentsService;
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
 	@GetMapping("list")
-	public String list(@RequestParam BoardCategory board_category,
-						Model model) {	
+	public String list(@RequestParam BoardCategory board_category, Model model,
+						@RequestParam(value = "searchText", defaultValue="", required = false) String searchText) {
 
-        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardService.findAllBoards(board_category);
+		// 원래 부분에서 search 부분 추가 (로직변경)
+		List<Board> boards = boardService.searchBoards(board_category, searchText);
+		
+		// Board 리스트를 model 에 저장한다.
+		model.addAttribute("boards", boards);
 
-        // Board 리스트를 model 에 저장한다.
-        model.addAttribute("boards", boards);
-        
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
 	
@@ -268,9 +265,8 @@ public class BoardController {
     						@RequestParam Long board_id,
     						@RequestParam BoardCategory board_category,
             				Model model) {
-
-    	Board board = boardService.findBoard(board_id);
     	
+    	Board board = boardService.findBoard(board_id);
     	// board_id에 해당하는 게시글이 없거나
     	// 게시글의 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
         if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
@@ -375,4 +371,5 @@ public class BoardController {
     						 .header(HttpHeaders.CONTENT_DISPOSITION, contentDispostion)
     						 .body(resource);
     }
+
 }

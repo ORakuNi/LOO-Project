@@ -11,5 +11,7 @@
   	<typeAlias type="com.example.loo.model.comments.Comments" alias="comments"/>
   	<typeAlias type="com.example.loo.model.commute.Commute" alias="commute"/>
   	<typeAlias type="com.example.loo.model.member.Member" alias="member"/>
+  	<typeAlias type="com.example.loo.model.matgip.Matgip" alias="matgip"/>
+  	<typeAlias type="com.example.loo.model.schedule.Schedule" alias="schedule"/>
   </typeAliases>
 </configuration>

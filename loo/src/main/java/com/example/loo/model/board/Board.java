@@ -34,4 +34,5 @@ public class Board {
 	public void addHit() {
 		this.hit++;
 	}
+
 }

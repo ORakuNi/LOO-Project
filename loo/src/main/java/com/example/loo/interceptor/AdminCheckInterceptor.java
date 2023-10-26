@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.example.loo.model.member.Member;
-import com.example.loo.model.member.Position;
 
 import lombok.extern.slf4j.Slf4j;
 
