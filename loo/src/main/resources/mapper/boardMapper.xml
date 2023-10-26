@@ -44,6 +44,28 @@
     	create_time desc
   </select>
   
+   <select id="findBoards" resultType="board">
+  	select 
+  	    b.board_id,
+    	b.board_title,
+    	b.board_contents,
+    	m.member_name,
+    	b.board_category,
+    	b.create_time,
+    	b.edit_time,
+    	b.hit
+    from
+    	board b join member m
+    	on (b.member_mail = m.member_mail)
+  	 where
+  	 	b.board_title LIKE '%' || #{searchText} || '%'
+  	 	and
+  	 	b.board_category = #{board_category}
+  	 order by
+  	 	create_time desc
+  	 
+  </select>
+  
   <select id="findBoard" resultType="board">
   	select
     	b.board_id,
@@ -105,6 +127,18 @@
   	select * from board_attached_file where board_id = #{board_id}
   </select>
   
+  <select id="findFileByAttachedFileId" resultType="boardfile">
+	select * from board_attached_file where attachedFile_id = #{attachedFile_id}  
+  </select>
+  
+  <delete id="removeAttachedFile">
+  	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
+  </delete>
+  
+  <select id="findFiles" resultType="boardfile">
+  	select * from board_attached_file
+  </select>
+  
   <select id="findAllClubs" resultType="board">
     select
     	b.board_id,
@@ -124,40 +158,5 @@
     order by
     	create_time desc
   </select>
-  
-  <select id="findFileByAttachedFileId" resultType="boardfile">
-	select * from board_attached_file where attachedFile_id = #{attachedFile_id}  
-  </select>
-  
-  <delete id="removeAttachedFile">
-  	delete from board_attached_file where attachedFile_id = #{attachedFile_id}
-  </delete>
-  
-  <select id="findFiles" resultType="boardfile">
-  	select * from board_attached_file
-  </select>
-  
-  <select id="findBoards" resultType="board">
-  	select 
-  	    b.board_id,
-    	b.board_title,
-    	b.board_contents,
-    	m.member_name,
-    	b.board_category,
-    	b.create_time,
-    	b.edit_time,
-    	b.hit
-    from
-    	board b join member m
-    	on (b.member_mail = m.member_mail)
-  	 where
-  	 	b.board_title LIKE '%' || #{searchText} || '%'
-  	 	and
-  	 	b.board_category = #{board_category}
-  	 order by
-  	 	create_time desc
-  	 
-  </select>
-
   
 </mapper>

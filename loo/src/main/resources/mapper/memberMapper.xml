@@ -35,9 +35,9 @@
 	<update id="updateMember">
 		update member
 		<set>
-			password = #{password}
-			<if test="phone != null">,phone = #{phone}</if>
-       		<if test="saved_filename != null">,saved_filename = #{saved_filename}</if>
+			password = #{password},
+			<if test="phone != null">phone = #{phone},</if>
+       		<if test="saved_filename != null">saved_filename = #{saved_filename}</if>
     	</set>
 		where
 			member_mail = #{member_mail}

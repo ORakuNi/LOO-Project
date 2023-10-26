@@ -32,10 +32,15 @@ public interface BoardMapper {
 	BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id);
 	//첨부파일 삭제
 	void removeAttachedFile(Long attachedFile_id);
+
+	//List<BoardAttachedFile> findFiles();
+
+	List<Board> findAllClubs();
 	
 	List<BoardAttachedFile> findFiles();
-
-	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category);
 	
-	List<Board> findAllClubs();
+	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category);
+
+	//List<Board> findAllClubs();
+
 }

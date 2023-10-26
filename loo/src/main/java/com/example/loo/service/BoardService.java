@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
-
 import com.example.loo.model.board.BoardCategory;
 
 import com.example.loo.model.file.AttachedFile;
@@ -114,6 +113,16 @@ public class BoardService {
 
 	public List<Board> findAllBoards(BoardCategory board_category) {
 		return boardMapper.findAllBoards(board_category);
+
+	}
+	
+	public List<Board> searchBoards(BoardCategory board_category, String searchText){
+		if(searchText.equals("")) {
+			  List<Board> boards = boardMapper.findAllBoards(board_category);
+			  return boards;
+		} else 
+			 return boardMapper.findBoards(searchText, board_category);
+		
 	}
 	
 }
