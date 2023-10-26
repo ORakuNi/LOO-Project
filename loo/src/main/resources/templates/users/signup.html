@@ -6,6 +6,82 @@
 </head>
 
 <body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+		function formCheck(){
+			let password = $("#password");
+			
+			if(password.val().length < 4 || password.val().length > 20){
+				alert("패스워드는 4자리 이상입니다.");
+				password.focus();
+				return false;
+			}
+			
+			let member_mail = $("#member_mail");
+			
+			if(member_mail.val()==""){
+				alert("이메일을 입력하세요.");
+				member_mail.focus();
+				return false;
+			}
+			
+			let member_name = $("#member_name");
+			
+			if(member_name.val()==""){
+				alert("이름을 입력하세요.");
+				email.focus();
+				return false;
+			}
+			
+			
+			let phone = $("#phone");
+			
+			if(phone.val()==""){
+				alert("연락처를 입력하세요.");
+				phone.focus();
+				return false;
+			}
+			
+			
+			let now = new Date();
+			let birthday = new Date(birthday.val());
+			
+			if(now < birthday){
+				alert("생년월일을 오늘 이전이어야 합니다.");
+				birthday.focus();
+				return false;
+			}
+			
+			let company_id = $("#company_id");
+			
+			if(company_id.val()==""){
+				alert("회사를 선택하세요.");
+				company_id.focus();
+				return false;
+			}
+			
+			let department_id = $("#department_id");
+			
+			if(department_id.val()==""){
+				alert("부서를 선택하세요.");
+				department_id.focus();
+				return false;
+			}
+		
+			let position_id = $("#position_id");
+			
+			if(position_id.val()==""){
+				alert("직책를 선택하세요.");
+				position_id.focus();
+				return false;
+			}
+			
+			return true;
+		}
+	</script>
+	
+	
+	
    <main class="d-flex w-100">
       <div class="container d-flex flex-column">
          <div class="row vh-100">
@@ -22,7 +98,7 @@
                   <div class="card">
                      <div class="card-body">
                         <div class="m-sm-3">
-                           <form action="signup" method="post" th:object="${member}">
+                           <form action="signup" method="post" th:object="${member}" onsubmit="return formCheck()">
                               <div class="mb-3">
                                  <label class="form-label">아이디(Email)</label>
                                  <input class="form-control form-control-lg" type="email" th:field="*{member_mail}" placeholder="회사 이메일을 입력해주세요."/>

@@ -3,12 +3,44 @@
 <head th:replace="head :: head"></head>
 <head>
 	<title>글 수정</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 	<script>
+		function formCheck(){
+			
+			let board_title = $("#board_title");
+			
+			if(board_title.val()==""){
+				alert("제목을 입력하세요.");
+				board_title.focus();
+				return false;
+			}
+			
+			if(board_title.val() > 50){
+				alert("제목은 50자 이내로 입력해주세요.");
+				board_title.focus();
+				return false;
+			}
+			
+			let board_contents = $("#board_contents");
+			
+			if(board_contents.val()==""){
+				alert("내용을 입력하세요.");
+				board_contents.focus();
+				return false;
+			}
+			
+	
+			return true;
+			
+			}
+		
 		function removeFile() {
 			document.getElementById("fileRemoved").value = "true";
 			document.getElementById("attachedFile").style.display = "none";
 			document.getElementById("new").style.display = "block"
 		}
+		
 	</script>
 </head>
 
@@ -29,7 +61,9 @@
 			</nav>
 			
 			<main class="content">
-				<form th:action="@{/board/update(board_id=${board.board_id},board_category=${param.board_category})}" th:object="${board}" method="post" enctype="multipart/form-data">
+				<form th:action="@{/board/update(board_id=${board.board_id},board_category=${param.board_category})}" th:object="${board}" method="post" enctype="multipart/form-data"
+				onsubmit="return formCheck()">
+				
 					<div class="container-fluid p-0">
 						<div class="card">
 							<div class="card-body">

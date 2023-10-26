@@ -136,7 +136,7 @@ public class MemberController {
 						@Validated @ModelAttribute("update") MemberUpdate memberUpdate,
 						BindingResult result,
 						@RequestParam(required = false) MultipartFile file) {
-
+System.out.println("여기는 update controller de memberUpdate" + memberUpdate);
 	   log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
 		
 		if(result.hasErrors()) {
@@ -149,6 +149,7 @@ public class MemberController {
 			return "redirect:/";
 		}
 
+		System.out.println(memberUpdate.getPassword());
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
 

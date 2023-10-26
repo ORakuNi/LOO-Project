@@ -6,6 +6,40 @@
 </head>
 
 <body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+	<script>
+		function formCheck(){
+			
+			let board_title = $("#board_title");
+			
+			if(board_title.val()==""){
+				alert("제목을 입력하세요.");
+				board_title.focus();
+				return false;
+			}
+			
+			if(board_title.val() > 60){
+				alert("제목은 50자 이내로 입력해주세요.");
+				board_title.focus();
+				return false;
+			}
+			
+			let board_contents = $("#board_contents");
+			
+			if(board_contents.val()==""){
+				alert("내용을 입력하세요.");
+				board_contents.focus();
+				return false;
+			}
+			
+			
+			return true;
+			
+			}
+	</script>		
+	
+	
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
@@ -21,7 +55,7 @@
 			</nav>
 			
 			<main class="content">
-				<form action="write" method="post" th:object="${writeForm}" enctype="multipart/form-data">
+				<form action="write" method="post" th:object="${writeForm}" enctype="multipart/form-data" onsubmit="return formCheck()">
 					<div class="container-fluid p-0">
 						<div class="card">
 							<div class="card-body">
