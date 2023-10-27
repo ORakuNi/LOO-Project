@@ -12,6 +12,7 @@ import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.file.AttachedFile;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.repository.BoardMapper;
+import com.example.loo.repository.CommentsMapper;
 import com.example.loo.util.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardService {
 
 	private final BoardMapper boardMapper;
+	private final CommentsMapper commentsMapper;
 	private final FileService fileService;
 	
 	@Value("${file.upload.path}")
@@ -81,6 +83,7 @@ public class BoardService {
 		if (attachedFile != null) {
 			removeAttachedFile(attachedFile.getAttachedFile_id());
 		}
+		commentsMapper.removeAllComments(board_id);
 		boardMapper.removeBoard(board_id);
 	}
 	
@@ -101,13 +104,8 @@ public class BoardService {
 		return boardMapper.findBoard(board_id);
 	}
 	
-	public Board readBoard(Long board_id) {
-		Board board = findBoard(board_id);
-		// 조회수 1 증가
-        board.addHit();
-        // 조회수를 증가하여 데이터베이스에 업데이트 한다.
-        updateBoard(board, false, null);
-		return board;
+	public void readBoard(Long board_id) {
+		boardMapper.addHit(board_id);
 	}
 
 	public List<Board> findAllBoards(BoardCategory board_category) {

@@ -19,13 +19,8 @@ import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.board.BoardUpdateForm;
 import com.example.loo.model.board.BoardWriteForm;
-import com.example.loo.model.comments.Comments;
-import com.example.loo.model.comments.CommentsUpdate;
-import com.example.loo.model.comments.CommentsWrite;
-import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.model.member.Member;
 import com.example.loo.service.BoardService;
-import com.example.loo.service.CommentsService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,116 +32,9 @@ import lombok.extern.slf4j.Slf4j;
 public class ClubController {
 	
 	private final BoardService boardService;
-	private final CommentsService commentsService;
 	@Value("${file.upload.path}")
 	private String uploadPath;
 	
-    // 댓글 작성
-    @PostMapping("writeComment")
-    public String writeComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    							@ModelAttribute("newComment") CommentsWrite commentsWrite,
-    							@RequestParam Long board_id,
-    							BindingResult results) {
-    	if(results.hasErrors()) {
-    		return "redirect:/club/chat?board_id=" + board_id;
-    	}
-    	
-    	Comments comments = commentsWrite.toComments(commentsWrite);
-    	comments.setBoard_id(board_id);
-    	comments.setMember_mail(loginMember.getMember_mail());
-    	commentsService.saveComments(comments);
-    	
-    	return "redirect:/club/chat?board_id=" + board_id;
-    }
-    
-    // 댓글 수정
-    @GetMapping("updateComment")
-    public String updateComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-								@RequestParam Long comment_id,
-								Model model) {
-    	
-    	Comments updateComment = commentsService.findComment(comment_id);
-    	Long board_id = updateComment.getBoard_id();
-
-    	if(updateComment == null || !updateComment.getMember_mail().equals(loginMember.getMember_mail())) {
-    		
-    		log.info("댓글 수정 권한 없음");
-    		return "redirect:/club/chat?board_id=" + board_id;
-    	}
-    	
-    	return "redirect:/club/chat?board_id=" + board_id + "&comment_id=" + updateComment.getComment_id();
-    }
-    
-    // 댓글 수정 저장
-    @PostMapping("updateComment")
-    public String updateComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    							@RequestParam Long comment_id,
-    							@Validated @ModelAttribute("updateComment") CommentsUpdate commentsUpdate,
-    							BindingResult result) {
-        
-        log.info("commentsUpdate: {}", commentsUpdate);
-        
-        Comments comments = commentsService.findComment(comment_id);
-        
-        Long board_id = comments.getBoard_id();
-        
-        if (comments == null || !comments.getMember_mail().equals(loginMember.getMember_mail())) {
-        	log.info("수정 권한 없음");
-        	return "redirect:/club/chat?board_id=" + board_id;
-        }
-        
-        comments.setComment_contents(commentsUpdate.getComment_contents());
-        
-        commentsService.updateComments(comments);
-        
-        return "redirect:/club/chat?board_id=" + board_id;
-    }
-    
-    
-    // 댓글 삭제
-    @GetMapping("deleteComment")
-    public String deleteComment(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    							@RequestParam Long comment_id) {
-    	
-        // board_id 에 해당하는 게시글을 가져온다.
-        Comments comments = commentsService.findComment(comment_id);
-        
-        Long board_id = comments.getBoard_id();
-        
-        if (comments == null || !comments.getMember_mail().equals(loginMember.getMember_mail())) {
-        	log.info("삭제 권한 없음");
-        	return "redirect:/club/chat?board_id=" + board_id;
-        }
-        
-        commentsService.removeComment(comment_id);
-        
-        return "redirect:/club/chat?board_id=" + board_id;
-    }
-    
-    // 게시글 수정 페이지 이동
-    @GetMapping("update")
-    public String updateForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-    						@RequestParam Long board_id,
-            				Model model) {
-    	
-    	Board board = boardService.findBoard(board_id);
-    	// board_id에 해당하는 게시글이 없거나
-    	// 게시글의 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
-        if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
-            log.info("수정 권한 없음");
-            return "redirect:/club/list";
-        }
-        
-        // model 에 board 객체를 저장한다.
-    	model.addAttribute("club", Board.toBoardUpdateForm(board));
-    	
-    	//첨부파일 찾기
-    	BoardAttachedFile attachedFile = boardService.findFileByBoardId(board_id);
-    	model.addAttribute("file", attachedFile);
-    	
-    	return "club/update";
-    }
-    
     @PostMapping("update")
     public String update(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id,
@@ -189,9 +77,6 @@ public class ClubController {
             return "redirect:/club/list";
         }
     	
-        // 댓글 삭제
-        commentsService.removeAllComments(board_id);
-        
         //게시글 삭제
         boardService.removeBoard(board_id);
     	
@@ -251,26 +136,9 @@ public class ClubController {
 		return "redirect:/board/club";
 		}
 		
-		// 댓글을 조회한다.
-		List<Comments> comments = commentsService.findAllComments(board_id);
-		log.info("comments: {}", comments);
-		
-		// 댓글이 있으면 모두 model에 담아 return
-		if(!comments.isEmpty() && comments != null) {
-		model.addAttribute("comments", comments);
-		}
-		
 		// 모델에 Board 객체를 저장한다.
 		model.addAttribute("board", board);
 		
-		// 새로운 댓글 작성을 받을 model
-		model.addAttribute("newComment", new CommentsWrite());
-		
-		if(comment_id != null) {
-			Comments updateComment = commentsService.findComment(comment_id);
-			// 댓글 수정 시 받을 model
-			model.addAttribute("updateComment", updateComment);
-		}
     	return "club/chat";
     }
 
