@@ -46,15 +46,14 @@ public class BoardController {
 	private String uploadPath;
 	
 	@GetMapping("list")
-	public String list(@RequestParam BoardCategory board_category,
-						Model model) {
+	public String list(@RequestParam BoardCategory board_category, Model model,
+						@RequestParam(value = "searchText", defaultValue="", required = false) String searchText) {
+
+		// 원래 부분에서 search 부분 추가 (로직변경)
+		List<Board> boards = boardService.searchBoards(board_category, searchText);
 		
-        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-        List<Board> boards = boardService.findAllBoards(board_category);
-        
-        // Board 리스트를 model 에 저장한다.
-        model.addAttribute("boards", boards);
-        
+		// Board 리스트를 model 에 저장한다.
+		model.addAttribute("boards", boards);
         // 카테고리 정보를 전달할 때 사용
         model.addAttribute("board_category", board_category);
 		

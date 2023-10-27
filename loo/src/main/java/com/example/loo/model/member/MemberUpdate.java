@@ -24,4 +24,5 @@ public class MemberUpdate {
 	private Company company_id;
 	private String department_id;
 	private String position_id;
+	private String saved_filename;
 }

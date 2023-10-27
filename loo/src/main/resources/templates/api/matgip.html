@@ -1,40 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head th:replace="head :: head"></head>
 <head>
 	<title>맛집</title>
 	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-	<script type="text/javascript">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script th:inline="javascript">
 		$(document).ready(function () {
+
 			$.ajax({
 				url: "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=kL00C7wEpGgpo2n%2FErweSgWemnixWZxI2N%2BTzlkyWrugWrGVQTQGO0lpetrDfzp88yDNXbcJJDyN2mTGdowblw%3D%3D&pageNo=1&numOfRows=10&resultType=json",           //파일 경로, 어떤 파일을 불러올 것인지               //캐시 사용여부 true false
 				dataType: "json",             //타입
 				success: function (data) {
-					console.log(data)
+					// console.log(data)
 					let matgip_data = data['getFoodKr']['item']
 					for (let i = 0; i < matgip_data.length; i++) {
 						put_data1(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
 					}
-					console.log(matgip_data)
-	
+					 console.log(matgip_data)
 				},
 				async: false,
 				error: function () {  //불러오지 못했을때 할일
 					alert('Error loading XML document');
 				}
-	
 			})
-	
 		})
-	
+
 		function put_data1(num, title, contents, add, tel, img) {
 			let html = `
-						<div class="col-12 col-md-4 d-flex">
+						<div class="col-12 col-md-3">
 						<div class="card">
-							<img class="card-img-top" src="${img}" alt="Unsplash">
+							<img class="card-img-top pic" src="${img}" alt="Unsplash" style="height:200px">
 							<div class="card-header">
-								<h5 class="card-title">${num + 1}.${title}</h5>
-							</div>
+								<h5 class="card-title">${num + 1}.${title}
+									
+                <button class="btn btn-danger p-1" id="button-${num + 1}" onclick="addFavorites('${title}','${add}','${tel}', '${img}')">
+                  찜하기
+                </button> 
+				</h5>					
+					</div>
 							<div class="card-body">
 								<p class="card-text">${contents}
 							</div>
@@ -47,9 +51,25 @@
 						`
 			$('#matgip').append(html);
 		}
-	
+
+
+		function addFavorites(title, add, tel, img) {
+			$.ajax({
+				type: "POST",
+				url: "matgip",
+				data: {matgip_title: title, matgip_add: add, matgip_tel: tel ,saved_filename : img}, // 보낼 데이터를 이와 같이 설정
+				success: function (result) {
+					Swal.fire(
+						'찜 등록되었습니다'
+					).then(() => {
+						location.reload();
+					})
+				}
+			});
+		}
+
 	</script>
-	
+
 	<script type="text/javascript">
 		$(document).ready(function () {
 			$("#more").click(function () {
@@ -57,18 +77,18 @@
 					url: "https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=kL00C7wEpGgpo2n%2FErweSgWemnixWZxI2N%2BTzlkyWrugWrGVQTQGO0lpetrDfzp88yDNXbcJJDyN2mTGdowblw%3D%3D&pageNo=2&numOfRows=10&resultType=json",           //파일 경로, 어떤 파일을 불러올 것인지               //캐시 사용여부 true false
 					dataType: "json",             //타입
 					success: function (data) {
-						console.log(data)
+						// console.log(data)
 						let matgip_data = data['getFoodKr']['item']
-						for (let i = 0; i < matgip_data.length; i++) {
+						for (let i = 1; i < matgip_data.length; i++) {
 							put_data(i, matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
 						}
-						console.log(matgip_data)
-	
+						 // console.log(matgip_data)
+
 					},
 					error: function () {  //불러오지 못했을때 할일
 						alert('Error loading XML document');
 					}
-	
+
 				})
 			})
 		})
@@ -76,9 +96,13 @@
 			let html = `
 						<div class="col-12 col-md-4 d-flex">
 						<div class="card">
-							<img class="card-img-top" src="${img}" alt="Unsplash">
+							<img class="card-img-top pic" src="${img}" alt="Unsplash">
 							<div class="card-header">
-								<h5 class="card-title">${num + 1}.${title}</h5>
+								<h5 class="card-title">${num}.${title}</h5>
+								 <button class="btn btn-danger p-1" id="button-${num + 1}" onclick="addFavorites('${title}','${add}','${tel}' ,${img})">
+                  				찜하기
+               					 </button> 		
+                					<span style="font-size : 30px; text-align:center;"></span>
 							</div>
 							<div class="card-body">
 								<p class="card-text">${contents}
@@ -90,13 +114,28 @@
 						</div>
 					</div>
 						`
+
+			$("#matgip").map(function () {
+				return this.lastChild;
+			}).after(html)
 			
-			$("#matgip").map(function(){
-				return this.firstChild;
-			}).before(html)
+			
 		}
-	
+
 	</script>
+	<style>
+		.pic {
+			width: 400px;
+			transition: all 0.2s linear;
+			overflow: hidden;
+		}
+
+		.pic:hover {
+			transform: scale(1.1);
+			overflow: hidden;
+		}
+	</style>
+
 </head>
 
 <body>
@@ -107,11 +146,11 @@
 		</nav>
 
 		<div class="main">
-		<!-- 드롭다운 -->
+			<!-- 드롭다운 -->
 			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
-    			</a>
+				</a>
 				<div th:replace="dropdown :: login"></div>
 			</nav>
 
@@ -122,12 +161,16 @@
 						<a class="badge bg-dark text-white ms-2" id="more">
 							오늘의 맛집 추천이 맘에 들지 않는다면?
 						</a>
-					</div>
+						<a class="badge bg-primary text-white" th:href="@{/api/myMatgip(member_mail=${session.loginMember.member_mail})}">
+							찜목록
+						</a>
+					
+							</div>
+							
+						<div class="row mt-36" id="matgip">
 
-					<div class="row" id="matgip" >
-
+					
 					</div>
-				</div>
 			</main>
 
 		</div>
