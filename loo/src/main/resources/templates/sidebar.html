@@ -1,128 +1,133 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<!-- 로그아웃 시 -->
-	<div class="sidebar-content js-simplebar" th:fragment="logout">
-		<a class="sidebar-brand" href="/">
-			<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px;" alt="logo" />
-		</a>
-		<ul class="sidebar-nav">
-			<li class="sidebar-header">
-				Life Of Office
-			</li>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-			<li class="sidebar-item active">
-				<a class="sidebar-link" href="/">
-      				<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
-    			</a>
-			</li>
 
-			<li class="sidebar-item">
-				<a class="sidebar-link" href="/users/login">
-      				<i class="align-middle" data-feather="log-in"></i> <span class="align-middle">로그인</span>
-    			</a>
-			</li>
 
-			<li class="sidebar-item">
-				<a class="sidebar-link" href="/users/signup">
-      				<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">회원가입</span>
-    			</a>
-			</li>
-		</ul>
+
+
+<!-- 로그아웃 시 -->
+<div class="sidebar-content js-simplebar" th:fragment="logout">
+	<a class="sidebar-brand" href="/">
+		<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px;" alt="logo" />
+	</a>
+	<ul class="sidebar-nav">
+		<li class="sidebar-header">
+			Life Of Office
+		</li>
+
+		<li class="sidebar-item active">
+			<a class="sidebar-link" href="/">
+				<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="/users/login">
+				<i class="align-middle" data-feather="log-in"></i> <span class="align-middle">로그인</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="/users/signup">
+				<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">회원가입</span>
+			</a>
+		</li>
+	</ul>
+</div>
+<!-- 로그인 시 -->
+<div class="sidebar-content js-simplebar" th:fragment="login">
+	<a class="sidebar-brand" href="/">
+		<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;" alt="logo" />
+	</a>
+	<ul class="sidebar-nav">
+		<li class="sidebar-header">
+			My Pages
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">
+			<a class="sidebar-link" href="/">
+				<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/users/update' ? 'active' : ''}">
+			<a class="sidebar-link" href="/users/update">
+				<i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item">
+			<a class="sidebar-link" href="/users/logout">
+				<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
+			</a>
+		</li>
+
+		<li class="sidebar-header">
+			My Schedule
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/schedule/list' ? 'active' : ''}">
+			<a class="sidebar-link" href="/schedule/list">
+				<i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/commute/list' ? 'active' : ''}">
+			<a class="sidebar-link" th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}">
+				<i class="align-middle" data-feather="user-check"></i> <span class="align-middle">근태관리</span>
+			</a>
+		</li>
+
+		<li class="sidebar-header">
+			Office
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'NOTICE')} ? 'active' : ''">
+			<a class="sidebar-link" href="/board/list?board_category=NOTICE">
+				<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
+			</a>
+		</li>
+		<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'REPORT')} ? 'active' : ''">
+			<a class="sidebar-link" href="/board/list?board_category=NOTICE">
+				<i class="align-middle" data-feather="inbox"></i> <span class="align-middle">업무보고</span>
+			</a>
+		</li>
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/phones/list' ? 'active' : ''}">
+			<a class="sidebar-link" href="/phones/list">
+				<i class="align-middle" data-feather="users"></i> <span class="align-middle">전화번호부</span>
+			</a>
+		</li>
+
+		<li class="sidebar-header">
+			Life
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'FREE')} ? 'active' : ''">
+			<a class="sidebar-link" href="/board/list?board_category=FREE">
+				<i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">게시판</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/board/club' ? 'active' : ''}">
+			<a class="sidebar-link" href="/club/list">
+				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
+			</a>
+		</li>
+
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/api/matgip' ? 'active' : ''}" id="mat">
+			<a class="sidebar-link" href="/api/matgip">
+				<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
+			</a>
+		</li>
+		<li class="sidebar-item" id="mymat" th:classappend="${#httpServletRequest.requestURI == '/api/matgip' ? 'active' : ''}">
+			
+		</li>
+
+
+	</ul>
+	<div>
+		<br>
 	</div>
-	<!-- 로그인 시 -->
-	<div class="sidebar-content js-simplebar" th:fragment="login">
-		<a class="sidebar-brand" href="/">
-			<img src="/img/icons/Loo_Letter_white.png" style="height: 30px; padding: 2px; margin-bottom: 0px;" alt="logo" />
-		</a>
-		<ul class="sidebar-nav">
-			<li class="sidebar-header">
-				My Pages
-			</li>
-
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">
-				<a class="sidebar-link" href="/">
-      				<i class="align-middle" data-feather="home"></i> <span class="align-middle">홈</span>
-    			</a>
-			</li>
-
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/users/update' ? 'active' : ''}">
-				<a class="sidebar-link" href="/users/update">
-      				<i class="align-middle" data-feather="user"></i> <span class="align-middle">내 정보</span>
-    			</a>
-			</li>
-			
-			<li class="sidebar-item">
-				<a class="sidebar-link" href="/users/logout">
-      				<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
-    			</a>
-			</li>
-
-			<li class="sidebar-header">
-				My Schedule
-			</li>
-
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/schedule/list' ? 'active' : ''}">
-				<a class="sidebar-link" href="/schedule/list">
-      				<i class="align-middle" data-feather="calendar"></i> <span class="align-middle">일정</span>
-    			</a>
-			</li>
-
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/commute/list' ? 'active' : ''}">
-				<a class="sidebar-link" th:href="@{/commute/list(member_mail=${session.loginMember.member_mail})}">
-      				<i class="align-middle" data-feather="user-check"></i> <span class="align-middle">근태관리</span>
-   				</a>
-			</li>
-			
-			<li class="sidebar-header">
-				Office
-			</li>
-
-			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'NOTICE')} ? 'active' : ''">
-				<a class="sidebar-link" href="/board/list?board_category=NOTICE">
-      				<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
-    			</a>
-			</li>
-			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'REPORT')} ? 'active' : ''">
-				<a class="sidebar-link" href="/board/list?board_category=NOTICE">
-      				<i class="align-middle" data-feather="inbox"></i> <span class="align-middle">업무보고</span>
-    			</a>
-			</li>
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/phones/list' ? 'active' : ''}">
-				<a class="sidebar-link" href="/phones/list">
- 		     		<i class="align-middle" data-feather="users"></i> <span class="align-middle">전화번호부</span>
-    			</a>
-			</li>
-			
-			<li class="sidebar-header">
-				Life
-			</li>
-
-			<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'FREE')} ? 'active' : ''">
-				<a class="sidebar-link" href="/board/list?board_category=FREE">
-      				<i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">게시판</span>
-    			</a>
-			</li>
-			
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/board/club' ? 'active' : ''}">
-				<a class="sidebar-link" href="/club/list">
-      				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
-    			</a>
-			</li>
-			
-			<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/api/matgip' ? 'active' : ''}">
-				<a class="sidebar-link" href="/api/matgip">
-      				<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
-    			</a>
-			</li>
-			
-			<!--<li class="sidebar-item">
-				<a class="sidebar-link" href="#">
-      				<i class="align-middle" data-feather="sun"></i> <span class="align-middle">날씨</span>
-    			</a>
-			</li>-->
-		</ul>
-		<div>
-			<br>
-		</div>
-	</div>
+</div>
 </html>

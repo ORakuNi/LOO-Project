@@ -21,6 +21,6 @@ public class BoardUpdateForm {
     private BoardCategory board_category;
     private Long hit;
     private LocalDateTime create_time;
-	boolean FileRemoved;
+	boolean fileRemoved;
 
 }
