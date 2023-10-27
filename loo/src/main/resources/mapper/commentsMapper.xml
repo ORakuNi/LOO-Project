@@ -62,4 +62,10 @@
   		delete from comments where board_id = #{board_id}
   	</delete>
   
+  	<update id="like">
+  		update comments set
+  			click_like = click_like + 1
+  		where
+  			comment_id = #{comment_id}
+  	</update>
 </mapper>

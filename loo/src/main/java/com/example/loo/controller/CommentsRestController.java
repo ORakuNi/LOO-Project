@@ -78,5 +78,12 @@ public class CommentsRestController {
 		return ResponseEntity.ok(findComment);
 	}
 	
+	@GetMapping("like/{comment_id}")
+	public ResponseEntity<String> like(@PathVariable Long comment_id){
+		commentsMapper.like(comment_id);
+		
+		return ResponseEntity.ok("like ok");
+	}
+	
 
 }

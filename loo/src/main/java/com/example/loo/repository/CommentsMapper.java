@@ -20,4 +20,6 @@ public interface CommentsMapper {
 	void removeComment(Long comment_id);
 	
 	void removeAllComments(Long board_id);
+	
+	void like(Long board_id);
 }

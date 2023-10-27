@@ -67,6 +67,7 @@
 						str += "<small class='text-muted'> / " + obj.comment_edit_time + " 수정</small><br />";
 					};
 					str += "<div class='flex-shrink-1 bg-light rounded py-2 px-3 me-3'>" + obj.comment_contents + "</div>";
+					str += "<a onclick='like(" + obj.comment_id + ")' class='btn btn-sm btn-danger mt-1'><i class='feather-sm' data-feather='heart'></i> Like " + obj.click_like + "</a>"
 					str += "</div>";
 					str += "</div>";
 					str += "<hr />"
@@ -126,6 +127,17 @@
 					}
 				});
 			}
+		}
+		
+		//좋아요
+		function like(comment_id){
+			$.ajax({
+				url: "/comments/like/" + comment_id,
+				success: function(data){
+					console.log(data);
+					getComments();
+				}
+			});
 		}
 		
 		$(function(){
