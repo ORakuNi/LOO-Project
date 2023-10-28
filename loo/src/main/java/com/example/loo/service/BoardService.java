@@ -108,7 +108,7 @@ public class BoardService {
 	public Board readBoard(Long board_id) {
 		Board board = findBoard(board_id);
 		// 조회수 1 증가
-        board.addHit();
+        boardMapper.addHit(board_id);
         // 조회수를 증가하여 데이터베이스에 업데이트 한다.
         updateBoard(board, false, null);
 		return board;

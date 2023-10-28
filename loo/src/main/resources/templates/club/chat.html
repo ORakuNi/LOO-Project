@@ -4,16 +4,146 @@
 <head>
 	<title>동호회</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-	<script>
-		function update(comment_id){
+    <script th:inline="javascript">
+		let board_id = /*[[${board.board_id}]]*/'';
+		let session = /*[[${session.loginMember}]]*/'';
+		
+		//댓글 작성
+		function writeComment(){
+			let content = $("#comment").val();
 			$.ajax({
-				url: repleUpdate.html,
+				url: "/comments/" + board_id,
+				type: "post",
+				data: {
+					"comment_contents": content
+				},
 				success: function(data){
 					console.log(data);
-					$("#test").html(data);
+					$("#comment").val('');
+					getComments();
+				},
+				error: function(xhr, status, error){
+					console.log(xhr);	
+					console.log(status);
+					console.log(error);
 				}
 			});
 		}
+		
+		//댓글 데이터 가져오기
+		function getComments(){
+			$.ajax({
+				url: "/comments/" + board_id,
+				success: function(data){
+					console.log(data);
+					showComments(data);
+				},
+				error: function(status){
+					console.log(status);
+				}
+			});
+		}
+		
+		//댓글 출력
+		function showComments(data){
+			$("#comments").html("");
+			let str = "";
+			if(data.length > 0){
+				$(data).each(function(idx, obj){
+					str += "<div class='d-flex align-items-start'>";
+					if(obj.saved_filename != null){
+						str += "<img src='/img/upload/" + obj.saved_filename + "' calss='avatar img-fluid rounded me-1' style='margin: 5px;' width='36' height='36'/>";
+					} else {
+						str += "<img src='/img/avatars/profile.png' calss='avatar img-fluid rounded me-1' style='margin: 5px;' width='36' height='36'/>";
+					}
+					str += "<div class='flex-grow-1' id='" + obj.comment_id + "'>";
+					str += "<strong style='margin: 5px;'>" + obj.member_name + "</strong>";
+					if(session.member_mail == obj.member_mail){
+						str += "<a onclick='removeComment(" + obj.comment_id + ")'><i class='float-end feather-sm' data-feather='trash-2' style='margin-left: 5px;'></i></a>";
+						str += "<a onclick=\"getUpdateComment(" + obj.comment_id + ",'" + obj.comment_contents + "')\"><i class='float-end feather-sm' data-feather='edit-3'>수정</i></a>";
+					};
+					str += "<small class='text-muted'> " + obj.comment_create_time + "</small>";
+					if(obj.comment_edit_time != null){
+						str += "<small class='text-muted'> / " + obj.comment_edit_time + " 수정</small><br />";
+					};
+					str += "<div class='flex-shrink-1 bg-light rounded py-2 px-3 me-3'>" + obj.comment_contents + "</div>";
+					str += "<a onclick='like(" + obj.comment_id + ")' class='btn btn-sm btn-danger mt-1'><i class='feather-sm' data-feather='heart'></i> Like " + obj.click_like + "</a>"
+					str += "</div>";
+					str += "</div>";
+					str += "<hr />"
+				});
+			} else {
+				str += "<div class='text-center'>등록된 댓글이 없습니다.</div>";
+			}
+			$("#comments").append(str);
+			feather.replace();
+		}
+		
+		//댓글 삭제
+		function removeComment(comment_id){
+			if(confirm("삭제하시겠습니까?")){
+				$.ajax({
+					url: "/comments/" + comment_id,
+					type: "delete",
+					success: function(data){
+						console.log(data);
+						getComments();
+					},
+					error: function(status){
+						console.log(status);
+						alert("삭제할 수 없습니다.");
+					}
+				});
+			}
+		}
+		
+		//댓글 수정 창
+		function getUpdateComment(comment_id, comment_contents){
+			let str = "";
+			str += "<a onclick='updateComment(" + comment_id + ")'><i class='float-end feather-sm' data-feather='save' style='margin-bottom: 10px;'></i></a>";
+			str += "<textarea rows='2' class='form-control bg-light' id='updateComment'>" + comment_contents + "</textarea>";
+			$("#" + comment_id).empty();
+			$("#"+comment_id).append(str);	
+			feather.replace();		
+		}
+		
+		//댓글 수정
+		function updateComment(comment_id){
+			let content = $("#updateComment").val();
+			if(confirm("수정하시겠습니까?")){
+				$.ajax({
+					url: "/comments/" + comment_id,
+					type: "put",
+					data: {
+						"comment_contents": content
+					},
+					success: function(data){
+						console.log(data);
+						getComments();
+					},
+					error: function(status){
+						console.log(status);
+						alert("수정할 수 없습니다.");
+					}
+				});
+			}
+		}
+		
+		//좋아요
+		function like(comment_id){
+			$.ajax({
+				url: "/comments/like/" + comment_id,
+				success: function(data){
+					console.log(data);
+					getComments();
+				}
+			});
+		}
+		
+		$(function(){
+			getComments();
+		});
+		
 	</script>
 </head>
 
@@ -63,46 +193,13 @@
 										<div class="card-body">
 											<div class="d-flex align-items-start" id="test">
 												<div class="flex-grow-1">
-													<form action="writeComment" method="post" th:object="${newComment}">
-														<input type="hidden" th:field="${board.board_category}">
-														<input type="hidden" th:field="${board.board_id}">
-														<textarea rows="2" class="form-control" th:field="*{comment_contents}" placeholder="글을 입력하세요."></textarea>
-														<input type="submit" class="float-end btn btn-primary btn-sm" value="글 작성" style="margin-top: 10px;">
-													</form>
+													<textarea rows="2" class="form-control" id="comment" name="comment" placeholder="글을 입력하세요."></textarea>
+													<input type="button" onclick="writeComment()" class="float-end btn btn-primary btn-sm" style="margin-top: 10px;" value="글 작성">
 												</div>
 											</div>
-											<!-- 수정버튼클릭 시 작성창에서 수정창으로 변경 -->
-											<!--<div class="d-flex align-items-start" th:if="${param.comment_id}">
-												<div class="flex-grow-1">
-													<form action="updateComment" method="post" th:object="${updateComment}">
-														<input type="hidden" th:field="${board.board_category}">
-														<input type="hidden" th:field="*{comment_id}">
-														<textarea rows="2" class="form-control" th:field="*{comment_contents}"></textarea>
-														<input type="submit" class="float-end btn btn-primary btn-sm" value="댓글 수정" style="margin-top: 10px;">
-													</form>
-												</div>
-											</div>-->
-											<th:block th:each="comments : ${comments}">
-												<hr/>
-												<div class="d-flex align-items-start">
-													<img th:if="${comments.saved_filename}" th:src="@{'/img/upload/' + ${comments.saved_filename}}" class="avatar img-fluid rounded me-1" width="36" height="36"/>
-	    											<img th:unless="${comments.saved_filename}" src="/img/avatars/profile.png" class="avatar img-fluid rounded me-1" width="36" height="36"/>
-													<div class="flex-grow-1">
-														<strong th:text="${comments.member_name}"></strong>
-														<div th:if="${session.loginMember.member_mail == comments.member_mail}" class="float-end">
-															<a th:onclick="update(${comments.comment_id})">
-																<i class="feather-sm" data-feather="edit-3"></i>
-															</a>
-															<a th:onclick="|location.href='/club/deleteComment?comment_id=${comments.comment_id}'|">
-																<i class="feather-sm" data-feather="trash-2"></i>
-															</a>
-														</div><br />
-														<small class="text-muted" th:text="${#temporals.format(comments.comment_create_time, 'yyyy-MM-dd HH:mm')}"></small>
-														<small th:if="${comments.comment_edit_time != null}" class="text-muted" th:text="' / ' + ${#temporals.format(comments.comment_edit_time, 'yyyy-MM-dd HH:mm')} + ' 수정'"></small><br />
-														<div class="flex-shrink-1 bg-light rounded py-2 px-3 me-3" th:text="${comments.comment_contents}"></div>
-													</div>
-												</div>
-											</th:block>
+											<hr/>
+											<div id="comments">
+											</div>
 										</div>
 									</div>
 								</div>
