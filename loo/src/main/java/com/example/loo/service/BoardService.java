@@ -92,6 +92,10 @@ public class BoardService {
 	public BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id) {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
+	
+	public int getTotal(BoardCategory board_category) {
+		return boardMapper.getTotal(board_category);
+	}
 
 	public List<Board> findAllClubs() {
 		return boardMapper.findAllClubs();
@@ -104,7 +108,7 @@ public class BoardService {
 	public Board readBoard(Long board_id) {
 		Board board = findBoard(board_id);
 		// 조회수 1 증가
-        board.addHit();
+        boardMapper.addHit(board_id);
         // 조회수를 증가하여 데이터베이스에 업데이트 한다.
         updateBoard(board, false, null);
 		return board;
