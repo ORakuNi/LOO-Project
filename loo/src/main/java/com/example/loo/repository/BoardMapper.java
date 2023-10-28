@@ -15,6 +15,8 @@ public interface BoardMapper {
 
 	void saveBoard(Board board);
 	
+	int getTotal(BoardCategory board_category);
+	
 	List<Board> findAllBoards(BoardCategory board_category);
 		
 	Board findBoard(Long board_id);

@@ -92,6 +92,10 @@ public class BoardService {
 	public BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id) {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
+	
+	public int getTotal(BoardCategory board_category) {
+		return boardMapper.getTotal(board_category);
+	}
 
 	public List<Board> findAllClubs() {
 		return boardMapper.findAllClubs();
