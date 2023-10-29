@@ -17,20 +17,33 @@
 			matgip_add,
 			matgip_date,
 			member_mail,
-			matgip_tel
+			matgip_tel,
+			saved_filename
 		) values (
 			#{matgip_id},
 			#{matgip_title},
 			#{matgip_add},
 			SYSDATE,
 			#{member_mail},
-			#{matgip_tel}
+			#{matgip_tel},
+			#{saved_filename}
 		)
 	</insert>
+	
+	<select id="findMatgipTitle" resultType="matgip">
+		select * from matgip where matgip_title = #{matgip_title} and member_mail = #{member_mail}
+	</select> 
+	
+	
 
 	<select id="findMatgip" resultType="matgip">
-		select * from matgip where matgip_title = #{matgip_title} and member_mail = #{member_mail}
+		select * from matgip where member_mail = #{member_mail}
 	</select>
-
+	
+	
+	<delete id="removeMatgip">
+		delete from matgip where matgip_title = #{matgip_title} and member_mail = #{member_mail}
+	</delete>
+	
 
 </mapper>

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.loo.model.comments.Comments;
+import com.example.loo.model.board.Comments;
 
 @Mapper
 public interface CommentsMapper {
@@ -20,4 +20,6 @@ public interface CommentsMapper {
 	void removeComment(Long comment_id);
 	
 	void removeAllComments(Long board_id);
+	
+	void like(Long board_id);
 }

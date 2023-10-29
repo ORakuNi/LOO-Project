@@ -30,8 +30,5 @@ public class Board {
         boardUpdateForm.setCreate_time(board.getCreate_time());
         return boardUpdateForm;
     }
-	public void addHit() {
-		this.hit++;
-	}
 
-}
+}	

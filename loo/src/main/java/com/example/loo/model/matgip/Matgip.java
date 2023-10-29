@@ -10,5 +10,6 @@ public class Matgip {
 	private String matgip_add;
 	private String member_mail;
 	private String matgip_tel;
+	private String saved_filename;
 	
 }
