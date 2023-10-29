@@ -4,9 +4,11 @@
 <head>
 	<title>글 조회</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
     <script th:inline="javascript">
 		let board_id = /*[[${board.board_id}]]*/'';
 		let session = /*[[${session.loginMember}]]*/'';
+		let board_category = /*[[${board.board_category}]]*/'';
 		
 		//댓글 작성
 		function writeComment(){
@@ -127,6 +129,46 @@
 			getComments();
 		});
 		
+		function confirmDelete(){
+			
+			Swal.fire({
+				
+				title: '정말로 삭제하시겠습니까?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonText: '삭제',
+				cancelButtonText: '취소'
+			}).then((result) => {
+				if(result.isConfirmed) {
+					deleteBoard(board_id, board_category);
+				}
+				
+			});
+			}
+			
+			function deleteBoard(board_id, board_category){
+				$.ajax({
+					url: "/board/delete?board_id=" + board_id,
+					type: "POST",
+					success: function (){
+						Swal.fire({
+							title: '글이 삭제되었습니다.',
+							icon: 'success'
+						}).then(() => {
+							
+							location.href = "/board/list?board_category=" + board_category;
+						});
+					},
+					error: function (status){
+						Swal.fire({
+							title: '삭제 실패',
+							text: '글을 삭제하는 중에 문제가 발생하였습니다.',
+							icon: 'error'
+							
+						});
+					}
+				});
+			}
 	</script>
 </head>
 
@@ -193,8 +235,10 @@
 								    <th:block >
 								    	<input type="button" class="btn btn-primary btn-sm" th:if="${session.loginMember.member_mail == board.member_mail}"
 								    		 th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
+								        
+								        
 								        <input type="button" class="btn btn-primary btn-sm" th:if="${session.loginMember.member_mail == board.member_mail}"
-								        	 th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+								        	 onclick="confirmDelete()" value="삭제하기">
 								    </th:block>
 								    <hr />
 								</div>

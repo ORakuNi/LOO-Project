@@ -109,7 +109,8 @@ public class BoardController {
 
 		// writeForm.html의 필드 표시를 위해 빈 BoardWriteForm 객체를 생성하여 model 에 저장한다.
 		model.addAttribute("writeForm", boardWriteForm);
-
+		model.addAttribute("board_category", board_category);
+		
 		// board/writeForm.html 을 찾아 리턴한다.
 		return "board/write";
 	}
@@ -236,7 +237,7 @@ public class BoardController {
 	}
 
 	 // 게시글 삭제
-    @GetMapping("delete")
+    @PostMapping("delete")
     public String delete(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id, RedirectAttributes redirect) {
     	

@@ -16,7 +16,7 @@
 				return false;
 			}
 			
-			if(board_title.val() > 50){
+			if(board_title.val().length > 50){
 				alert("제목은 50자 이내로 입력해주세요.");
 				board_title.focus();
 				return false;
@@ -30,6 +30,7 @@
 				return false;
 			}
 			
+			alert("글이 수정되었습니다.");
 	
 			return true;
 			
