@@ -5,7 +5,7 @@
 ### Life Of Office(LOO) - 사내 개인업무 관리 프로그램
 
 <p align="center">
-  <img src="" />
+ <img width="1187" alt="LOO(main)" src="https://github.com/ORakuNi/LOO-Project/assets/109561152/32a3521b-cec6-441f-83bb-66f0420c90b9">
 </p>
 
 <br/>
