@@ -9,10 +9,12 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
 	<script th:inline="javascript">
+	
+		let board_category = /*[[${board_category}]]*/'';
 		function formCheck(){
 			
 			let board_title = $("#board_title");
-			let board_category = /*[[${board_category}]]*/'';
+	
 			if(board_title.val()==""){
 				alert("제목을 입력하세요.");
 				board_title.focus();
@@ -34,29 +36,31 @@
 			}
 			
 			
-			alert("글이 등록되었습니다.");
 			
-			const data = {
-				board_title: board_title.val(),
-				board_contents: board_contents.val()
-			};
+			alertWriteSuccess();
 			
-			$.ajax({
+			
+			
+
+			}
+			function alertWriteSuccess(board_category){
+				let content = $("#alertWriteSucess").val();
+				if(confirm("등록하시겠습니까?")){
+				alert("글이 등록되었습니다.");
+				$.ajax({
 				url: "/board/write?board_category=" + board_category,
-				method: "POST",
-				data: data,
-				success: function (){
+				type: "POST",
+				
+				success: function (){q2
 						Swal.fire({
 							title: '글이 등록되었습니다.',
 							icon: 'success'
 						}).then(() => {
-							location.reload();
+							location.href = "/board/list?board_category=" + board_category;
 						});
 						
 					}
-			});
-			
-			return true;
+			});}
 			}
 	</script>		
 	
