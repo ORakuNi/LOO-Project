@@ -152,12 +152,11 @@ public class MemberController {
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
 		
+		memberService.updateMember(member);
 		
 		if(file != null && file.getSize() > 0) {
-			memberService.updateMember(loginMember, member, previousFile, file);
-			MemberAttachedFile nowFile = memberService.findFileByMail(member_mail);
-			member.setSaved_filename(nowFile.getSaved_filename());
-		} // 여기도 memberService.updateMember 안에 다 넣으면 안되나?
+			memberService.updateFile(loginMember, member, previousFile, file);
+		} 
 		
 		return "redirect:/";
 	}

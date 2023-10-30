@@ -48,7 +48,7 @@ public class MemberService {
 	
 	  
 	@Transactional
-	public void updateMember(Member loginMember, 
+	public void updateFile(Member loginMember, 
 							Member givenmember, 
 							MemberAttachedFile previousFile, 
 							MultipartFile newFile) {
@@ -70,8 +70,11 @@ public class MemberService {
 
 			//첨부파일 내용을 데이터베이스 저장
 			memberMapper.saveFile(savedFile);
-			memberMapper.updateMember(givenmember);
 		}
+	}
+	
+	public void updateMember(Member member) {
+		memberMapper.updateMember(member);
 	}
 	
 	public void updateAdminMember(Member mbember) {
