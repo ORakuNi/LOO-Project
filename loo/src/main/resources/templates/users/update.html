@@ -6,6 +6,16 @@
 </head>
 
 <body>
+	<script>
+		function updateCheck() {
+			console.log("updateUser 실행");
+        	if (confirm('정말로 수정하시겠습니까?')) {
+            	return true;
+			} else {
+				return false;
+			}
+		}
+	</script>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
@@ -24,7 +34,9 @@
 				<div class="container-fluid p-0">
 
 					<h1 class="h3 mb-3">내 정보</h1>
-					<form th:action="@{/users/update(member_mail=${update.member_mail})}" method="post" th:object="${update}" enctype="multipart/form-data">
+					<form th:action="@{/users/update(member_mail=${update.member_mail})}" 
+							method="post" th:object="${update}" enctype="multipart/form-data"
+							onsubmit="return updateCheck()">
 						<div class="mb-3">
 							<label class="form-label">아이디(Email)</label>
 							<input type="text" class="form-control" th:field="*{member_mail}" disabled/>

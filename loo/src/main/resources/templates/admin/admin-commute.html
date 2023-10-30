@@ -29,18 +29,20 @@
 			console.log("attendance_time: " + attendance_time);
 			console.log("leave_time: " + leave_time);
 
-			$.ajax({
-				url: "/admin/" + commute_id,
-				type: "post",
-				data: {
-					"attendance_time": attendance_time,
-					"leave_time": leave_time
-				},
-				success: function(data){
-					console.log(data);
-				}
-				
-			});
+			if (confirm('정말로 수정하겠습니까?')) { // 확인창 출력
+				$.ajax({
+					url: "/admin/" + commute_id,
+					type: "post",
+					data: {
+						"attendance_time": attendance_time,
+						"leave_time": leave_time
+					},
+					success: function(data){
+						console.log(data);
+					}
+					
+				});
+			}
 		}
 		
 		// 로딩 되면 자동 적용

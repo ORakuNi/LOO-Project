@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.example.loo.model.commute.Commute;
 import com.example.loo.model.member.Member;
 import com.example.loo.model.member.MemberAdminUpdate;
-import com.example.loo.repository.CommuteMapper;
-import com.example.loo.repository.MemberMapper;
-import com.example.loo.repository.PhonesMapper;
+import com.example.loo.service.CommuteService;
+import com.example.loo.service.MemberService;
+import com.example.loo.service.PhonesService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AdminController {
 	
-	private final PhonesMapper phonesMapper;
-	private final MemberMapper memberMapper;
-	private final CommuteMapper commuteMapper;
+	private final PhonesService phonesService;
+	private final MemberService memberService;
+	private final CommuteService commuteService;
 
 	@GetMapping("admin")
 	public String admin(Model model) {
@@ -45,7 +43,7 @@ public class AdminController {
 		log.info("admin 페이지");
 		
         // 데이터베이스에 저장된 모든 Member 객체를 리스트 형태로 받는다.
-        List<Member> members = phonesMapper.findAllPhones();
+        List<Member> members = phonesService.findAllPhones();
         // Member 리스트를 model 에 저장한다.
         model.addAttribute("members", members);
 		
@@ -56,7 +54,7 @@ public class AdminController {
 	public String adminUpdate(@RequestParam String member_mail,
 								Model model) {
 		
-		Member member = memberMapper.findMember(member_mail);
+		Member member = memberService.findMember(member_mail);
 		
 		model.addAttribute("update", member);
 		
@@ -75,7 +73,7 @@ public class AdminController {
 			return "admin/admin-update?member_mail=" + member_mail;
 		}
 		
-		Member member = memberMapper.findMember(member_mail);
+		Member member = memberService.findMember(member_mail);
 		if(member == null) {
 			return "redirect:/admin/admin";
 		}
@@ -83,7 +81,7 @@ public class AdminController {
 		member = MemberAdminUpdate.toMember(memberAdminUpdate);
 		member.setMember_mail(member_mail);
 		
-		memberMapper.updateAdminMember(member);
+		memberService.updateAdminMember(member);
 
 		return "redirect:/admin/admin";
 	}
@@ -92,7 +90,7 @@ public class AdminController {
 	public String adminCommute(@RequestParam String member_mail, 
 								Model model) {
 		
-		List<Commute> findAllCommutes = commuteMapper.findAllCommutes(member_mail);
+		List<Commute> findAllCommutes = commuteService.findAllCommutes(member_mail);
 		log.info("findAllCommutes : {}", findAllCommutes);
 		model.addAttribute("commutes", findAllCommutes);
 		
@@ -107,7 +105,7 @@ public class AdminController {
 		log.info("commute_id: {}", commute_id);
 		log.info("param: {}", param);
 		
-		Commute commute = commuteMapper.findCommute(commute_id);
+		Commute commute = commuteService.findCommute(commute_id);
 		
 //		if(commute == null) {
 //			
@@ -126,7 +124,7 @@ public class AdminController {
 		commute.setAttendance_time(attendance_time);
 		commute.setLeave_time(leave_time);
 		
-		commuteMapper.updateAdminCommute(commute);
+		commuteService.updateAdminCommute(commute);
 		
 		return ResponseEntity.ok("업데이트 성공");
 	}

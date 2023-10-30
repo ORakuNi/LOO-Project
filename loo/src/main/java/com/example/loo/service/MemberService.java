@@ -27,9 +27,31 @@ public class MemberService {
 	private final FileService fileService;
 	@Value("${file.upload.path}")
     private String uploadPath;
+	
+	public void saveMember(Member member) {		
+        memberMapper.saveMember(member);		
+	}
+	
+	public Member findMember(String member_mail) {
+		
+		Member findMember = memberMapper.findMember(member_mail);		
+		
+		return findMember;
+	}
+	
+	 public MemberAttachedFile findFileByMail(String member_mail) {
+		 
+		 MemberAttachedFile findFileByMail = memberMapper.findFileByMail(member_mail);	
+		 
+		 return findFileByMail;
+	 }
+	
 	  
 	@Transactional
-	public void updateMember(Member loginMember, Member givenmember, MemberAttachedFile previousFile, MultipartFile newFile) {
+	public void updateMember(Member loginMember, 
+							Member givenmember, 
+							MemberAttachedFile previousFile, 
+							MultipartFile newFile) {
 		
 		log.info("첨부파일:{}", newFile.getSize());
 
@@ -50,6 +72,10 @@ public class MemberService {
 			memberMapper.saveFile(savedFile);
 			memberMapper.updateMember(givenmember);
 		}
+	}
+	
+	public void updateAdminMember(Member mbember) {
+		memberMapper.updateAdminMember(mbember);
 	}
 	
 	@Transactional

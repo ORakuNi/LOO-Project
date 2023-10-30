@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,25 +17,20 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.example.loo.model.commute.Commute;
 import com.example.loo.model.commute.CommuteAttendance;
 import com.example.loo.model.member.Member;
-import com.example.loo.repository.CommuteMapper;
+import com.example.loo.service.CommuteService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("commute")
+@RequiredArgsConstructor
 @Slf4j
 public class CommuteController {
 
 
-	private final CommuteMapper commuteMapper;
+	private final CommuteService commuteService;
 	private Commute findCommute;
-	
-	@Autowired
-	public CommuteController(CommuteMapper commuteMapper) {
-		this.commuteMapper = commuteMapper;
-	}
-	
-	
 	
 	// 출근하기
 	@PostMapping("attendance")
@@ -48,10 +42,12 @@ public class CommuteController {
 		commuteAttendance.setCommute_status("1");
 		
 		Commute commute = CommuteAttendance.toCommute(commuteAttendance);
-		commuteMapper.insertCommute(commute);
+		commuteService.attendanceCommute(commute);
+		
 		HttpSession session = request.getSession();
 		session.setAttribute("status", commute);
 		log.info("commute:{}",commute);
+		
 		return "redirect:/";
 	}
 	
@@ -68,8 +64,7 @@ public class CommuteController {
 
 		// session에 있는 commute_id를 들고와서 형변환 시켜줌
 //		log.info("status : {}" , ((Commute) attribute).getCommute_id());
-		findCommute = commuteMapper.findCommute(((Commute) attribute).getCommute_id());
-		commuteMapper.updateCommute(findCommute);
+		commuteService.leaveCommute(((Commute) attribute).getCommute_id());
 		return "redirect:/";
 	}
 	
@@ -80,7 +75,7 @@ public class CommuteController {
 	public String list(@RequestParam String member_mail, 
 						Model model) {
 		
-		List<Commute> findAllCommutes = commuteMapper.findAllCommutes(member_mail);
+		List<Commute> findAllCommutes = commuteService.findAllCommutes(member_mail);
 		log.info("findAllCommutes : {}", findAllCommutes);
 		model.addAttribute("commutes", findAllCommutes);
 		

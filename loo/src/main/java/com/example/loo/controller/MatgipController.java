@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.example.loo.model.matgip.Matgip;
 import com.example.loo.model.member.Member;
 import com.example.loo.repository.MatgipMapper;
+import com.example.loo.service.MatgipService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,19 +28,20 @@ import lombok.extern.slf4j.Slf4j;
 public class MatgipController {
 	
 	@Autowired
-	private final MatgipMapper matgipMapper;
+	private final MatgipService matgipService;
 	
 	@GetMapping("matgip")
 	public String restaurant(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
 							 @SessionAttribute(name = "like" ,required =  false)
-							 @ModelAttribute("data") Matgip restaurant, Model model) {
+							 	@ModelAttribute("data") Matgip restaurant, 
+							 Model model) {
 		
 		if(restaurant.getMatgip_title() != null) {
-			Matgip findMatgip = matgipMapper.findMatgip(restaurant.getMatgip_title(),loginMember.getMember_mail());
+			Matgip findMatgip = 
+					matgipService.findMatgip(restaurant.getMatgip_title(),loginMember.getMember_mail());
 			log.info("등록된 맛집 : {}", findMatgip);
 			model.addAttribute("like", restaurant);
 		}
-		
 		
 		return "api/matgip";
 	}
@@ -55,7 +57,7 @@ public class MatgipController {
 		HttpSession session = request.getSession();
 		session.setAttribute("like", restaurant.getMatgip_title());
 
-		matgipMapper.saveMatgip(restaurant);			
+		matgipService.saveMatgip(restaurant);			
 		
 		return "api/matgip";
 	}

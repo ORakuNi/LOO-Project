@@ -12,9 +12,9 @@ import com.example.loo.model.commute.Commute;
 public interface CommuteMapper {
 
 	// 출근하기
-	void insertCommute(Commute commute);
+	void attendanceCommute(Commute commute);
 	// 퇴근하기 
-	void updateCommute(Commute commute);
+	void leaveCommute(Commute commute);
 	// 찾기
 	Commute findCommute(Long commute_id);
 	// 관리자용 출퇴근 기록 수정
