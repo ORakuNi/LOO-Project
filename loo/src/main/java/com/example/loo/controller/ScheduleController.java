@@ -45,8 +45,7 @@ public class ScheduleController {
 		List<Schedule> allSchedules = scheduleMapper.allSchedules(loginMember.getMember_mail());
 		
 		
-		// log.info("schedule : {}", schedule);
-		// log.info("schedules : {}", schedules);
+		
 		model.addAttribute("schedule", schedule);
 		model.addAttribute("schedules", schedules);
 		model.addAttribute("allschedules", allSchedules);
@@ -61,9 +60,6 @@ public class ScheduleController {
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("loginMember");
 		
-
-
-
 		Schedule schedule = ScheduleWriteForm.toSchedule(scheduleWriteForm);
 		schedule.setMember_mail(((Member) attribute).getMember_mail());
 		log.info("가져온거 : {} ", schedule);
