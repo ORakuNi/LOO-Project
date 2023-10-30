@@ -19,9 +19,9 @@ public class MatgipService {
 		matgipMapper.saveMatgip(restaurant);	
 	}
 	
-	public Matgip findMatgip(String matgip_title, String member_mail) {
-		Matgip findMatgip = matgipMapper.findMatgip(matgip_title, member_mail);
-		return findMatgip;
-	}
+//	public Matgip findMatgip(String matgip_title, String member_mail) {
+//		Matgip findMatgip = matgipMapper.findMatgip(matgip_title, member_mail);
+//		return findMatgip;
+//	}
 	
 }

@@ -123,6 +123,11 @@
   		)
   </insert>
   
+   <select id="getTotal" resultType="int">
+        select count(*) from board
+        where board_category = #{board_category}
+  </select>
+  
   <select id="findFileByBoardId" resultType="boardfile">
   	select * from board_attached_file where board_id = #{board_id}
   </select>
