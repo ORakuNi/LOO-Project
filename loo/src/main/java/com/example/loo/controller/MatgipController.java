@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.example.loo.model.matgip.Matgip;
 import com.example.loo.model.member.Member;
 import com.example.loo.repository.MatgipMapper;
+import com.example.loo.service.MatgipService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +28,13 @@ import lombok.extern.slf4j.Slf4j;
 public class MatgipController {
 
 	private final MatgipMapper matgipMapper;
+	private final MatgipService matgipService;
 
 	@GetMapping("matgip")
 	public String restaurant(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-			@SessionAttribute(name = "like", required = false) @ModelAttribute("data") Matgip restaurant, Model model) {
+							@SessionAttribute(name = "like", required = false) 
+								@ModelAttribute("data") Matgip restaurant,
+							Model model) {
 
 		return "api/matgip";
 	}
@@ -64,13 +68,12 @@ public class MatgipController {
 	
 	@GetMapping("delete")
 	public String deleteMatgip(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-								@RequestParam String member_mail, @RequestParam("matgip_title") String matgip_title
-								) {
-		
+								@RequestParam String member_mail, 
+								@RequestParam("matgip_title") String matgip_title) {
 	
 		// log.info("파람 : {}", member_mail);
 		// log.info("맛집 이름 : {}", matgip_title);
-		
+
 		matgipMapper.removeMatgip(matgip_title, loginMember.getMember_mail());
 		
 		

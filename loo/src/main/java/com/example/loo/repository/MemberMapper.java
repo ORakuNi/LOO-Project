@@ -11,6 +11,7 @@ public interface MemberMapper {
 	void saveMember(Member member);
 	Member findMember(String member_mail);
 	void updateMember(Member member);
+	void updateAdminMember(Member mbember);
 	void saveFile(MemberAttachedFile attachedFile);
 	MemberAttachedFile findFileByMail(String member_mail);
 	MemberAttachedFile findFileByAttachedFileId(Long id);

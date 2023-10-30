@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head th:replace="head :: head"></head>
+<head>
+	<title>근태관리</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script th:inline="javascript">
+		function updateTime(button){
+			
+			//let commute_id = $('input[name=commute_id]').val();
+			//let attendance_time = $('input[name=attendance_time]').val();
+			//let leave_time = $('input[name=leave_time]').val();
+
+
+			// 버튼을 클릭한 tr태그를 가져옴(th:each로 반복되는 tr태그중에 button을 누른 tr태그)
+			let row = button.closest("tr");
+			
+			// 해당하는 클래스를 가진 HTMLInputElement를 가져옴
+			let commuteIdInput = row.querySelector(".commute-id");
+			let attendanceInput = row.querySelector(".attendance-time");
+			let leaveInput = row.querySelector(".leave-time");
+	
+			// HTMLInputElement에서 value값을 빼서 넣어줌
+			let commute_id = commuteIdInput.value;
+			let attendance_time = attendanceInput.value;
+			let leave_time = leaveInput.value;
+			
+			console.log("commute_id: " + commute_id);
+			console.log("attendance_time: " + attendance_time);
+			console.log("leave_time: " + leave_time);
+
+			if (confirm('정말로 수정하겠습니까?')) { // 확인창 출력
+				$.ajax({
+					url: "/admin/" + commute_id,
+					type: "post",
+					data: {
+						"attendance_time": attendance_time,
+						"leave_time": leave_time
+					},
+					success: function(data){
+						console.log(data);
+					}
+					
+				});
+			}
+		}
+		
+		// 로딩 되면 자동 적용
+		$(document).ready(function(){
+			maxTime();
+			minTime();
+		});
+		
+		function maxTime() {
+	        // 해당하는 클래스를 가진 HTMLInputElement들을 가져옴
+	        let elements = document.getElementsByClassName("attendance-time");
+			
+	        // i번째에 해당하는 HTMLInputElement의 value값을 담아서 setAttribute 해줌
+	        for (let i = 0; i < elements.length; i++) {
+	            let leave_time = elements[i].parentElement.nextElementSibling.querySelector(".leave-time").value;
+	            elements[i].setAttribute("max", leave_time);
+	        }
+	    }
+
+	    function minTime() {
+	        let elements = document.getElementsByClassName("leave-time");
+	
+	        for (let i = 0; i < elements.length; i++) {
+	            let attendance_time = elements[i].parentElement.previousElementSibling.querySelector(".attendance-time").value;
+	            elements[i].setAttribute("min", attendance_time);
+	        }
+	    }
+		
+	</script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<!-- 사이드 메뉴 -->
+		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
+			<div th:replace="sidebar :: login"></div>
+		</nav>
+		<!-- 상단 드롭다운 -->
+		<div class="main">
+			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
+				<a class="sidebar-toggle js-sidebar-toggle">
+					<i class="hamburger align-self-center"></i>
+    			</a>
+				<div th:replace="dropdown :: login"></div>
+			</nav>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+
+
+					<div class="card">
+						<div class="card-body">
+							<div class="row">
+								<div class="card-header">
+									<h5 class="card-title mb-0">출/퇴근기록</h5>
+								</div>
+							  <table class="table">
+								  <tbody>
+							    	<tr class="text-center">
+							      		<th>No</th>
+							      		<th>성함</th>
+									    <th>날짜</th>
+									    <th>출근시간</th>
+									    <th>퇴근시간</th>
+									    <th></th>
+									</tr>
+									<tr th:each="commute : ${commutes}">
+										<input class="commute-id" type="hidden" name="commute_id" th:value="*{commute.commute_id}">
+									    <td class="text-center" th:text="${commuteStat.count}"></td>
+		   								<td class="text-center" th:text="${commute.member_name}"></td>
+		     							<td class="text-center" th:text="${#temporals.format(commute.commute_date, 'yyyy-MM-dd')}"></td>
+		     							<td class="text-center">
+			                                <input class="form-control form-control-lg attendance-time" type="datetime-local" 
+			                                		name="attendance_time" th:value="${#temporals.format(commute.attendance_time , 'yyyy-MM-dd HH:mm:ss')}"/>
+			                            </td>
+			                            <td class="text-center">
+			                                <input class="form-control form-control-lg leave-time" type="datetime-local" 
+			                                		name="leave_time" th:value="${#temporals.format(commute.leave_time, 'yyyy-MM-dd HH:mm:ss')}"/>
+			                            </td>
+		   								<td class="text-center">
+									    	<!--<input type="button" value="수정하기" class="btn btn-lg btn-primary"
+									    			th:onclick="|location.href='/admin/admin-commute-update?commute_id=${commute.commute_id}'|">-->	
+									    	<input type="button" class="btn btn-lg btn-primary" 
+									    		value="수정하기" onclick="updateTime(this)">
+										</td>
+									</tr>
+							    </tbody>
+							  </table>
+							  <p>
+							  <div class="text-center">
+							    <input type="button" class="btn btn-primary btn-sm" onclick="location.href='/admin/admin'" value="이전으로">
+							  </div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</main>
+
+		</div>
+	</div>
+	<script src="/js/app.js"></script>		
+</body>
+
+</html>

@@ -59,14 +59,14 @@ public class MemberController {
       }
       
       //회원가입 중복 확인
-      Member checkToEmail = memberMapper.findMember(memberSignUp.getMember_mail());
+      Member checkToEmail = memberService.findMember(memberSignUp.getMember_mail());
       if (checkToEmail != null) {
          result.reject("alreadyUsedId", "이미 가입된 이메일입니다.");
          return "users/signup";
       }
       
       // 중복 아닐 때 회원 정보 저장
-      memberMapper.saveMember(MemberSignUp.toMember(memberSignUp));
+      memberService.saveMember(MemberSignUp.toMember(memberSignUp));
       return "redirect:/";
    }
    
@@ -91,13 +91,13 @@ public class MemberController {
       }
       
 	   //로그인 검증
-	   Member findMember = memberMapper.findMember(memberLogin.getMember_mail());
+	   Member findMember = memberService.findMember(memberLogin.getMember_mail());
 	   log.info("findMember:{}", findMember);
 	   if(findMember == null || !findMember.getPassword().equals(memberLogin.getPassword())) {
 	      result.reject("loginError", "아이디가 존재하지 않거나 패스워드가 다릅니다");
 	      return "users/login";
       }
-   
+
 	   //세션을 이용한 로그인 처리
 	   HttpSession session = request.getSession();
 	   session.setAttribute("loginMember", findMember);
@@ -118,12 +118,12 @@ public class MemberController {
 	public String update(Model model,
 						@SessionAttribute(name="loginMember", required = false) Member loginMember) {
 
-		Member member = memberMapper.findMember(loginMember.getMember_mail());
+		Member member = memberService.findMember(loginMember.getMember_mail());
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
 		
-		MemberAttachedFile file = memberMapper.findFileByMail(member.getMember_mail());
+		MemberAttachedFile file = memberService.findFileByMail(member.getMember_mail());
 		
 		model.addAttribute("file", file);
 		model.addAttribute("update", member);
@@ -137,26 +137,26 @@ public class MemberController {
 						BindingResult result,
 						@RequestParam(required = false) MultipartFile file) {
 
-	   log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
-		
+		log.info("member_mail: {}, member:{}", member_mail, memberUpdate);
+
 		if(result.hasErrors()) {
 			return "users/update";
 		}
-		MemberAttachedFile previousFile = memberMapper.findFileByMail(member_mail);
+		MemberAttachedFile previousFile = memberService.findFileByMail(member_mail);
 		
-		Member member = memberMapper.findMember(member_mail);
+		Member member = memberService.findMember(member_mail);
 		if(member == null || !member.getMember_mail().equals(loginMember.getMember_mail())) {
 			return "redirect:/";
 		}
 
 		member.setPassword(memberUpdate.getPassword());
 		member.setPhone(memberUpdate.getPhone());
-		log.info("member: {}", member);
-		memberMapper.updateMember(member);
+		
+		memberService.updateMember(member);
 		
 		if(file != null && file.getSize() > 0) {
-			memberService.updateMember(loginMember, member, previousFile, file);
-		}
+			memberService.updateFile(loginMember, member, previousFile, file);
+		} 
 		
 		return "redirect:/";
 	}

@@ -34,6 +34,7 @@ import com.example.loo.model.member.Member;
 import com.example.loo.service.BoardService;
 import com.example.loo.util.PageNavigator;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,10 +65,12 @@ public class BoardController {
 		RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
 
 		// 원래 부분에서 search 부분 추가 (로직변경)
-		List<Board> boards = boardService.searchBoards(board_category, searchText);
+		List<Board> boards = boardService.searchBoards(board_category, searchText, rowBounds);
 
 		// Board 리스트를 model 에 저장한다.
 		model.addAttribute("boards", boards);
+		
+		model.addAttribute("navi", navi);
 		// 카테고리 정보를 전달할 때 사용
 		model.addAttribute("board_category", board_category);
 
@@ -150,10 +153,6 @@ public class BoardController {
 	    	return "board/read";
 	    }
 
-	
-
-	
-
 	// 게시글 수정 페이지 이동
 	@GetMapping("update")
 	public String updateForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
@@ -213,12 +212,18 @@ public class BoardController {
     @GetMapping("delete")
     public String delete(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id, RedirectAttributes redirect) {
-    	
+
         // board_id 에 해당하는 게시글을 가져온다.
         Board board = boardService.findBoard(board_id);
         
-        // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
-        if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
+        // 리다이렉트 할때 파라미터를 추가해줌
+        redirect.addAttribute("board_category", board.getBoard_category());    
+        
+        // 게시글이 존재하지 않거나 
+        // 작성자와 로그인 사용자의 아이디가 다르면고 직급이 매니저가 아니면 리스트로 리다이렉트 한다.
+        if (board == null || 
+        		(!board.getMember_mail().equals(loginMember.getMember_mail()) &&
+        		!loginMember.getPosition_id().equals("manager"))) {
             log.info("삭제 권한 없음");
             return "redirect:/board/list";
         }
@@ -230,6 +235,7 @@ public class BoardController {
     	
     	return "redirect:/board/list";
     }
+
 
 	@GetMapping("download/{id}")
 	public ResponseEntity<Resource> download(@PathVariable Long id) throws MalformedURLException {

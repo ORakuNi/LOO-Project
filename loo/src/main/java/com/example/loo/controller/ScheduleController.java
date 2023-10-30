@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.example.loo.model.member.Member;
 import com.example.loo.model.schedule.Schedule;
 import com.example.loo.model.schedule.ScheduleWriteForm;
-import com.example.loo.repository.ScheduleMapper;
+import com.example.loo.service.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,19 +29,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("schedule")
 public class ScheduleController {
 
-	@Autowired
-	private final ScheduleMapper scheduleMapper;
+	private final ScheduleService scheduleService;
 
 	@GetMapping("list")
 	public String getSchedule(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 			Model model) {
 
 		// 개인스케줄 
-		List<Schedule> schedule = scheduleMapper.getPerSchedule(loginMember.getMember_mail());
+		List<Schedule> schedule = scheduleService.getPersonalSchedule(loginMember.getMember_mail());
 		// 회사스케줄
-		List<Schedule> schedules = scheduleMapper.getAllSchedule();	
+		List<Schedule> schedules = scheduleService.getCompanySchedule();	
 		// 전체스케줄
-		List<Schedule> allSchedules = scheduleMapper.allSchedules(loginMember.getMember_mail());
+		List<Schedule> allSchedules = scheduleService.getAllSchedules(loginMember.getMember_mail());
 		
 		
 		
@@ -64,7 +62,7 @@ public class ScheduleController {
 		schedule.setMember_mail(((Member) attribute).getMember_mail());
 		log.info("가져온거 : {} ", schedule);
 
-		scheduleMapper.saveSchedule(schedule);
+		scheduleService.saveSchedule(schedule);
 		
 		
 		return "schedule/list";
@@ -75,7 +73,7 @@ public class ScheduleController {
 		
 		log.info("지울거 : {}", schedule_name);
 		
-		scheduleMapper.deleteSchedule(schedule_name);
+		scheduleService.deleteSchedule(schedule_name);
 		
 		return "schedule/list";
 	}

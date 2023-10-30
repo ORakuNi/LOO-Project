@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
@@ -17,7 +18,7 @@ public interface BoardMapper {
 	
 	int getTotal(BoardCategory board_category);
 	
-	List<Board> findAllBoards(BoardCategory board_category);
+	List<Board> findAllBoards(BoardCategory board_category, RowBounds rowBounds);
 		
 	Board findBoard(Long board_id);
 	
@@ -36,9 +37,9 @@ public interface BoardMapper {
 	void removeAttachedFile(Long attachedFile_id);
 
 	List<Board> findAllClubs();
-	
+
 	List<BoardAttachedFile> findFiles();
 	
-	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category);
-
+	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category, RowBounds rowBounds);
+	
 }
