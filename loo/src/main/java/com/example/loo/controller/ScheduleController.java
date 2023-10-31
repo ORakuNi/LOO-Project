@@ -21,10 +21,8 @@ import com.example.loo.model.schedule.ScheduleWriteForm;
 import com.example.loo.service.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("schedule")
 public class ScheduleController {
@@ -36,17 +34,17 @@ public class ScheduleController {
 			Model model) {
 
 		// 개인스케줄 
-		List<Schedule> schedule = scheduleService.getPersonalSchedule(loginMember.getMember_mail());
+		List<Schedule> personalSchedule = scheduleService.getPersonalSchedule(loginMember.getMember_mail());
 		// 회사스케줄
-		List<Schedule> schedules = scheduleService.getCompanySchedule();	
+		List<Schedule> companySchedule = scheduleService.getCompanySchedule();	
 		// 전체스케줄
 		List<Schedule> allSchedules = scheduleService.getAllSchedules(loginMember.getMember_mail());
 		
 		
 		
-		model.addAttribute("schedule", schedule);
-		model.addAttribute("schedules", schedules);
-		model.addAttribute("allschedules", allSchedules);
+		model.addAttribute("personalSchedule", personalSchedule);
+		model.addAttribute("companySchedule", companySchedule);
+		model.addAttribute("allSchedules", allSchedules);
 		return "schedule/list";
 	}
 
@@ -54,13 +52,11 @@ public class ScheduleController {
 	public String registSchedule(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
 			HttpServletRequest request, @ModelAttribute("data") ScheduleWriteForm scheduleWriteForm) {
 
-		log.info("가져온거 : {} " , scheduleWriteForm);
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("loginMember");
 		
 		Schedule schedule = ScheduleWriteForm.toSchedule(scheduleWriteForm);
 		schedule.setMember_mail(((Member) attribute).getMember_mail());
-		log.info("가져온거 : {} ", schedule);
 
 		scheduleService.saveSchedule(schedule);
 		
@@ -70,8 +66,6 @@ public class ScheduleController {
 	
 	@PostMapping("delete")
 	public String deleteSchedule(@RequestParam("schedule_name") String schedule_name) {
-		
-		log.info("지울거 : {}", schedule_name);
 		
 		scheduleService.deleteSchedule(schedule_name);
 		

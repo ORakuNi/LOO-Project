@@ -6,7 +6,6 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.example.loo.model.company.Company;
 
 import lombok.Data;
 
@@ -21,7 +20,7 @@ public class MemberUpdate {
 	private String phone;
 	private LocalDate birthday;
 	private String hire_date;
-	private Company company_id;
+	private String company_id;
 	private String department_id;
 	private String position_id;
 	private String saved_filename;

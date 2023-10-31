@@ -18,7 +18,6 @@ public interface ScheduleMapper {
 	// 전체 스케줄 가져오기
 	List<Schedule> getAllSchedules(String member_mail);
 
-	
 	void saveSchedule(Schedule schedule);
 
 	void deleteSchedule(String schedule_name);

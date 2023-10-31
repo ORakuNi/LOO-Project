@@ -19,6 +19,7 @@ import com.example.loo.model.board.Board;
 import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.board.BoardUpdateForm;
 import com.example.loo.model.board.BoardWriteForm;
+import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.model.member.Member;
 import com.example.loo.service.BoardService;
 
@@ -34,6 +35,30 @@ public class ClubController {
 	private final BoardService boardService;
 	@Value("${file.upload.path}")
 	private String uploadPath;
+	
+	// 게시글 수정 페이지 이동
+    @GetMapping("update")
+    public String updateForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
+    						@RequestParam Long board_id,
+            				Model model) {
+    	
+    	Board board = boardService.findBoard(board_id);
+    	// board_id에 해당하는 게시글이 없거나
+    	// 게시글의 작성자가 로그인한 사용자의 아이디와 다르면 수정하지 않고 리스트로 리다이렉트 시킨다.
+        if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
+            log.info("수정 권한 없음");
+            return "redirect:/club/list";
+        }
+        
+        // model 에 board 객체를 저장한다.
+    	model.addAttribute("club", Board.toBoardUpdateForm(board));
+    	
+    	//첨부파일 찾기
+    	BoardAttachedFile attachedFile = boardService.findFileByBoardId(board_id);
+    	model.addAttribute("file", attachedFile);
+    	
+    	return "club/update";
+    }
 	
     @PostMapping("update")
     public String update(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
@@ -71,16 +96,19 @@ public class ClubController {
         // board_id 에 해당하는 게시글을 가져온다.
         Board board = boardService.findBoard(board_id);
         
-        // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
-        if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
-            log.info("삭제 권한 없음");
-            return "redirect:/club/list";
+        if (board != null) {
+        	if(board.getMember_mail().equals(loginMember.getMember_mail()) || loginMember.getPosition_id().equals("manager")) {
+        		//게시글 삭제
+        		boardService.removeBoard(board_id);
+
+        		return "redirect:/club/list";
+        	}
         }
-    	
-        //게시글 삭제
-        boardService.removeBoard(board_id);
-    	
-    	return "redirect:/club/list";
+        
+        // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
+        log.info("삭제 권한 없음");
+        
+        return "redirect:/club/list";
     }
     
     @GetMapping("list")
@@ -111,7 +139,7 @@ public class ClubController {
     		return "club/write";
     	}
     	
-    	Board board = boardWriteForm.toBoard(boardWriteForm);
+    	Board board = BoardWriteForm.toBoard(boardWriteForm);
     	board.setMember_mail(loginMember.getMember_mail());
     	board.setBoard_category(BoardCategory.CLUB);
     	

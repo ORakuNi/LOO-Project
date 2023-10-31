@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
-
 import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.file.AttachedFile;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.repository.BoardMapper;
+import com.example.loo.repository.CommentsMapper;
 import com.example.loo.util.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardService {
 
 	private final BoardMapper boardMapper;
+	private final CommentsMapper commentsMapper;
 	private final FileService fileService;
 	
 	@Value("${file.upload.path}")
@@ -84,6 +85,7 @@ public class BoardService {
 		if (attachedFile != null) {
 			removeAttachedFile(attachedFile.getAttachedFile_id());
 		}
+		commentsMapper.removeAllComments(board_id);
 		boardMapper.removeBoard(board_id);
 	}
 	

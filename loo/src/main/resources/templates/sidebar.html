@@ -59,7 +59,8 @@
 				<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
 			</a>
 		</li>
-		<li class="sidebar-item" th:if="${session.loginMember.getPosition_id == 'manager'}">
+		<li class="sidebar-item" th:if="${session.loginMember.getPosition_id == 'manager'}" 
+			th:classappend="${#httpServletRequest.requestURI == '/admin/admin' ? 'active' : ''}">
 			<a class="sidebar-link" href="/admin/admin">
       			<i class="align-middle" data-feather="user"></i> <span class="align-middle">관리자 페이지</span>
     		</a>
@@ -111,7 +112,7 @@
 			</a>
 		</li>
 
-		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/board/club' ? 'active' : ''}">
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/club/list' ? 'active' : ''}">
 			<a class="sidebar-link" href="/club/list">
 				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
 			</a>

@@ -3,16 +3,13 @@ package com.example.loo.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.loo.model.commute.Commute;
 import com.example.loo.repository.CommuteMapper;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class CommuteService {
 	
