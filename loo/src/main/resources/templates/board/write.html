@@ -20,7 +20,7 @@
 				<div th:replace="dropdown :: login"></div>
 			</nav>
 			
-			<main class="content">											
+			<main class="content">
 				<form action="write" method="post" th:object="${writeForm}" enctype="multipart/form-data">
 					<div class="container-fluid p-0">
 						<div class="card">
@@ -46,9 +46,9 @@
 										        </td>
 										    </tr>
 										    <tr>
-												<th>첨부파일</th>
+												<th class="text-center">첨부파일</th>
 												<td>
-													<input type="file" name="file">
+													<input class="form-control" type="file" name="file">
 												</td>
 											</tr>
 										  </tbody>

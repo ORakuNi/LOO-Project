@@ -3,6 +3,7 @@
 <head th:replace="head :: head"></head>
 <head>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 	<script defer src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
 		integrity="sha384-vuFJ2JiSdUpXLKGK+tDteQZBqNlMwAjhZ3TvPaDfN9QmbPb7Q8qUpbSNapQev3YF"
 		crossorigin="anonymous"></script>
@@ -133,10 +134,14 @@
 			$('select.form-select').trigger('change');
 		});
 	</script>
+	
+	  
+   
 
 </head>
 
 <body>
+	
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<!-- 로그아웃 시 -->
@@ -169,16 +174,12 @@
 				<!-- 로그아웃 시 -->
 				<div class="container-fluid p-0" th:unless="${session.loginMember}">
 
-					<h1 class="h3 mb-3">Enjoy <strong>L</strong>ife <strong>O</strong>f <strong>O</strong>ffice</h1>
-
 					<div class="row">
-						<div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
-							<div class="card flex-fill w-100">
-								<div class="card-header">
-									<h5 class="card-title mb-0">일정관리, 동호회, 맛집, 날씨 등 기능 안내</h5>
-								</div>
-								<div class="card-body px-4">
-									<div id="" style="height:350px;"></div>
+						<div class="col-12 col-md-12 col-xxl-12 d-flex order-3 order-xxl-2">
+							<div class="card flex-fill" style="width: auto; height: auto;">
+								<div style="position: relative; width: 100%; height: 0; padding-top: 56.25%; overflow: hidden; will-change: transform;">
+								   	<iframe loading="lazy" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; border: none; padding: 0; margin: 0;" src="https:&#x2F;&#x2F;www.miricanvas.com&#x2F;v&#x2F;12igjdm?embed">
+								    </iframe>
 								</div>
 							</div>
 						</div>
@@ -218,7 +219,7 @@
 												<th:block th:unless="${commute == '1'}">
 													<span
 														th:text="${#calendars.format(#calendars.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></span>
-													<p style="color: red; font-weight: bold; font-size:large;">오늘 하루도
+													<p style="color: red; font-weight: bold; font-size: large;">오늘 하루도
 														수고하셨습니다! 업무는 하실수 없습니다.</p>
 												</th:block>
 											</div>
@@ -264,17 +265,36 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-12 col-lg-6 col-xxl-3 d-flex">
-							<div class="card flex-fill">
+						<div class="col-12 col-md-6 col-xxl-3 d-flex order-2 order-xxl-3">
+							<div class="card flex-fill w-100">
 								<div class="card-header">
 
-									<h5 class="card-title mb-0">Calendar</h5>
+									<h5 class="card-title mb-0">실적 현황</h5>
 								</div>
 								<div class="card-body d-flex">
 									<div class="align-self-center w-100">
-										<div class="chart">
-											<div id="datetimepicker-dashboard"></div>
+										<div class="py-3">
+											<div class="chart chart-xs">
+												<canvas id="chartjs-dashboard-pie"></canvas>
+											</div>
 										</div>
+
+										<table class="table mb-0">
+											<tbody>
+												<tr>
+													<td>개발부</td>
+													<td class="text-end">436</td>
+												</tr>
+												<tr>
+													<td>생산부</td>
+													<td class="text-end">3801</td>
+												</tr>
+												<tr>
+													<td>영업부</td>
+													<td class="text-end">1689</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -282,13 +302,12 @@
 						<div class="col-12 col-lg-6 col-xxl-9 d-flex">
 							<div class="card flex-fill">
 								<div class="card-header">
-									<a th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
+
 									<h5 class="card-title mb-0">Notice</h5>
-									</a>
 								</div>
-								<table class="table">
+								<table class="table table-hover my-0">
 									<thead>
-										<tr class="text-center">
+										<tr>
 											<th>No</th>
 											<th>제목</th>
 											<th>작성자</th>
@@ -296,12 +315,12 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr th:each="board, boardStat : ${noticeBoardList}">
-											<td class="text-center" th:text="${boardStat.count}"></td>
-											<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
-											<td class="text-center" th:text="${board.member_name}"></td>
-											<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
-										</tr>
+									<tr th:each="board : ${boards}">
+									    <td class="text-center" th:text="${boardStat.count}"></td>
+		   								<td><a th:href="@{/board/read(board_id=${board.board_id})}" th:text="${board.board_title}"></a></td>
+		     							<td class="text-center" th:text="${board.member_name}"></td>
+		   								<td class="text-center" th:text="${#temporals.format(board.create_time, 'yyyy-MM-dd HH:mm')}"></td>
+									</tr>
 									</tbody>
 								</table>
 							</div>
@@ -325,6 +344,32 @@
 				prevArrow: "<span title=\"Previous month\">&laquo;</span>",
 				nextArrow: "<span title=\"Next month\">&raquo;</span>",
 				defaultDate: defaultDate
+			});
+		});
+		document.addEventListener("DOMContentLoaded", function() {
+			// Pie chart
+			new Chart(document.getElementById("chartjs-dashboard-pie"), {
+				type: "pie",
+				data: {
+					labels: ["개발부", "생산부", "영업부"],
+					datasets: [{
+						data: [4306, 3801, 1689],
+						backgroundColor: [
+							window.theme.primary,
+							window.theme.warning,
+							window.theme.danger
+						],
+						borderWidth: 5
+					}]
+				},
+				options: {
+					responsive: !window.MSInputMethodContext,
+					maintainAspectRatio: false,
+					legend: {
+						display: false
+					},
+					cutoutPercentage: 75
+				}
 			});
 		});
 	</script>

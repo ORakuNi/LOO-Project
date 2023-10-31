@@ -26,18 +26,20 @@
 	    select
 	    	c.comment_id,
 			c.board_id,
-			c.member_mail,
-			m.member_name,
 			c.comment_contents,
 			c.comment_create_time,
-			<if test="comment_edit_time != null">c.comment_edit_time</if>
+			c.click_like,
+			m.member_mail,
+			m.member_name,
+			c.comment_edit_time,
+			m.saved_filename
 	    from
-	    	comments c join member m
+	    	comments c left outer join member m
 	    	on (c.member_mail = m.member_mail)
 	    where
 	    	c.board_id = #{board_id}
 	    order by
-	    	c.comment_create_time
+	    	c.comment_create_time desc
     </select>
   	
   	<select id="findComment" resultType="comments">
@@ -60,4 +62,10 @@
   		delete from comments where board_id = #{board_id}
   	</delete>
   
+  	<update id="like">
+  		update comments set
+  			click_like = click_like + 1
+  		where
+  			comment_id = #{comment_id}
+  	</update>
 </mapper>

@@ -6,8 +6,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 
 import com.example.loo.interceptor.AdminCheckInterceptor;
 import com.example.loo.interceptor.LoginCheckInterceptor;
@@ -16,11 +16,15 @@ import com.example.loo.interceptor.LoginCheckInterceptor;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-	private String[] excludePaths = {"/", "/head", "/dropdown", "/sidebar", 
+	private String[] loginCheckExcludePaths = {"/", "/head", "/dropdown", "/sidebar", 
 					"/users/login", "/users/signup", "/users/logout", "/users/js/app.js",
-					"/*.css", "/*.fonts", "/*.js", "/*.img", "/*.ico", "/error",
+					"/*.css", "/*.fonts", "/**/*.js", "/*.img", "/*.ico", "/error",
 					"/css/**", "/fonts/**", "/img/**", "/js/**", "/src/**"};
 	
+	private String[]  adminCheckAddPath = {"/admin/admin", "/admin/admin-update"
+	};
+	
+	String permittedPath = "file:///" + System.getProperty("user.dir") + "/src/main/resources/static/";
 	
 //	@Bean
 //	public FilterRegistrationBean<Filter> loginCheckFilter() {
@@ -48,15 +52,20 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(new LoginCheckInterceptor())
 		.order(1) // 호출 순서
 		.addPathPatterns("/**") // 인터셉터를 적용할 URL 패턴 지정
-		.excludePathPatterns(excludePaths); // 인터셉터에서 제외할 패턴을 지정
+		.excludePathPatterns(loginCheckExcludePaths); // 인터셉터에서 제외할 패턴을 지정
 	
 		
 		registry.addInterceptor(new AdminCheckInterceptor())
 		.order(2) // 호출 순서
-		.addPathPatterns("/admin/admin"); // 인터셉터를 적용할 URL 패턴 지정
+		.addPathPatterns(adminCheckAddPath); // 인터셉터를 적용할 URL 패턴 지정
 	}
 	
 
-	
+	@Override
+	   public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	      registry.addResourceHandler("/**").addResourceLocations(permittedPath);
+	      //WebMvcConfigurer.super.addResourceHandlers(registry);
+	   }
+
 	
 }

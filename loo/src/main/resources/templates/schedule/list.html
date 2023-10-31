@@ -12,12 +12,15 @@
 
 	<script th:inline="javascript">
 		document.addEventListener('DOMContentLoaded', function () {
-			var object = [[${schedule}]]
-			var objects = [[${schedules}]]
-			var allObject = [[${allschedules}]]
+			// 개인 스케줄
+			var object = /*[[${schedule}]]*/'';
+			// 회사 스케줄
+			var objects = /*[[${schedules}]]*/'';
+			// 전체 스케줄 
+			var allObject = /*[[${allschedules}]]*/'';
+
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
-
 				googleCalendarApiKey: 'AIzaSyAgGNHIbmXLXhRPanmc-xAAt_qdwPxHUOk',
 
 
@@ -34,20 +37,7 @@
 					right: 'dayGridMonth,timeGridWeek'
 				},
 
-
-				/* 마우스 올렸을 때 내용보이기(수정을 할수없어서 보류) eventDidMount: function (info) {
-					for (var i = 0; i < object.length; i++) {
-						if (info.event.title === object[i].schedule_name) {
-							tippy(info.el, {
-								content: object[i].schedule_contents,
-								placement: 'top',
-								offset: [0, 0],
-								// interactive: true,	
-							});
-						}
-					}
-				}, */
-
+				
 				navLinks: false,
 				fixedWeekCount: false, // 이전달 다음달 선택 막기 
 				eventSources: [
@@ -96,11 +86,11 @@
 						color: 'white',
 						textColor: 'black'
 					},
-					
+
 					{	// 구글 일본꺼
-					 	googleCalendarId :'ja.japanese#holiday@group.v.calendar.google.com',
-					 	color : 'white',
-					 	textColor : 'black'
+						googleCalendarId: 'ja.japanese#holiday@group.v.calendar.google.com',
+						color: 'white',
+						textColor: 'black'
 					}
 				],
 
@@ -113,9 +103,9 @@
 							<label for="sch">일정명</label>
 							<input type="text" id="sch" class="form-control form-control-lg" name="schedule_name"><p><p>
 							<label for="con">상세설명</label>
-  							<input type="text" id="con" class="form-control form-control-lg" name="schedule_contents"><p>
+  							<textarea type="text" id="con" class="form-control form-control-lg" name="schedule_contents"></textarea><p>
   							<label for="sta">시작일</label>
-  							<input type="datetime-local" id="sta" class="form-control form-control-lg" name="schedule_date" value="${info.dateStr}"><p>
+  							<input type="datetime-local" id="sta" class="form-control form-control-lg" name="schedule_date"><p>
 						    <label for="sta">마감일</label>
   							<input type="datetime-local" id="ded" class="form-control form-control-lg" name="deadline"><p>
   							<label for="typ">일정종류</label>
@@ -140,13 +130,13 @@
 							const data = {
 								schedule_name: $('#sch').val(),
 								schedule_contents: $('#con').val(),
-								schedule_date: $('#sta').val(),
-								deadline: $('#ded').val(),
+								schedule_date: new Date($('#sta').val()),
+								deadline: new Date($('#ded').val()),
 								importance: $('#imp').val(),
 								schedule_type: $('#typ').val()
 							};
-							 console.log(data.schedule_date);
-							 console.log(typeof(new Date(data.deadline)));
+							console.log(data.schedule_date);
+							console.log((new Date(data.deadline)));
 							$.ajax({
 								url: url,
 								type: "POST",
@@ -167,10 +157,8 @@
 				eventClick: function (info) {
 					var 누른거 = allObject.find(function (event) {
 						return event.schedule_name === info.event._def.title;
-						console.log(누른거)
-						 info.event.jsEvent.cancelBubble = true;
-    					 info.event.jsEvent.preventDefault();
 					});
+					console.log(누른거)
 
 					Swal.fire({
 						title: '일정 확인하기',
@@ -178,11 +166,11 @@
 				            <label for="sch">일정명</label>
 				            <input type="text" id="sch" class="form-control form-control-lg" value="${누른거.schedule_name}" disabled><p><p>
 				            <label for="con">상세설명</label>
-				            <input type="text" id="con" class="form-control form-control-lg" value="${누른거.schedule_contents}" disabled><p>
+				            <textarea type="text" id="con" class="form-control form-control-lg" rows="3" cols="30" disabled>${누른거.schedule_contents}</textarea><p>
 				            <label for="sta">시작일</label>
-				            <input type="datetime-local" id="sta" class="form-control form-control-lg"  value="${누른거.schedule_date}" disabled><p>
+				            <input type="text" id="sta" class="form-control form-control-lg"  value="${(누른거.schedule_date).substring(0,16)}" disabled><p>
 				            <label for="sta">마감일</label>
-				            <input type="datetime-local" id="ded" class="form-control form-control-lg"  value="${누른거.deadline}" disabled><p>
+				            <input type="text" id="ded" class="form-control form-control-lg"  value="${누른거.deadline.substring(0,16)}" disabled><p>
 							<labe for="typ">일정종류</label>
 							<input type="text" id="typ" class="form-control form-control-lg" value="${누른거.schedule_type}" disabled><p>
 				            <label for="imp">중요도</label>

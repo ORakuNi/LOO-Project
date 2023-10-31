@@ -16,6 +16,7 @@ public class Board {
 	private LocalDateTime create_time; //작성일
 	private LocalDateTime edit_time;  // 수정시간
 	private Long hit; //조회수
+	private String saved_filename;
 
     public static BoardUpdateForm toBoardUpdateForm(Board board) {
         BoardUpdateForm boardUpdateForm = new BoardUpdateForm();
@@ -29,4 +30,5 @@ public class Board {
         boardUpdateForm.setCreate_time(board.getCreate_time());
         return boardUpdateForm;
     }
-}
+
+}	

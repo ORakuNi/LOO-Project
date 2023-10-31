@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head th:replace="head :: head"></head>
+
+<head>
+	<title>맛집</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			let page = 1;
+			fetchData();
+
+			function fetchData() {
+				$.ajax({
+					url: `https://apis.data.go.kr/6260000/FoodService/getFoodKr?serviceKey=kL00C7wEpGgpo2n%2FErweSgWemnixWZxI2N%2BTzlkyWrugWrGVQTQGO0lpetrDfzp88yDNXbcJJDyN2mTGdowblw%3D%3D&pageNo=${page}&numOfRows=10&resultType=json`,
+					dataType: "json",
+					success: function (data) {
+						// console.log(data)
+						let matgip_data = data['getFoodKr']['item']
+						for (let i = 0; i < matgip_data.length; i++) {
+							put_data1(matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
+						}
+						console.log(matgip_data)
+						page++;
+					},
+					async: false,
+					error: function () {
+						alert('Error loading XML document');
+					}
+				})
+			}
+
+
+			$(window).scroll(function () {
+				let $window = $(this);
+				let scrollTop = $window.scrollTop();
+				let windowHeight = $window.height();
+				let documentHeight = $(document).height();
+
+				console.log("documentHeight:" + documentHeight + " | scrollTop:" + scrollTop + " | windowHeight: " + windowHeight);
+
+				if (scrollTop + windowHeight + 30 > documentHeight) {
+					fetchData()
+				}
+			})
+
+		})
+
+		function put_data1(title, contents, add, tel, img) {
+			let num = 1;
+			let html = `
+						<div class="col-12 col-md-3">
+						<div class="card">
+							<img class="card-img-top pic" src="${img}" alt="Unsplash" style="height:200px">
+							<div class="card-header">
+								<h5 class="card-title" style="font-size:16px;">-${title}
+									
+                <button class="btn btn-danger p-1" onclick="addFavorites('${title}','${add}','${tel}', '${img}')" style="font-size:12px;">
+                  찜하기
+                </button> 
+				</h5>					
+					</div>
+							<div class="card-body">
+								<p class="card-text">${contents}
+							</div>
+							<div class="card-body">
+								<a href="tel:${tel}" class="card-link">${tel}</a></p>
+								<p class="card-link">${add}</a>
+							</div>
+						</div>
+					</div>
+						`
+
+			$('#matgip').append(html);
+		}
+
+
+
+		function addFavorites(title, add, tel, img) {
+			$.ajax({
+				type: "POST",
+				url: "matgip",
+				data: {matgip_title: title, matgip_add: add, matgip_tel: tel, saved_filename: img},
+				success: function (result) {
+					Swal.fire(
+						'찜 등록되었습니다'
+					).then(() => {
+						location.reload();
+					})
+				}
+			});
+		}
+
+	</script>
+
+
+	<style>
+		.pic {
+			width: 400px;
+			transition: all 0.2s linear;
+			overflow: hidden;
+		}
+
+		.pic:hover {
+			transform: scale(1.1);
+			overflow: hidden;
+		}
+	</style>
+
+</head>
+
+<body>
+	<div class="wrapper">
+		<!-- 사이드 메뉴 -->
+		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
+			<div th:replace="sidebar :: login"></div>
+		</nav>
+
+		<div class="main">
+			<!-- 드롭다운 -->
+			<nav class="navbar navbar-expand navbar-light navbar-bg" th:if="${session.loginMember}">
+				<a class="sidebar-toggle js-sidebar-toggle">
+					<i class="hamburger align-self-center"></i>
+				</a>
+				<div th:replace="dropdown :: login"></div>
+			</nav>
+
+			<main class="content">
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle">맛집</h1>
+						<a class="badge bg-dark text-white ms-2" id="more">
+							오늘의 맛집 추천이 맘에 들지 않는다면?
+						</a>
+						<a class="badge bg-primary text-white"
+							th:href="@{/api/myMatgip(member_mail=${session.loginMember.member_mail})}">
+							찜목록
+						</a>
+
+					</div>
+
+					<div class="row mt-36" id="matgip">
+
+
+					</div>
+			</main>
+
+		</div>
+	</div>
+
+	<script src="/js/app.js"></script>
+
+</body>
+
+</html>
