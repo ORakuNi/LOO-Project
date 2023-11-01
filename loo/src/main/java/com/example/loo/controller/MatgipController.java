@@ -28,7 +28,7 @@ public class MatgipController {
 	@GetMapping("matgip")
 	public String restaurant(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
 							@SessionAttribute(name = "like", required = false) 
-								@ModelAttribute("data") Matgip restaurant,
+							@ModelAttribute("data") Matgip restaurant,
 							Model model) {
 
 		return "api/matgip";
@@ -63,14 +63,11 @@ public class MatgipController {
 	public String deleteMatgip(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
 								@RequestParam String member_mail, 
 								@RequestParam("matgip_title") String matgip_title) {
-
-		matgipMapper.removeMatgip(matgip_title, loginMember.getMember_mail());		
+	
+		matgipMapper.removeMatgip(matgip_title, loginMember.getMember_mail());
 		
 		return "redirect:/api/matgip";
 	}
-	
-	
-	
 	
 
 }

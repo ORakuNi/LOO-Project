@@ -19,6 +19,7 @@
 			// 전체 스케줄 
 			var allSchedule = /*[[${allschedules}]]*/'';
 
+
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
 				googleCalendarApiKey: 'AIzaSyAgGNHIbmXLXhRPanmc-xAAt_qdwPxHUOk',
@@ -156,6 +157,7 @@
 
 				eventClick: function (info) {
 					var 누른거 = allSchedule.find(function (event) {
+
 						return event.schedule_name === info.event._def.title;
 					});
 					console.log(누른거)

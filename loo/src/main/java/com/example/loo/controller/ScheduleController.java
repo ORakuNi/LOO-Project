@@ -21,10 +21,8 @@ import com.example.loo.model.schedule.ScheduleWriteForm;
 import com.example.loo.service.ScheduleService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("schedule")
 public class ScheduleController {
@@ -41,10 +39,10 @@ public class ScheduleController {
 		List<Schedule> companySchedule = scheduleService.getCompanySchedule();	
 		// 전체스케줄
 		List<Schedule> allSchedules = scheduleService.getAllSchedules(loginMember.getMember_mail());			
-		
+
 		model.addAttribute("personalSchedule", personalSchedule);
 		model.addAttribute("companySchedule", companySchedule);
-		model.addAttribute("allschedules", allSchedules);
+		model.addAttribute("allSchedules", allSchedules);
 		return "schedule/list";
 	}
 

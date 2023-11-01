@@ -40,10 +40,9 @@ public class HomeController {
 					@ModelAttribute CommuteAttendance commuteAttendance, 
 					HttpServletRequest request, 
 					Model model) {
-		
-		 //페이징
-		RowBounds rowBounds = new RowBounds(0, countPerPage);	
-		
+
+		RowBounds rowBounds = new RowBounds(0, countPerPage);
+
 		
 	    // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
 	    List<Board> boards = boardService.findAllBoards(BoardCategory.NOTICE, rowBounds);
