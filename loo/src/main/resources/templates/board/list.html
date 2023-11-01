@@ -1,6 +1,6 @@
 	<!DOCTYPE html>
 <html lang="ko">
-
+<meta charset="UTF-8">
 <head th:replace="head :: head"></head>
 
 <head>
@@ -14,7 +14,8 @@
 		function search() {
 			let searchText = document.getElementById("searchText").value;
 			let board_category = document.getElementById("board_category").value;
-			location.href = "/board/list?board_category=" + board_category + "&searchText=" + searchText;
+			 
+			location.href = "/board/list?board_category=" + board_category + "&searchText=" + searchText;			
 		}
 		
     	function deleteBoard(board_id) {
@@ -76,6 +77,32 @@
 											</tr>
 										</tbody>
 									</table>
+									<div id="navigator" class="text-center">
+									
+										<th:block th:if="${navi.currentPage - navi.pagePerGroup > 0 }">
+											<a th:href="@{/board/list(board_category=${board_category},page=${navi.currentPage - navi.pagePerGroup},searchText=${searchText})}"><<</a>&nbsp;&nbsp;
+										</th:block>
+										
+										<th:block th:if="${navi.currentPage - 1 > 0}">
+											<a th:href="@{/board/list(board_category=${board_category},page=${navi.currentPage - 1 },searchText=${searchText})}"><</a>&nbsp;&nbsp;
+										</th:block>
+										
+										
+										<th:block th:if="${navi.endPageGroup != 0}">
+											<th:block th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+												<a th:href="@{/board/list(board_category=${board_category},searchText=${searchText},page=${counter})}" th:text="${counter}"></a>&nbsp;&nbsp;
+											</th:block>
+										</th:block>
+										
+										<th:block th:if="${navi.currentPage < navi.totalPageCount}">
+											<a th:href="@{/board/list(board_category=${board_category},page=${navi.currentPage + 1 },searchText=${searchText})}">></a>&nbsp;&nbsp;
+										</th:block>
+										
+										<th:block th:if="${navi.currentPage + navi.pagePerGroup < navi.totalPageCount + 1}">
+											<a th:href="@{/board/list(board_category=${board_category},page=${navi.currentPage + navi.pagePerGroup },searchText=${searchText})}">>></a>&nbsp;&nbsp;
+										</th:block>
+										
+									</div> 
 									<div class="text-center">
 										<form>
 											<label for="searchText">제목:</label>
@@ -83,7 +110,7 @@
 												th:value="${searchText}">
 											<input type="hidden" id="board_category" name="board_category"
 												th:value="${board_category}">
-											<input class="btn btn-sm btn-primary" type="button" onclick="search()" value="검색">
+											<input type="button" onclick="search()" value="검색">
 										</form>
 									</div>
 									<p>

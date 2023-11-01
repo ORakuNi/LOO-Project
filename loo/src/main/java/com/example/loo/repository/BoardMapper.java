@@ -16,7 +16,7 @@ public interface BoardMapper {
 
 	void saveBoard(Board board);
 	
-	int getTotal(BoardCategory board_category);
+	int getTotal(@Param("board_category") BoardCategory board_category, @Param("searchText")String searchText);
 	
 	List<Board> findAllBoards(BoardCategory board_category, RowBounds rowBounds);
 		
@@ -41,5 +41,7 @@ public interface BoardMapper {
 	List<BoardAttachedFile> findFiles();
 	
 	List<Board> findBoards(@Param("searchText") String searchText, @Param("board_category") BoardCategory board_category, RowBounds rowBounds);
+	
+
 	
 }

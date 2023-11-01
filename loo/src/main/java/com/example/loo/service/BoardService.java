@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
+
 import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.file.AttachedFile;
 import com.example.loo.model.file.BoardAttachedFile;
 import com.example.loo.repository.BoardMapper;
-import com.example.loo.repository.CommentsMapper;
 import com.example.loo.util.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardService {
 
 	private final BoardMapper boardMapper;
-	private final CommentsMapper commentsMapper;
 	private final FileService fileService;
 	
 	@Value("${file.upload.path}")
@@ -85,7 +84,6 @@ public class BoardService {
 		if (attachedFile != null) {
 			removeAttachedFile(attachedFile.getAttachedFile_id());
 		}
-		commentsMapper.removeAllComments(board_id);
 		boardMapper.removeBoard(board_id);
 	}
 	
@@ -98,8 +96,8 @@ public class BoardService {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
 	
-	public int getTotal(BoardCategory board_category) {
-		return boardMapper.getTotal(board_category);
+	public int getTotal(BoardCategory board_category, String searchText) {
+		return boardMapper.getTotal(board_category, searchText);
 	}
 
 	public List<Board> findAllClubs() {
@@ -124,12 +122,9 @@ public class BoardService {
 
 	}
 	
-	public List<Board> searchBoards(BoardCategory board_category, String searchText, RowBounds rowBounds){
-		if(searchText.equals("")) {
-			  List<Board> boards = boardMapper.findAllBoards(board_category, rowBounds);
-			  return boards;
-		} else 
-			 return boardMapper.findBoards(searchText, board_category, rowBounds);		
+	public List<Board> searchBoards(BoardCategory board_category, String searchText, int startRecored, int countPerpage ){
+		RowBounds rowBounds = new RowBounds(startRecored, countPerpage);
+		return boardMapper.findBoards(searchText, board_category, rowBounds);
 	}
 	
 }
