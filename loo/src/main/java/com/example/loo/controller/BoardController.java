@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -55,24 +54,23 @@ public class BoardController {
 	@GetMapping("list")
 	public String list(@RequestParam BoardCategory board_category, Model model,
 			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "searchText", defaultValue = "", required = false) String searchText) {
+			@RequestParam(value = "searchText", defaultValue = "") String searchText) {
 
 		// 페이징
-		int total = boardService.getTotal(board_category);
+		int total = boardService.getTotal(board_category,searchText);
 
 		PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
 
-		RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
-
 		// 원래 부분에서 search 부분 추가 (로직변경)
-		List<Board> boards = boardService.searchBoards(board_category, searchText, rowBounds);
+		List<Board> boards = boardService.searchBoards(board_category, searchText, navi.getStartRecord(),navi.getCountPerPage() );
 
-		// Board 리스트를 model 에 저장한다.
-		model.addAttribute("boards", boards);
 		
+		model.addAttribute("boards", boards);
 		model.addAttribute("navi", navi);
 		// 카테고리 정보를 전달할 때 사용
 		model.addAttribute("board_category", board_category);
+		
+		model.addAttribute("searchText", searchText);
 
 		return "board/list";
 	}
