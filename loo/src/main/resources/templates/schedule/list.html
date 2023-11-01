@@ -13,11 +13,11 @@
 	<script th:inline="javascript">
 		document.addEventListener('DOMContentLoaded', function () {
 			// 개인 스케줄
-			var object = /*[[${schedule}]]*/'';
+			var pSchedule = /*[[${personalSchedule}]]*/'';
 			// 회사 스케줄
-			var objects = /*[[${schedules}]]*/'';
+			var cSchedule = /*[[${companySchedule}]]*/'';
 			// 전체 스케줄 
-			var allObject = /*[[${allschedules}]]*/'';
+			var allSchedule = /*[[${allschedules}]]*/'';
 
 			var calendarEl = document.getElementById('calendar');
 			var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -46,11 +46,11 @@
 					{
 						events: function (info, successCallback, failureCallback) {
 							var events = [];
-							for (var i = 0; i < object.length; i++) {
+							for (var i = 0; i < pSchedule.length; i++) {
 								events.push({
-									"start": object[i].schedule_date,
-									"end": object[i].deadline,
-									"title": object[i].schedule_name,
+									"start": pSchedule[i].schedule_date,
+									"end": pSchedule[i].deadline,
+									"title": pSchedule[i].schedule_name,
 									allDay: false,
 
 								});
@@ -65,11 +65,11 @@
 					{
 						events: function (info, successCallback, failureCallback) {
 							var events = [];
-							for (var i = 0; i < objects.length; i++) {
+							for (var i = 0; i < cSchedule.length; i++) {
 								events.push({
-									"start": objects[i].schedule_date,
-									"end": objects[i].deadline,
-									"title": objects[i].schedule_name,
+									"start": cSchedule[i].schedule_date,
+									"end": cSchedule[i].deadline,
+									"title": cSchedule[i].schedule_name,
 									allDay: false,
 
 								});
@@ -155,7 +155,7 @@
 				},
 
 				eventClick: function (info) {
-					var 누른거 = allObject.find(function (event) {
+					var 누른거 = allSchedule.find(function (event) {
 						return event.schedule_name === info.event._def.title;
 					});
 					console.log(누른거)

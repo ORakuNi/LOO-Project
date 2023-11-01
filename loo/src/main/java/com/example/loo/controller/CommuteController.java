@@ -30,7 +30,6 @@ public class CommuteController {
 
 
 	private final CommuteService commuteService;
-	private Commute findCommute;
 	
 	// 출근하기
 	@PostMapping("attendance")
@@ -63,7 +62,6 @@ public class CommuteController {
 		Object attribute = session.getAttribute("status");
 
 		// session에 있는 commute_id를 들고와서 형변환 시켜줌
-//		log.info("status : {}" , ((Commute) attribute).getCommute_id());
 		commuteService.leaveCommute(((Commute) attribute).getCommute_id());
 		return "redirect:/";
 	}

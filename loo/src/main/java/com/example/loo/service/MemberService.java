@@ -68,6 +68,7 @@ public class MemberService {
 
 			//첨부파일 내용을 데이터베이스 저장
 			memberMapper.saveFile(savedFile);
+			updateMember(givenmember);
 		}
 	}
 	
@@ -75,8 +76,8 @@ public class MemberService {
 		memberMapper.updateMember(member);
 	}
 	
-	public void updateAdminMember(Member mbember) {
-		memberMapper.updateAdminMember(mbember);
+	public void updateAdminMember(Member member) {
+		memberMapper.updateAdminMember(member);
 	}
 	
 	@Transactional

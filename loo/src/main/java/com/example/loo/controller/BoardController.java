@@ -105,7 +105,7 @@ public class BoardController {
 		}
 
 		// 파라미터로 받은 BoardWriteForm 객체를 Board 타입으로 변환한다.
-		Board board = BoardWriteForm.toBoard(boardWriteForm);
+		Board board = boardWriteForm.toBoard(boardWriteForm);
 
 		// board 객체에 로그인한 사용자의 아이디와 카테고리 타입 추가
 		board.setMember_mail(loginMember.getMember_mail());

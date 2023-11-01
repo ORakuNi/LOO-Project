@@ -66,9 +66,6 @@ public class AdminController {
 							@Validated @ModelAttribute("update") MemberAdminUpdate memberAdminUpdate,
 							BindingResult result) {
 		
-		log.info("매니저가 선택한 사용자: {}", member_mail);
-		log.info("사용자 정보: {}", memberAdminUpdate);
-		
 		if(result.hasErrors()) {
 			return "admin/admin-update?member_mail=" + member_mail;
 		}
@@ -107,10 +104,6 @@ public class AdminController {
 		
 		Commute commute = commuteService.findCommute(commute_id);
 		
-//		if(commute == null) {
-//			
-//		}
-		
 		// Map 타입으로 가져온 param들을 String 으로 각각 담아줌
 		String attendance = (String)param.get("attendance_time");
 		String leave = (String)param.get("leave_time");
@@ -128,32 +121,4 @@ public class AdminController {
 		
 		return ResponseEntity.ok("업데이트 성공");
 	}
-	
-	
-	
-	
-//	@GetMapping("admin-commute-update")
-//	public String adminCommuteUpdate(@RequestParam Long commute_id,
-//						@Validated @ModelAttribute("commutes") CommuteAdminUpdate commuteAdminUpdate) {
-//		log.info("관리자 일정 변경");
-//		log.info("commute_id: {}", commute_id);
-//		
-//		Commute commute = commuteMapper.findCommute(commute_id);
-//		log.info("commute: {}", commute);
-//		if(commute == null) {
-//			return "redirect:/admin/admin";
-//		}
-//		
-//		commute.setAttendance_time(commuteAdminUpdate.getAttendance_time());
-//		commute.setLeave_time(commuteAdminUpdate.getLeave_time());
-//		
-//		log.info("commuteAdminUpdate: {}", commuteAdminUpdate);
-//		log.info("commute: {}", commute);
-//		commuteMapper.updateAdminCommute(commute);
-//		
-//		
-//		
-//		return "redirect:/admin/admin";
-//	}
-	
 }
