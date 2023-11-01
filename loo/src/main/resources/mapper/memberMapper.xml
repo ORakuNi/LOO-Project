@@ -43,6 +43,20 @@
 			member_mail = #{member_mail}
 	</update>
 	
+	<update id="updateAdminMember">
+		update member
+		set
+			member_name = #{member_name},
+			phone = #{phone},
+			birthday = #{birthday},
+			hire_date = #{hire_date},
+			company_id = #{company_id},
+			department_id = #{department_id},
+			position_id = #{position_id}
+		where
+			member_mail = #{member_mail}
+	</update>
+	
 	<insert id="saveFile">
 	<selectKey keyProperty="attachedFile_id" resultType="long" order="BEFORE">
         select board_seq.nextval from dual

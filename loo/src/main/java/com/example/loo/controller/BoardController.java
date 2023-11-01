@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -34,6 +33,7 @@ import com.example.loo.model.member.Member;
 import com.example.loo.service.BoardService;
 import com.example.loo.util.PageNavigator;
 
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,50 +52,27 @@ public class BoardController {
 	private final int pagePerGroup = 5;
 
 	@GetMapping("list")
-//<<<<<<< HEAD
-//	public String list(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
-//			@RequestParam BoardCategory board_category,
-//			@RequestParam(value = "searchText", defaultValue="", required = false) String searchText,
-//			Model model) {
-//		
-//        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-//        //List<Board> boards = boardService.findAllBoards(board_category);
-//
-//        List<Board> boards;
-//        
-//        if(searchText.equals("")) {
-//        // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-//        boards =boardMapper.findAllBoards(board_category);
-//        model.addAttribute("boards", boards);
-//
-//        }
-//        
-//        else {
-//        boards = boardMapper.findBoards(searchText, board_category);
-//        model.addAttribute("boards", boards);
-//        
-//        }
-//
-//=======
+
 	public String list(@RequestParam BoardCategory board_category, Model model,
 			@RequestParam(value = "page", defaultValue = "1") int page,
-			@RequestParam(value = "searchText", defaultValue = "", required = false) String searchText) {
+			@RequestParam(value = "searchText", defaultValue = "") String searchText) {
 
 		// 페이징
-		int total = boardService.getTotal(board_category);
+		int total = boardService.getTotal(board_category,searchText);
 
 		PageNavigator navi = new PageNavigator(countPerPage, pagePerGroup, page, total);
 
-		RowBounds rowBounds = new RowBounds(navi.getStartRecord(), navi.getCountPerPage());
-
 		// 원래 부분에서 search 부분 추가 (로직변경)
-		List<Board> boards = boardService.searchBoards(board_category, searchText);
+		List<Board> boards = boardService.searchBoards(board_category, searchText, navi.getStartRecord(),navi.getCountPerPage() );
 
-		// Board 리스트를 model 에 저장한다.
-		model.addAttribute("boards", boards);
 		
+		model.addAttribute("boards", boards);
+		model.addAttribute("navi", navi);
+
 		// 카테고리 정보를 전달할 때 사용
 		model.addAttribute("board_category", board_category);
+		
+		model.addAttribute("searchText", searchText);
 
 		return "board/list";
 	}
@@ -177,10 +154,6 @@ public class BoardController {
 	    	return "board/read";
 	    }
 
-	
-
-	
-
 	// 게시글 수정 페이지 이동
 	@GetMapping("update")
 	public String updateForm(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
@@ -240,12 +213,18 @@ public class BoardController {
     @PostMapping("delete")
     public String delete(@SessionAttribute(value = "loginMember", required = false) Member loginMember,
     					@RequestParam Long board_id, RedirectAttributes redirect) {
-    	
+
         // board_id 에 해당하는 게시글을 가져온다.
         Board board = boardService.findBoard(board_id);
         
-        // 게시글이 존재하지 않거나 작성자와 로그인 사용자의 아이디가 다르면 리스트로 리다이렉트 한다.
-        if (board == null || !board.getMember_mail().equals(loginMember.getMember_mail())) {
+        // 리다이렉트 할때 파라미터를 추가해줌
+        redirect.addAttribute("board_category", board.getBoard_category());    
+        
+        // 게시글이 존재하지 않거나 
+        // 작성자와 로그인 사용자의 아이디가 다르면고 직급이 매니저가 아니면 리스트로 리다이렉트 한다.
+        if (board == null || 
+        		(!board.getMember_mail().equals(loginMember.getMember_mail()) &&
+        		!loginMember.getPosition_id().equals("manager"))) {
             log.info("삭제 권한 없음");
             return "redirect:/board/list";
         }
@@ -260,6 +239,7 @@ public class BoardController {
     	
     	return "redirect:/board/list";
     }
+
 
 	@GetMapping("download/{id}")
 	public ResponseEntity<Resource> download(@PathVariable Long id) throws MalformedURLException {

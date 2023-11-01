@@ -1,6 +1,6 @@
 
 
-## 💛 JOBPAIR PJT BY LOO
+## 💛 JOBFAIR PJT BY LOO
 
 ### Life Of Office(LOO) - 사내 개인업무 관리 프로그램
 

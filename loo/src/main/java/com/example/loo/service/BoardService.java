@@ -2,12 +2,14 @@ package com.example.loo.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
+
 import com.example.loo.model.board.BoardCategory;
 
 import com.example.loo.model.file.AttachedFile;
@@ -47,6 +49,7 @@ public class BoardService {
 	
 	@Transactional
 	public void updateBoard(Board updateBoard, boolean isFileRemoved, MultipartFile file) {
+		
 		Board board = boardMapper.findBoard(updateBoard.getBoard_id());
 		if (board != null) {
 			boardMapper.updateBoard(updateBoard);
@@ -94,8 +97,8 @@ public class BoardService {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
 	
-	public int getTotal(BoardCategory board_category) {
-		return boardMapper.getTotal(board_category);
+	public int getTotal(BoardCategory board_category, String searchText) {
+		return boardMapper.getTotal(board_category, searchText);
 	}
 
 	public List<Board> findAllClubs() {
@@ -115,18 +118,14 @@ public class BoardService {
 		return board;
 	}
 
-	public List<Board> findAllBoards(BoardCategory board_category) {
-		return boardMapper.findAllBoards(board_category);
+	public List<Board> findAllBoards(BoardCategory board_category, RowBounds rowBounds) {
+		return boardMapper.findAllBoards(board_category, rowBounds);
 
 	}
 	
-	public List<Board> searchBoards(BoardCategory board_category, String searchText){
-		if(searchText.equals("")) {
-			  List<Board> boards = boardMapper.findAllBoards(board_category);
-			  return boards;
-		} else 
-			 return boardMapper.findBoards(searchText, board_category);
-		
+	public List<Board> searchBoards(BoardCategory board_category, String searchText, int startRecored, int countPerpage ){
+		RowBounds rowBounds = new RowBounds(startRecored, countPerpage);
+		return boardMapper.findBoards(searchText, board_category, rowBounds);
 	}
 	
 }

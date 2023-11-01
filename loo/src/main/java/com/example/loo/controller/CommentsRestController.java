@@ -28,6 +28,7 @@ public class CommentsRestController {
 	
 	private final CommentsMapper commentsMapper;
 	
+	// 댓글 작성
 	@PostMapping("{board_id}")
 	public ResponseEntity<String> writeComment(@PathVariable Long board_id,
 											@ModelAttribute Comments comments,
@@ -42,6 +43,7 @@ public class CommentsRestController {
 		return ResponseEntity.ok("write ok");
 	}
 	
+	// 게시물에 해당하는 댓글 가져오기
 	@GetMapping("{board_id}")
 	public ResponseEntity<List<Comments>> readComments(@PathVariable Long board_id){
 		List<Comments> comments = commentsMapper.findAllComments(board_id);
@@ -49,24 +51,28 @@ public class CommentsRestController {
 		return ResponseEntity.ok(comments);
 	}
 	
+	// 댓글 삭제
 	@DeleteMapping("{comment_id}")
 	public ResponseEntity<String> removeComment(@SessionAttribute("loginMember") Member loginMember,
 												@PathVariable Long comment_id){
 		Comments findComment = commentsMapper.findComment(comment_id);
-		if(!findComment.getMember_mail().equals(loginMember.getMember_mail())) {
-			return ResponseEntity.badRequest().build();
+		// 댓글 작성자와 로그인한 회원이 같거나 로그인한 회원이 관리자일 경우 삭제 진행 후 ok status return
+		if(findComment.getMember_mail().equals(loginMember.getMember_mail())||loginMember.getPosition_id().equals("manager")) {
+			commentsMapper.removeComment(comment_id);
+			
+			return ResponseEntity.ok("remove ok");
 		}
-		
-		commentsMapper.removeComment(comment_id);
-		
-		return ResponseEntity.ok("remove ok");
+		// 위 if구문에 해당안되는 경우 400에러 반환
+		return ResponseEntity.badRequest().build();
 	}
 	
+	// 댓글 수정
 	@PutMapping("{comment_id}")
 	public ResponseEntity<Comments> updateComment(@SessionAttribute("loginMember") Member loginMember,
 												@PathVariable Long comment_id,
 												@ModelAttribute Comments comments){
 		Comments findComment = commentsMapper.findComment(comment_id);
+		// 댓글 작성자와 로그인한 회원이 다를 경우 수정하기 요청 시 400에러 반환
 		if(!findComment.getMember_mail().equals(loginMember.getMember_mail())) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -78,6 +84,7 @@ public class CommentsRestController {
 		return ResponseEntity.ok(findComment);
 	}
 	
+	// 동호회 댓글 좋아요
 	@GetMapping("like/{comment_id}")
 	public ResponseEntity<String> like(@PathVariable Long comment_id){
 		commentsMapper.like(comment_id);

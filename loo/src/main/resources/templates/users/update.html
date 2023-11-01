@@ -6,6 +6,16 @@
 </head>
 
 <body>
+	<script>
+		function updateCheck() {
+			console.log("updateUser 실행");
+        	if (confirm('정말로 수정하시겠습니까?')) {
+            	return true;
+			} else {
+				return false;
+			}
+		}
+	</script>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<nav id="sidebar" class="sidebar js-sidebar" th:if="${session.loginMember}">
@@ -24,7 +34,9 @@
 				<div class="container-fluid p-0">
 
 					<h1 class="h3 mb-3">내 정보</h1>
-					<form th:action="@{/users/update(member_mail=${update.member_mail})}" method="post" th:object="${update}" enctype="multipart/form-data">
+					<form th:action="@{/users/update(member_mail=${update.member_mail})}" 
+							method="post" th:object="${update}" enctype="multipart/form-data"
+							onsubmit="return updateCheck()">
 						<div class="mb-3">
 							<label class="form-label">아이디(Email)</label>
 							<input type="text" class="form-control" th:field="*{member_mail}" disabled/>
@@ -34,7 +46,6 @@
 							<input class="form-control" type="file" name="file"/><br>
 							<img th:if="${file}" th:src="@{'/img/upload/' + ${file.saved_filename}}" class="img-fluid rounded mb-2" width="128" height="128" />
 				        </div>
-
 						<div class="mb-3">
 							<label class="form-label">비밀번호</label>
 							<!--<input class="form-control form-control-lg" type="password" th:field="*{password}"/>-->
@@ -61,22 +72,23 @@
 						</div>
 						<div class="mb-3">
 							<label class="form-label">회사명</label>
-							<input type="text" class="form-control" th:field="*{company_id}" disabled/>
+							<input type="text" class="form-control" th:value="${#strings.equals(update.company_id, 'C001')} ? 'LOO' : ''" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">부서 정보</label>
-							<input type="text" class="form-control" th:field="*{department_id}" disabled/>
+							<input type="text" class="form-control" th:if="${#strings.equals(update.department_id, 'C001-D')}" th:value="개발팀" disabled/>
+							<input type="text" class="form-control" th:if="${#strings.equals(update.department_id, 'C001-P')}" th:value="인사팀" disabled/>
+							<input type="text" class="form-control" th:if="${#strings.equals(update.department_id, 'C001-F')}" th:value="총무팀" disabled/>
 						</div>
 						<div class="mb-3">
 							<label class="form-label">직책</label>
-							<input type="text" class="form-control" th:field="*{position_id}" disabled/>
+							<input type="text" class="form-control" th:value="${#strings.equals(update.position_id, 'manager')} ? '매니저' : '사원'" disabled/>
 						</div>
                        	<div th:if="${#fields.hasGlobalErrors()}">
 					  	  <p class="text-danger" th:each="err : ${#fields.globalErrors}" th:text="${err}">
 		  				</div>
 						<div class="d-grid gap-2 mt-3">
 							<input type="submit" value="수정하기" class="btn btn-lg btn-primary">
-
 						</div>
 					</form>
 				</div>
