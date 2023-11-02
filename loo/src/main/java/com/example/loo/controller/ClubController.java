@@ -139,7 +139,7 @@ public class ClubController {
     		return "club/write";
     	}
     	
-    	Board board = BoardWriteForm.toBoard(boardWriteForm);
+    	Board board = boardWriteForm.toBoard(boardWriteForm);
     	board.setMember_mail(loginMember.getMember_mail());
     	board.setBoard_category(BoardCategory.CLUB);
     	

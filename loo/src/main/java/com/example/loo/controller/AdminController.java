@@ -38,7 +38,11 @@ public class AdminController {
 	private final CommuteService commuteService;
 
 	@GetMapping("admin")
-	public String admin(Model model) {
+	public String admin(Model model,
+			@RequestParam(value = "member_mail", required = false) String member_mail,
+			@RequestParam(value = "member_name", required = false) String member_name, 
+			@RequestParam(value = "phone", required = false) String phone, 
+			@RequestParam(value = "department_name", required = false) String department_name) {
 		
 		log.info("admin 페이지");
 		
@@ -46,6 +50,15 @@ public class AdminController {
         List<Member> members = phonesService.findAllPhones();
         // Member 리스트를 model 에 저장한다.
         model.addAttribute("members", members);
+        
+        // 검색기능 사용시 해당하는 member를 findMembers에 담는다.
+        List<Member> findMembers = 
+    			phonesService.findMember(member_name, member_mail, phone, department_name);
+        
+        // 검색으로 찾은 findMembers를 모델에 member 객체를 저장한다.
+        if(findMembers != null) { 
+    		model.addAttribute("members", findMembers);
+    	};
 		
 		return "admin/admin";
 	}

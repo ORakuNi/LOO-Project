@@ -10,6 +10,19 @@
 
 
 <body>
+	<script>
+		function search() {
+			let department_name = document.getElementById("department_name").value;
+			let member_mail = document.getElementById("member_mail").value;
+			let member_name = document.getElementById("member_name").value;
+			let phone = document.getElementById("phone").value;
+			
+			if(department_name || member_mail || member_name || phone){
+				location.href = "/admin/admin?department_name=" + department_name + 
+				"&member_mail=" + member_mail +"&member_name=" + member_name + "&phone=" +phone;
+			}
+		}
+	</script>
 
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
@@ -27,53 +40,42 @@
 
 			<main class="content">
 				<div class="container-fluid p-0">
-
-
 					<div class="card">
 						<div class="card-body">
 							<div class="row">
 								<div class="card-header">
 									<h5 class="card-title mb-0">관리자 페이지</h5>
 								</div>
-							<!--
-							<table class="table">
-							<tbody>	
-						<form th:action="@{/phones/read}" method="get" class="text-center">
-   						 <div class="text-center" style="display: inline-block;">
-					        <label for="member_mail">이메일:</label>
-					       <input type="text" id="member_mail" name="member_mail">
-				        <label for="member_name">이름:</label>
-					        <input type="text" id="member_name" name="member_name">
-					         <label for="phone" style="display: block;">전화번호:</label>
-					    <input type="text" id="phone" name="phone">
-					    </div>
-		-->
 		<table class="table">
-	 	 <tbody>
+	 	<tbody>
 			<tr class="text-center">
 				<th>
-					<form th:action="@{/phones/read}" method="get" class="text-center">
-   					
-				<select class="form-select mb-1" id="department_name" name="department_name">
-					 <label for="department_name">부서:</label>
-					<option value="" selected>부서</option>
-					<option value="개발팀">개발팀</option>
-					<option value="인사팀">인사팀</option>
-					<option value="총무팀">총무팀</option>
-				</select>
+					<select class="form-select mb-1" id="department_name" name="department_name">
+						<label for="department_name">부서:</label>
+						<option value="" selected>부서</option>
+						<option value="개발팀">개발팀</option>
+						<option value="인사팀">인사팀</option>
+						<option value="총무팀">총무팀</option>
+					</select>
 				</th>
 				<th>
-						 <label for="member_mail">이메일:</label>
-					       <input type="text" id="member_mail" name="member_mail">
+					<label for="member_mail">이메일:</label>
+					<input type="text" id="member_mail" name="member_mail">
 				</th>
-				<th>	  <label for="member_name">이름:</label>
-					        <input type="text" id="member_name" name="member_name">
+				<th>	  
+					<label for="member_name">이름:</label>
+					<input type="text" id="member_name" name="member_name">
 				</th>
-		<th> <input class="btn btn-primary btn-sm" type="submit" onclick="location.href='/phones/read'" value="검색">
-		</th>			
-							</form>
+				<th>    
+					<label for="phone">전화번호:</label>
+					<input type="search" id="phone" name="phone" th:value="${phone}">
+				</th>
+				<th> 
+					<input class="btn btn-primary btn-sm" type="button" 
+						onclick="search()" value="검색">
+				</th>			
 			</tr>
-	 	 </tbody>
+	 	</tbody>
 		</table>				    
 							  <table class="table">
 								  <tbody>
@@ -81,6 +83,7 @@
 							      		<th>No</th>
 							      		<th>메일</th>
 									    <th>이름</th>
+									    <th>전화번호</th>
 									    <th>부서</th>
 									    <th>직함</th>
 									    <th></th>
@@ -89,6 +92,7 @@
 									    <td class="text-center" th:text="${memberStat.count}"></td>    
 									    <td class="text-center" th:text="${member.member_mail}"></td>
 									    <td class="text-center" th:text="${member.member_name}"></td>
+									    <td class="text-center" th:text="${member.phone}"></td>
 		   								<td class="text-center" th:text="${member.department_name}"></td>
 		   								<td class="text-center" th:text="${member.position_id}"></td>
 										<td class="text-center">
