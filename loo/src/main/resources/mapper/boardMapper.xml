@@ -123,6 +123,14 @@
   		)
   </insert>
   
+   <select id="getTotal" resultType="int">
+        select count(*) from board
+        <if test="_parameter != null">
+        where board_category = #{board_category} and board_title like '%' || #{searchText} || '%'     
+        </if>
+   
+  </select>
+  
   <select id="findFileByBoardId" resultType="boardfile">
   	select * from board_attached_file where board_id = #{board_id}
   </select>

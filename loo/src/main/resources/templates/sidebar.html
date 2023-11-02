@@ -3,9 +3,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
-
-
-
 <!-- 로그아웃 시 -->
 <div class="sidebar-content js-simplebar" th:fragment="logout">
 	<a class="sidebar-brand" href="/">
@@ -62,6 +59,12 @@
 				<i class="align-middle" data-feather="log-out"></i> <span class="align-middle">로그아웃</span>
 			</a>
 		</li>
+		<li class="sidebar-item" th:if="${session.loginMember.getPosition_id == 'manager'}" 
+			th:classappend="${#httpServletRequest.requestURI == '/admin/admin' ? 'active' : ''}">
+			<a class="sidebar-link" href="/admin/admin">
+      			<i class="align-middle" data-feather="user"></i> <span class="align-middle">관리자 페이지</span>
+    		</a>
+		</li>
 
 		<li class="sidebar-header">
 			My Schedule
@@ -109,7 +112,7 @@
 			</a>
 		</li>
 
-		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/board/club' ? 'active' : ''}">
+		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/club/list' ? 'active' : ''}">
 			<a class="sidebar-link" href="/club/list">
 				<i class="align-middle" data-feather="coffee"></i> <span class="align-middle">동호회</span>
 			</a>
@@ -120,10 +123,8 @@
 				<i class="align-middle" data-feather="map"></i> <span class="align-middle">맛집</span>
 			</a>
 		</li>
-		<li class="sidebar-item" id="mymat" th:classappend="${#httpServletRequest.requestURI == '/api/matgip' ? 'active' : ''}">
-			
+		<li class="sidebar-item" id="mymat" th:classappend="${#httpServletRequest.requestURI == '/api/matgip' ? 'active' : ''}">		
 		</li>
-
 
 	</ul>
 	<div>

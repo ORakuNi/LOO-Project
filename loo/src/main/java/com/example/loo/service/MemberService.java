@@ -1,6 +1,5 @@
-	package com.example.loo.service;
+package com.example.loo.service;
 
-import javax.websocket.Session;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -26,9 +25,31 @@ public class MemberService {
 	private final FileService fileService;
 	@Value("${file.upload.path}")
     private String uploadPath;
+	
+	public void saveMember(Member member) {		
+        memberMapper.saveMember(member);		
+	}
+	
+	public Member findMember(String member_mail) {
+		
+		Member findMember = memberMapper.findMember(member_mail);		
+		
+		return findMember;
+	}
+	
+	 public MemberAttachedFile findFileByMail(String member_mail) {
+		 
+		 MemberAttachedFile findFileByMail = memberMapper.findFileByMail(member_mail);	
+		 
+		 return findFileByMail;
+	 }
+	
 	  
 	@Transactional
-	public void updateMember(Member loginMember, Member givenmember, MemberAttachedFile previousFile, MultipartFile newFile) {
+	public void updateFile(Member loginMember, 
+							Member givenmember, 
+							MemberAttachedFile previousFile, 
+							MultipartFile newFile) {
 		
 		log.info("첨부파일:{}", newFile.getSize());
 
@@ -41,12 +62,22 @@ public class MemberService {
 			//첨부파일을 서버에 저장한다.
 			AttachedFile attachedFile = fileService.saveFile(newFile);
 			MemberAttachedFile savedFile = new MemberAttachedFile(attachedFile, givenmember.getMember_mail());
+
 			givenmember.setSaved_filename(savedFile.getSaved_filename());
 			loginMember.setSaved_filename(savedFile.getSaved_filename());
+
 			//첨부파일 내용을 데이터베이스 저장
 			memberMapper.saveFile(savedFile);
-			memberMapper.updateMember(givenmember);
+			updateMember(givenmember);
 		}
+	}
+	
+	public void updateMember(Member member) {
+		memberMapper.updateMember(member);
+	}
+	
+	public void updateAdminMember(Member member) {
+		memberMapper.updateAdminMember(member);
 	}
 	
 	@Transactional

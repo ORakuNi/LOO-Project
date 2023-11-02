@@ -5,7 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,26 +19,20 @@ import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.commute.Commute;
 import com.example.loo.model.commute.CommuteAttendance;
 import com.example.loo.model.member.Member;
-import com.example.loo.repository.BoardMapper;
-import com.example.loo.repository.CommuteMapper;
+import com.example.loo.service.BoardService;
+import com.example.loo.service.CommuteService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import com.example.loo.model.board.Board;
-import com.example.loo.model.board.BoardCategory;
-import com.example.loo.repository.BoardMapper;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
 public class HomeController {
 	
-	@Autowired
-	private BoardMapper boardMapper;
-	
-	private final CommuteMapper commuteMapper;
-	private Commute findCommute;
+	private final BoardService boardService;
+	private final CommuteService commuteService;
+	private final int countPerPage = 5;
 
 
 	@GetMapping("/")
@@ -46,24 +40,24 @@ public class HomeController {
 					@ModelAttribute CommuteAttendance commuteAttendance, 
 					HttpServletRequest request, 
 					Model model) {
+
+		RowBounds rowBounds = new RowBounds(0, countPerPage);
+
 		
 	    // 데이터베이스에 저장된 모든 Board 객체를 리스트 형태로 받는다.
-	    List<Board> boards = boardMapper.findAllBoards(BoardCategory.NOTICE);
+	    List<Board> boards = boardService.findAllBoards(BoardCategory.NOTICE, rowBounds);
 	    // Board 리스트를 model 에 저장한다.
 	    model.addAttribute("boards", boards);
 	
-	
 		HttpSession session = request.getSession();
 		Object attribute = session.getAttribute("status");
-//		log.info("attribute : {}", attribute);
 		if(attribute != null) {
-			Commute findCommute = commuteMapper.findCommute(((Commute)attribute).getCommute_id());
-//			log.info("see : {}", findCommute);
+			Commute findCommute = commuteService.findCommute(((Commute)attribute).getCommute_id());
 			model.addAttribute("commute", findCommute.getCommute_status());
 		}
 		
 		// 공지 게시판
-		List<Board> noticeBoardList = boardMapper.findAllBoards(BoardCategory.NOTICE);
+		List<Board> noticeBoardList = boardService.findAllBoards(BoardCategory.NOTICE, rowBounds);
 		model.addAttribute("noticeBoardList", noticeBoardList);
 		return "index";
 	}
@@ -80,7 +74,7 @@ public class HomeController {
 		commuteAttendance.setCommute_status("1");
 		
 		Commute commute = CommuteAttendance.toCommute(commuteAttendance);
-		commuteMapper.insertCommute(commute);
+		commuteService.attendanceCommute(commute);
 		HttpSession session = request.getSession();
 		session.setAttribute("status", commute);
 		log.info("commute:{}",commute);
@@ -100,9 +94,7 @@ public class HomeController {
 		session.setAttribute("status", attribute);
 
 		// session에 있는 commute_id를 들고와서 형변환 시켜줌
-//		log.info("status : {}" , ((Commute) attribute).getCommute_id());
-		findCommute = commuteMapper.findCommute(((Commute) attribute).getCommute_id());
-		commuteMapper.updateCommute(findCommute);
+		commuteService.leaveCommute(((Commute) attribute).getCommute_id());
 		return "redirect:/";
 	}
 	
@@ -112,7 +104,7 @@ public class HomeController {
 	@GetMapping("list")
 	public String list(@RequestParam String member_mail, Model model) {
 		
-		List<Commute> findAllCommutes = commuteMapper.findAllCommutes(member_mail);
+		List<Commute> findAllCommutes = commuteService.findAllCommutes(member_mail);
 		log.info("findAllCommutes : {}", findAllCommutes);
 		model.addAttribute("commutes", findAllCommutes);
 		

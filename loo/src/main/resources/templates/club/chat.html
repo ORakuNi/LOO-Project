@@ -58,8 +58,10 @@
 					}
 					str += "<div class='flex-grow-1' id='" + obj.comment_id + "'>";
 					str += "<strong style='margin: 5px;'>" + obj.member_name + "</strong>";
-					if(session.member_mail == obj.member_mail){
+					if(session.member_mail == obj.member_mail || session.position_id == 'manager'){
 						str += "<a onclick='removeComment(" + obj.comment_id + ")'><i class='float-end feather-sm' data-feather='trash-2' style='margin-left: 5px;'></i></a>";
+					};
+					if(session.member_mail == obj.member_mail){
 						str += "<a onclick=\"getUpdateComment(" + obj.comment_id + ",'" + obj.comment_contents + "')\"><i class='float-end feather-sm' data-feather='edit-3'>수정</i></a>";
 					};
 					str += "<small class='text-muted'> " + obj.comment_create_time + "</small>";

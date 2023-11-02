@@ -2,12 +2,14 @@ package com.example.loo.service;
 
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.loo.model.board.Board;
+
 import com.example.loo.model.board.BoardCategory;
 import com.example.loo.model.file.AttachedFile;
 import com.example.loo.model.file.BoardAttachedFile;
@@ -48,6 +50,7 @@ public class BoardService {
 	
 	@Transactional
 	public void updateBoard(Board updateBoard, boolean isFileRemoved, MultipartFile file) {
+		
 		Board board = boardMapper.findBoard(updateBoard.getBoard_id());
 		if (board != null) {
 			boardMapper.updateBoard(updateBoard);
@@ -95,6 +98,10 @@ public class BoardService {
 	public BoardAttachedFile findFileByAttachedFileId(Long attachedFile_id) {
 		return boardMapper.findFileByAttachedFileId(attachedFile_id);
 	}
+	
+	public int getTotal(BoardCategory board_category, String searchText) {
+		return boardMapper.getTotal(board_category, searchText);
+	}
 
 	public List<Board> findAllClubs() {
 		return boardMapper.findAllClubs();
@@ -104,22 +111,23 @@ public class BoardService {
 		return boardMapper.findBoard(board_id);
 	}
 	
-	public void readBoard(Long board_id) {
-		boardMapper.addHit(board_id);
+	public Board readBoard(Long board_id) {
+		Board board = findBoard(board_id);
+		// 조회수 1 증가
+        boardMapper.addHit(board_id);
+        // 조회수를 증가하여 데이터베이스에 업데이트 한다.
+        updateBoard(board, false, null);
+		return board;
 	}
 
-	public List<Board> findAllBoards(BoardCategory board_category) {
-		return boardMapper.findAllBoards(board_category);
+	public List<Board> findAllBoards(BoardCategory board_category, RowBounds rowBounds) {
+		return boardMapper.findAllBoards(board_category, rowBounds);
+
 	}
 	
-	public List<Board> searchBoards(BoardCategory board_category, String searchText){
-		if(searchText.equals("")) {
-			  List<Board> boards = boardMapper.findAllBoards(board_category);
-			  return boards;
-		} else 
-			 return boardMapper.findBoards(searchText, board_category);
-		
-		
+	public List<Board> searchBoards(BoardCategory board_category, String searchText, int startRecored, int countPerpage ){
+		RowBounds rowBounds = new RowBounds(startRecored, countPerpage);
+		return boardMapper.findBoards(searchText, board_category, rowBounds);
 	}
 	
 }

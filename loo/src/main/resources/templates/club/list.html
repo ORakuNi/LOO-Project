@@ -45,6 +45,10 @@
 									<small class="text-muted" th:text="'시작일 : ' + ${#temporals.format(board.create_time, 'yyyy-MM-dd')}"></small>
 								</div>
 								<div class="card-body">
+									<a th:onclick="|location.href='/club/delete?board_id=${board.board_id}'|" class="float-end" th:if="${session.loginMember.getPosition_id == 'manager'}">
+										<i class="feather-md" data-feather="trash-2"></i>
+										삭제
+									</a>
 									<a th:href="@{/club/chat(board_id=*{board_id})}" class="card-link">참여하기</a>
 								</div>
 							</div>

@@ -20,7 +20,8 @@ public class BoardWriteForm {
 	private MultipartFile attachedFile;
 	
 	
-	public static Board toBoard(BoardWriteForm boardWriteForm) {
+	
+	public Board toBoard(BoardWriteForm boardWriteForm) {
 		Board board = new Board();
 		board.setBoard_title(boardWriteForm.getBoard_title());
 		board.setBoard_contents(boardWriteForm.getBoard_contents());

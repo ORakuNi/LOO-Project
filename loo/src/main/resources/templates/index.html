@@ -4,7 +4,7 @@
 <head>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-	<script defer src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
+	<script defer src='https:&#x2F;&#x2F;www.miricanvas.com&#x2F;v&#x2F;12igjdm?embed'
 		integrity="sha384-vuFJ2JiSdUpXLKGK+tDteQZBqNlMwAjhZ3TvPaDfN9QmbPb7Q8qUpbSNapQev3YF"
 		crossorigin="anonymous"></script>
 		
@@ -189,8 +189,6 @@
 				<!-- 로그인 시 -->
 				<div class="container-fluid p-0" th:if="${session.loginMember}">
 
-					<h1 class="h3 mb-3"><strong>제목</strong> 뭐라고할까요?</h1>
-
 					<div class="row">
 						<div class="col-xl-6 col-xxl-5 d-flex">
 							<div class="w-100">
@@ -283,7 +281,7 @@
 											<tbody>
 												<tr>
 													<td>개발부</td>
-													<td class="text-end">436</td>
+													<td class="text-end">4306</td>
 												</tr>
 												<tr>
 													<td>생산부</td>
@@ -323,6 +321,11 @@
 									</tr>
 									</tbody>
 								</table>
+								<div class="card-header">
+		                           <a class="btn btn-primary d-block text-white" th:href="@{/board/list(board_category=${T(com.example.loo.model.board.BoardCategory).NOTICE})}">
+		                              <span id="공지사항">더보기</span>
+		                           </a>                           
+		                        </div>
 							</div>
 						</div>
 
