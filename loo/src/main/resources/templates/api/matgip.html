@@ -20,7 +20,7 @@
 						// console.log(data)
 						let matgip_data = data['getFoodKr']['item']
 						for (let i = 0; i < matgip_data.length; i++) {
-							put_data1(matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
+							put_data1(matgip_data[i]['UC_SEQ'],matgip_data[i]['MAIN_TITLE'], matgip_data[i]['ITEMCNTNTS'], matgip_data[i]['ADDR1'], matgip_data[i]['CNTCT_TEL'], matgip_data[i]['MAIN_IMG_THUMB'])
 						}
 						console.log(matgip_data)
 						page++;
@@ -39,7 +39,7 @@
 				let windowHeight = $window.height();
 				let documentHeight = $(document).height();
 
-				console.log("documentHeight:" + documentHeight + " | scrollTop:" + scrollTop + " | windowHeight: " + windowHeight);
+				// console.log("documentHeight:" + documentHeight + " | scrollTop:" + scrollTop + " | windowHeight: " + windowHeight);
 
 				if (scrollTop + windowHeight + 30 > documentHeight) {
 					fetchData()
@@ -48,8 +48,8 @@
 
 		})
 
-		function put_data1(title, contents, add, tel, img) {
-			let num = 1;
+		function put_data1(num,title, contents, add, tel, img) { 
+		
 			let html = `
 						<div class="col-12 col-md-3">
 						<div class="card">
@@ -57,7 +57,7 @@
 							<div class="card-header">
 								<h5 class="card-title" style="font-size:16px;">-${title}
 									
-                <button class="btn btn-danger p-1" onclick="addFavorites('${title}','${add}','${tel}', '${img}')" style="font-size:12px;">
+                <button class="btn btn-danger p-1" onclick="addFavorites('${num}','${title}','${add}','${tel}', '${img}')" style="font-size:12px;">
                   찜하기
                 </button> 
 				</h5>					
@@ -78,16 +78,18 @@
 
 
 
-		function addFavorites(title, add, tel, img) {
+		function addFavorites(num,title, add, tel, img) {
+			let user = /*[[${session.loginMember.member_mail}]]*/'';
+			console.log(user);
 			$.ajax({
 				type: "POST",
 				url: "matgip",
-				data: {matgip_title: title, matgip_add: add, matgip_tel: tel, saved_filename: img},
+				data: {matgip_num : num ,matgip_title: title, matgip_add: add, matgip_tel: tel, saved_filename: img},
 				success: function (result) {
 					Swal.fire(
 						'찜 등록되었습니다'
 					).then(() => {
-						location.reload();
+						location.replace(`/api/myMatgip?member_mail=${user}`);
 					})
 				}
 			});
