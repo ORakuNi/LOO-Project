@@ -57,7 +57,7 @@ public class ReviewRestController {
 		
 		Review findReview = reviewMapper.findReview(review_id);
 		
-		if(!findReview.getMember_mail().equals(loginMember.getMember_mail()) || loginMember.getPosition_id().equals("manager")) {
+		if(findReview.getMember_mail().equals(loginMember.getMember_mail()) || loginMember.getPosition_id().equals("manager")) {
 			reviewMapper.removeReview(review_id);
 			return ResponseEntity.ok("삭제완료");
 		}
