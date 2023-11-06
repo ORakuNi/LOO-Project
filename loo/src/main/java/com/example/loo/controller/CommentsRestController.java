@@ -79,7 +79,7 @@ public class CommentsRestController {
 		
 		findComment.setComment_contents(comments.getComment_contents());
 		
-		commentsMapper.updateComments(findComment);;
+		commentsMapper.updateComments(findComment);
 		
 		return ResponseEntity.ok(findComment);
 	}

@@ -118,7 +118,7 @@
 										<input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'"
 											value="메인으로">
 										<input type="button" class="btn btn-primary btn-sm" 
-											th:if="${session.loginMember.getPosition_id == 'manager'}"
+											th:unless="${session.loginMember.getPosition_id != 'manager' && board_category.toString().equals('NOTICE')}"
 											th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|"
 											value="글쓰기">
 									</div>

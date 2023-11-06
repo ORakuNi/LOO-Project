@@ -91,11 +91,11 @@
 				<i class="align-middle" data-feather="bell"></i> <span class="align-middle">공지사항</span>
 			</a>
 		</li>
-		<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'REPORT')} ? 'active' : ''">
+		<!--<li class="sidebar-item" th:classappend="${#strings.equals(param.board_category, 'REPORT')} ? 'active' : ''">
 			<a class="sidebar-link" href="/board/list?board_category=NOTICE">
 				<i class="align-middle" data-feather="inbox"></i> <span class="align-middle">업무보고</span>
 			</a>
-		</li>
+		</li>-->
 		<li class="sidebar-item" th:classappend="${#httpServletRequest.requestURI == '/phones/list' ? 'active' : ''}">
 			<a class="sidebar-link" href="/phones/list">
 				<i class="align-middle" data-feather="users"></i> <span class="align-middle">전화번호부</span>

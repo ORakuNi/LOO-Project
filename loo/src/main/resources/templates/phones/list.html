@@ -88,8 +88,8 @@
 											<td class="text-center" th:text="${member.member_name}"></td>
 											<td class="text-center" th:text="${member.phone}"></td>
 											<td class="text-center" th:text="${member.department_name}"></td>
-											<td class="text-center" th:text="${member.position_id}"></td>
-
+											<td class="text-center" th:text="${#strings.equals(member.position_id, 'manager')} ? '매니저' : '사원'">
+											</td>
 										</tr>
 									</tbody>
 								</table>
