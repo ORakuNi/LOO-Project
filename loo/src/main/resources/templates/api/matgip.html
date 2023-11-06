@@ -77,22 +77,58 @@
 		}
 
 
-
-		function addFavorites(num,title, add, tel, img) {
+		function addFavorites(num, title, add, tel, img) {
 			let user = /*[[${session.loginMember.member_mail}]]*/'';
 			console.log(user);
-			$.ajax({
-				type: "POST",
-				url: "matgip",
-				data: {matgip_num : num ,matgip_title: title, matgip_add: add, matgip_tel: tel, saved_filename: img},
-				success: function (result) {
-					Swal.fire(
-						'찜 등록되었습니다'
-					).then(() => {
-						location.replace(`/api/myMatgip?member_mail=${user}`);
-					})
+			Swal.fire({
+				title: '찜하시겠습니까?',
+				text: "잘 선택해주세요!!",
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: '찜하기 ',
+				cancelButtonText: '취소'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						type: "POST",
+						url: "matgip",
+						data: {matgip_num: num, matgip_title: title, matgip_add: add, matgip_tel: tel, saved_filename: img},
+						success: function (result) {
+							Swal.fire({
+								title: '찜 목록에 추가되었습니다.',
+								text: '목록으로 이동하시겠습니까?',
+								icon: 'success',
+								showCancelButton: true,
+								confirmButtonColor: '#3085d6',
+								cancelButtonColor: '#d33',
+								confirmButtonText: '찜목록으로 가기 ',
+								cancelButtonText: '취소'
+							}).then((result) => {
+								if (result.isConfirmed) {
+									location.replace(`/api/myMatgip?member_mail=${user}`);
+								} else if (result.isDenied) {
+									location.reload();
+								}
+							})
+						}
+					});
+				} else if (result.isDenied) {
+					return;
 				}
-			});
+
+			})
+		
+		
+		
+			
+			
+			
+			
+			
+			
+			
 		}
 
 	</script>

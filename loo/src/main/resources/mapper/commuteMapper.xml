@@ -58,6 +58,8 @@
     	on (c.member_mail = m.member_mail)
     where
     	c.member_mail = #{member_mail}
+    order by
+    	c.commute_date desc
   </select>
   
  
