@@ -17,10 +17,13 @@ import com.example.loo.model.member.Member;
 import com.example.loo.repository.MatgipMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.OracleDatabaseException;
 
 @RequestMapping("api")
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MatgipController {
 
 	private final MatgipMapper matgipMapper;
@@ -36,9 +39,10 @@ public class MatgipController {
 
 	@PostMapping("matgip")
 	public String myRestaurant(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-							   @ModelAttribute("data") Matgip matgip, BindingResult result) {
+							   @ModelAttribute("data") Matgip matgip, BindingResult result) throws OracleDatabaseException {
 		
 		matgip.setMember_mail(loginMember.getMember_mail());
+		log.info("찜한 목록 :{}", matgip);
 		
 		Matgip findMatgip = matgipMapper.findMatgipTitle(matgip.getMatgip_title(), loginMember.getMember_mail());
 		
@@ -57,6 +61,20 @@ public class MatgipController {
 		model.addAttribute("myMat", findMatgip);
 
 		return "api/myMatgip";
+	}
+	
+	@GetMapping("review")
+	public String review(@SessionAttribute(name ="loginMember", required = false) Member loginMember,
+						@RequestParam Long matgip_num, Model model) {
+		
+		// matgip_num에 해당하는 맛집찾기
+		Matgip matgip = matgipMapper.findMatgipByMail(matgip_num,loginMember.getMember_mail() );
+		
+		
+		model.addAttribute("matgip", matgip);
+		
+		
+		return "api/review";
 	}
 	
 	@GetMapping("delete")

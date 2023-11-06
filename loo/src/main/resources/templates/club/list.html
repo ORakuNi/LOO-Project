@@ -6,6 +6,16 @@
 </head>
 
 <body>
+	<script>
+    	function deleteClub(board_id) {
+			console.log("deleteBoard 실행");
+			console.log(board_id);
+        	if (confirm('정말로 삭제하시겠습니까?')) {
+				alert('삭제되었습니다');
+            	location.replace('/club/delete?board_id=' + board_id);
+			}
+		}
+	</script>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
 		<nav id="sidebar" class="sidebar js-sidebar">
@@ -45,7 +55,8 @@
 									<small class="text-muted" th:text="'시작일 : ' + ${#temporals.format(board.create_time, 'yyyy-MM-dd')}"></small>
 								</div>
 								<div class="card-body">
-									<a th:onclick="|location.href='/club/delete?board_id=${board.board_id}'|" class="float-end" th:if="${session.loginMember.getPosition_id == 'manager'}">
+									<a th:onclick="'javascript:deleteClub(\''+ ${board.board_id} +'\');'"
+									class="float-end" th:if="${session.loginMember.getPosition_id == 'manager'}">
 										<i class="feather-md" data-feather="trash-2"></i>
 										삭제
 									</a>

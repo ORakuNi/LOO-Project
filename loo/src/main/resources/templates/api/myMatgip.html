@@ -23,7 +23,7 @@
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			let mymat = /*[[${myMat}]]*/'';
-			
+			console.log(mymat)
 			if (mymat.length > 0) {
 				for (let i = 0; i < mymat.length; i++) {
 					let html = `
@@ -39,6 +39,7 @@
 								<a class="card-text">
 							</div>
 							<div class="card-body">
+								<a href="/api/review?matgip_num=${mymat[i].matgip_num}" class="card-link">직원후기 보기</a></p>
 								<a href="tel:${mymat[i].matgip_tel}" class="card-link">${mymat[i].matgip_tel}</a></p>
 								<p href="#" class="card-link">${mymat[i].matgip_add}</a>
 							</div>

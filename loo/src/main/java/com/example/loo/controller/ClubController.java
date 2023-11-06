@@ -153,7 +153,7 @@ public class ClubController {
 							@RequestParam(required = false) Long comment_id,
 							Model model) {
 		
-		log.info("id: {}", board_id);
+		// log.info("id: {}", board_id);
 		
 		// board_id에 해당하는 게시글 찾기
 		Board board = boardService.findBoard(board_id);
