@@ -17,8 +17,7 @@
 		on (m.department_id = d.department_id)
 	</select>
 
-	<select id="findMember" parameterType="map"
-		resultType="com.example.loo.model.member.Member">
+	<select id="findMember" resultType="member">
 		select
 			m.member_mail,
 			m.member_name,
