@@ -16,6 +16,18 @@
 				return false;
 			}
 		}
+		
+		function setImg(input) {
+		  if (input.files && input.files[0]) {
+		    var reader = new FileReader();
+		    reader.onload = function(e) {
+		      document.getElementById('img').src = e.target.result;
+		    };
+		    reader.readAsDataURL(input.files[0]);
+		  } else {
+		    document.getElementById('img').src = "";
+		  }
+		}
 	</script>
 	<div class="wrapper">
 		<!-- 사이드 메뉴 -->
@@ -44,8 +56,11 @@
 						</div>
 						<div class="mb-3">
 							<label class="form-label">내 사진</label>
-							<input class="form-control" type="file" name="file"/><br>
-							<img th:if="${file}" th:src="@{'/img/upload/' + ${file.saved_filename}}" class="img-fluid rounded mb-2" width="128" height="128" />
+							<input class="form-control" type="file" name="file" onchange="setImg(this);"/><br>
+							<img th:if="${file}" th:src="@{'/img/upload/' + ${file.saved_filename}}" 
+								class="img-fluid rounded mb-2" id="img" width="128" height="128" />
+							<img th:unless="${file}" class="img-fluid rounded mb-2" 
+								id="img" width="128" height="128" />
 				        </div>
 						<div class="mb-3">
 							<label class="form-label">비밀번호</label>

@@ -4,6 +4,16 @@
 <head>
 	<title>글 조회</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+		function deleteBoard(board_id) {
+			console.log("deleteBoard 실행");
+			console.log(board_id);
+        	if (confirm('정말로 삭제하시겠습니까?')) {
+				alert('삭제되었습니다');
+            	location.replace('/board/delete?board_id=' + board_id);
+			}
+		}
+	</script>
     <script th:inline="javascript">
 		let board_id = /*[[${board.board_id}]]*/'';
 		let session = /*[[${session.loginMember}]]*/'';
@@ -196,7 +206,7 @@
 								    	<input type="button" class="btn btn-primary btn-sm" th:if="${session.loginMember.member_mail == board.member_mail}"
 								    		 th:onclick="|location.href='@{/board/update(board_id=${board.board_id},board_category=${board_category})}'|" value="수정하기">
 								        <input type="button" class="btn btn-primary btn-sm" th:if="${session.loginMember.member_mail == board.member_mail}"
-								        	 th:onclick="|location.href='/board/delete?board_id=${board.board_id}'|" value="삭제하기">
+								        	 th:onclick="'javascript:deleteBoard(\''+ ${board.board_id} +'\');'" value="삭제하기">
 								    </th:block>
 								    <hr />
 								</div>

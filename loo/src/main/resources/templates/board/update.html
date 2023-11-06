@@ -9,6 +9,15 @@
 			document.getElementById("attachedFile").style.display = "none";
 			document.getElementById("new").style.display = "block"
 		}
+		
+		function updateCheck() {
+        	if (confirm('정말로 수정하시겠습니까?')) {
+				alert('수정되었습니다');
+            	return true;
+			} else {
+				return false;
+			}
+		}
 	</script>
 </head>
 
@@ -29,7 +38,9 @@
 			</nav>
 			
 			<main class="content">
-				<form th:action="@{/board/update(board_id=${board.board_id},board_category=${param.board_category})}" th:object="${board}" method="post" enctype="multipart/form-data">
+				<form th:action="@{/board/update(board_id=${board.board_id},board_category=${param.board_category})}" 
+					th:object="${board}" method="post" enctype="multipart/form-data" 
+					onsubmit="return updateCheck()">
 					<div class="container-fluid p-0">
 						<div class="card">
 							<div class="card-body">
