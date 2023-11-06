@@ -12,6 +12,7 @@
 		</selectKey>
 
 		insert into matgip(
+			matgip_num,
 			matgip_id,
 			matgip_title,
 			matgip_add,
@@ -20,6 +21,7 @@
 			matgip_tel,
 			saved_filename
 		) values (
+			#{matgip_num},
 			#{matgip_id},
 			#{matgip_title},
 			#{matgip_add},
@@ -33,6 +35,11 @@
 	<select id="findMatgipTitle" resultType="matgip">
 		select * from matgip where matgip_title = #{matgip_title} and member_mail = #{member_mail}
 	</select> 
+	
+	
+	<select id="findMatgipByMail" resultType="matgip">
+		select * from matgip where matgip_num = #{matgip_num} and member_mail = #{member_mail}
+	</select>
 	
 	
 

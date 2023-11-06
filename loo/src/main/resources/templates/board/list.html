@@ -22,6 +22,7 @@
 			console.log("deleteBoard 실행");
 			console.log(board_id);
         	if (confirm('정말로 삭제하시겠습니까?')) {
+				alert('삭제되었습니다');
             	location.replace('/board/delete?board_id=' + board_id);
 			}
 		}
@@ -117,7 +118,9 @@
 									<div class="text-center">
 										<input type="button" class="btn btn-primary btn-sm" onclick="location.href='/'"
 											value="메인으로">
-										<input type="button" class="btn btn-primary btn-sm"
+										<input type="button" class="btn btn-primary btn-sm" 
+											th:unless="${board_category.toString().equals('NOTICE') && 
+														session.loginMember.getPosition_id != 'manager'}"
 											th:onclick="|location.href='@{/board/write(board_category=${param.board_category})}'|"
 											value="글쓰기">
 									</div>
