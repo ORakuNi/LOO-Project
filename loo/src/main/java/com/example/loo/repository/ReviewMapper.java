@@ -21,6 +21,6 @@ public interface ReviewMapper {
 	
 	void removeAllReview(Long matgip_id);
 	
-	void like(Long matgip_num);
+	void like(Long review_id);
 	
 }

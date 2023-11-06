@@ -48,6 +48,7 @@
 		}
 		// 리뷰 출력 
 		function showReviews(data){
+			
 			$("#reviews").html("");
 			let str = "";
 			if(data.length > 0){
@@ -58,7 +59,7 @@
 					} else {
 						str += "<img src='/img/avatars/profile.png' calss='avatar img-fluid rounded me-1' style='margin: 5px;' width='36' height='36'/>";
 					}
-					str += "<div class='flex-grow-1' id='" + obj.reveiw_id + "'>";
+					str += "<div class='flex-grow-1' id='" + obj.review_id + "'>";
 					str += "<strong style='margin: 5px;'>" + obj.member_name + "</strong>";
 					if(session.member_mail == obj.member_mail || session.position_id == 'manager'){
 						str += "<a onclick='removeReview(" + obj.review_id + ")'><i class='float-end feather-sm' data-feather='trash-2' style='margin-left: 5px;'></i></a>";
@@ -67,11 +68,11 @@
 						str += "<a onclick=\"getUpdateReview(" + obj.review_id + ",'" + obj.review_contents + "')\"><i class='float-end feather-sm' data-feather='edit-3'>수정</i></a>";
 					};
 					str += "<small class='text-muted'> " + obj.review_create_time + "</small>";
-					if(obj.reveiw_edit_time != null){
-						str += "<small class='text-muted'> / " + obj.reveiw_edit_time + " 수정</small><br />";
+					if(obj.review_edit_time != null){
+						str += "<small class='text-muted'> / " + obj.review_edit_time + " 수정</small><br />";
 					};
 					str += "<div class='flex-shrink-1 bg-light rounded py-2 px-3 me-3'>" + obj.review_contents + "</div>";
-					str += "<a onclick='like(" + obj.reveiw_id + ")' class='btn btn-sm btn-danger mt-1'><i class='feather-sm' data-feather='heart'></i> Like " + obj.click_like + "</a>"
+					str += "<a onclick='like(" + obj.review_id + ")' class='btn btn-sm btn-danger mt-1'><i class='feather-sm' data-feather='heart'></i> " + obj.click_like + "</a>"
 					str += "</div>";
 					str += "</div>";
 					str += "<hr />"
@@ -106,8 +107,8 @@
 			let str = "";
 			str += "<a onclick='updateReview(" + review_id + ")'><i class='float-end feather-sm' data-feather='save' style='margin-bottom: 10px;'></i></a>";
 			str += "<textarea rows='2' class='form-control bg-light' id='updateReview'>" + review_contents + "</textarea>";
-			$("#" + comment_id).empty();
-			$("#"+comment_id).append(str);	
+			$("#" + review_id).empty();
+			$("#"+review_id).append(str);	
 			feather.replace();		
 		}
 		
@@ -117,9 +118,9 @@
 			if(confirm("수정하시겠습니까?")){
 				$.ajax({
 					url: "/review/" + review_id,
-					method: "put",
+					type: "put",
 					data: {
-						"comment_contents": content
+						"review_contents": content
 					},
 					success: function(data){
 						console.log(data);
@@ -136,7 +137,7 @@
 		// 공감하기
 		function like(review_id){
 			$.ajax({
-				url : "/review/like + review_id",
+				url : "/review/like/" + review_id,
 				success: function(data){
 					console.log(data);
 					getReviews();

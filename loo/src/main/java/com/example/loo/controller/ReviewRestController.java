@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -64,15 +65,17 @@ public class ReviewRestController {
 	}
 	
 	// 리뷰 수정
-	@PostMapping("{review_id}")
+	@PutMapping("{review_id}")
 	public ResponseEntity<Review> updateReview(@SessionAttribute("loginMember") Member loginMember, 
 											   @PathVariable Long review_id, @ModelAttribute Review review){
 		Review findReview = reviewMapper.findReview(review_id);
 		if(!findReview.getMember_mail().equals(loginMember.getMember_mail())) {
 			return ResponseEntity.badRequest().build();
 		}
-		findReview.setReview_contents(review.getReview_contents());
 		
+		log.info("review : {}", review);
+		findReview.setReview_contents(review.getReview_contents());
+			
 		reviewMapper.updateReview(findReview);
 		
 		return ResponseEntity.ok(findReview);

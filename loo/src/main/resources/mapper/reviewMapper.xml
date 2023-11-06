@@ -63,7 +63,7 @@
   	</delete>
   
   	<update id="like">
-  		update review sets
+  		update review set
   			click_like = click_like + 1
   		where
   			review_id = #{review_id}
